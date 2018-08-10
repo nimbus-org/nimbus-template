@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github.nimbus-org</groupId>
+    <artifactId>nimbus-template</artifactId>
+    <packaging>jar</packaging>
+    <version>SNAPSHOT</version>
+    <name>nimbus</name>
+    <description>Nimbus Framework</description>
+    <url>https://github.com/nimbus-org/nimbus</url>
+    <licenses>
+        <license>
+            <name>3-Clause BSD License</name>
+            <url>https://opensource.org/licenses/BSD-3-Clause</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Masanori Takata</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Masahiro Ishida</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mitsuhiro Aono</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Yoshito Kunisaki</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Kokkei Tou</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Yu-ki Nakashima</name>
+            <email>nimbusorg@googlegroups.com</email>
+            <organization>nimbus-org</organization>
+            <organizationUrl>https://github.com/nimbus-org</organizationUrl>
+        </developer>
+    </developers>
+    <properties>
+        <java.version>1.8</java.version>
+        <compile.target>1.6</compile.target>
+        <maven.compiler.source>${compile.target}</maven.compiler.source>
+        <maven.compiler.target>${compile.target}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.github.nimbus-org</groupId>
+            <artifactId>nimbus</artifactId>
+            <version>SNAPSHOT</version>
+        </dependency>
+        
+    </dependencies>
+    
+    <build>
+        <finalName>${artifactId}-${version}</finalName>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                    <configuration>
+                        <useIncrementalCompilation>false</useIncrementalCompilation>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <fork>true</fork>
+                        <compilerArgs>
+                            <arg>-Xlint:-unchecked,-deprecation</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property name="service.target" value="${service.target}"/>
+                                <property name="classpath.runtime" refid="maven.runtime.classpath" />
+                                <property name="classpath.compile" refid="maven.compile.classpath"/>
+                                <ant antfile="build.xml" target="default" inheritRefs="true" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>nimbus</id>
+            <name>Nimbus Maven Repository</name>
+            <url>https://nimbus-org.github.io/gh-pages/mvn</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nimbus</id>
+            <name>Nimbus Maven Repository</name>
+            <url>https://nimbus-org.github.io/gh-pages/mvn</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>

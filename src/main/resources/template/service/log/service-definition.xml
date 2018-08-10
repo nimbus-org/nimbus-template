@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Log">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">./log</manager-property>
+
+<!--=======================================================================
+ログサービス
+========================================================================-->
+
+        <!-- LOGGERサービス -->
+        <service name="Logger"
+                 code="jp.ossc.nimbus.service.log.DefaultCommonsLogFactoryService"
+                 instance="template">
+            <attribute name="CategoryServiceNames">
+                #SysDebugGroupCategory
+                #SysInfoGroupCategory
+                #SysWarnGroupCategory
+                #SysErrorGroupCategory
+                #SysFatalGroupCategory
+                #ComTraceGroupCategory
+                #ComDebugGroupCategory
+                #ComInfoGroupCategory
+                #ComWarnGroupCategory
+                #ComErrorGroupCategory
+                #ComFatalGroupCategory
+                #FrameGroupCategory
+                #ApplGroupCategory
+            </attribute>
+            <attribute name="MessageRecordFactoryServiceName">#LogMessageRecordFactory</attribute>
+            <attribute name="DefaultWritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="DefaultMessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="DebugEnabled">false</attribute>
+            <attribute name="ContextServiceName">#Context</attribute>
+            <attribute name="ContextFormatKeys">
+                REQUEST_ID
+            </attribute>
+            <depends>LogMessageRecordFactory</depends>
+            <depends>SysDebugGroupCategory</depends>
+            <depends>SysInfoGroupCategory</depends>
+            <depends>SysWarnGroupCategory</depends>
+            <depends>SysErrorGroupCategory</depends>
+            <depends>SysFatalGroupCategory</depends>
+            <depends>ComTraceGroupCategory</depends>
+            <depends>ComDebugGroupCategory</depends>
+            <depends>ComInfoGroupCategory</depends>
+            <depends>ComWarnGroupCategory</depends>
+            <depends>ComErrorGroupCategory</depends>
+            <depends>ComFatalGroupCategory</depends>
+            <depends>FrameGroupCategory</depends>
+            <depends>ApplGroupCategory</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+            <depends>ConsoleWriter</depends>
+            <depends>Context</depends>
+        </service>
+
+
+<!--=======================================================================
+メッセージ定義
+========================================================================-->
+
+        <!-- ログメッセージサービス -->
+        <service name="LogMessageRecordFactory"
+                 code="jp.ossc.nimbus.service.message.MessageRecordFactoryService"
+                 instance="template">
+            <attribute name="ExtentionOfMessageFile">def</attribute>
+            <attribute name="MessageFiles">messages/log-message</attribute>
+            <attribute name="MessageRecordClassName">jp.ossc.nimbus.service.log.LogMessageRecordImpl</attribute>
+            <attribute name="SecretMode">true</attribute>
+        </service>
+
+
+<!--=======================================================================
+ログレコード生成サービス
+========================================================================-->
+        <!-- ファイル出力用レコード生成 -->
+        <service name="LogFileWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.log.LogWritableRecordFactoryService"
+                 instance="template">
+            <attribute name="Format">%DATE%,%REQUEST_ID%,%PRIORITY%,[%CODE%]%MESSAGE%</attribute>
+            <attribute name="DateFormat">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+            <attribute name="ImplementClasses">
+                DATE=jp.ossc.nimbus.service.writer.DateElement
+            </attribute>
+        </service>
+        
+        <!-- コンソール出力用レコード生成 -->
+        <service name="LogConsoleWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.log.LogWritableRecordFactoryService"
+                 instance="template">
+            <attribute name="Format">%DATE%,%REQUEST_ID%,%PRIORITY%,[%CODE%]%MESSAGE%</attribute>
+        </service>
+
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        <!-- フレームワークログ出力 -->
+        <service name="FrameLogWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="Append">true</attribute>
+            <attribute name="BufferedIO">false</attribute>
+            <attribute name="File">${Template.Service.Log.LOG_OUTPUT_PATH}/framework%INDEX%.log</attribute>
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="Header"></attribute>
+            <attribute name="MaximumFileSize">10485760</attribute>
+            <attribute name="MaxBackupIndex">100</attribute>
+        </service>
+
+        <!-- アプリケーションログ出力 -->
+        <service name="ApplLogWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="Append">true</attribute>
+            <attribute name="BufferedIO">false</attribute>
+            <attribute name="File">${Template.Service.Log.LOG_OUTPUT_PATH}/application%INDEX%.log</attribute>
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="Header"></attribute>
+            <attribute name="MaximumFileSize">10485760</attribute>
+            <attribute name="MaxBackupIndex">100</attribute>
+        </service>
+
+        <!-- コンソールログ出力 -->
+        <service name="ConsoleWriter"
+                 code="jp.ossc.nimbus.service.writer.ConsoleWriterService"
+                 instance="template">
+            <attribute name="Output">STDOUT</attribute>
+        </service>
+
+
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
+        <service name="Context"
+                 code="jp.ossc.nimbus.service.context.GroupContextService"
+                 instance="template">
+            <attribute name="ContextServiceNames">
+                #ThreadContext
+                #ServerInfo
+            </attribute>
+            <depends>ThreadContext</depends>
+            <depends>ServerInfo</depends>
+        </service>
+
+        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
+        <service name="ThreadContext"
+                 code="jp.ossc.nimbus.service.context.ThreadContextService"
+                 instance="template">
+            <attribute name="REQUEST_ID">UNKNOWN</attribute>
+        </service>
+
+        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
+        <service name="ServerInfo"
+                 code="jp.ossc.nimbus.service.context.ServerInfoService"
+                 instance="template"/>
+
+
+<!--=======================================================================
+カテゴリサービス IOC等のミドルで出力するログのカテゴリ
+========================================================================-->
+        <!-- IOC等のミドルで出力するログ グループ -->
+        <service name="FrameGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">FRAMEWORK</attribute>
+            <attribute name="CategoryServiceNames">
+                #FrameFileCategory
+                #FrameConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                0:19=FRAMWORK_DEBUG
+                20:39=FRAMWORK_INFO
+                40:59=FRAMWORK_WARN
+                60:79=FRAMWORK_ERROR
+                80:99=FRAMWORK_FATAL
+            </attribute>
+            <depends>FrameFileCategory</depends>
+            <depends>FrameConsoleCategory</depends>
+        </service>
+
+        <!-- IOC等のミドルで出力するログ ファイル出力 -->
+        <service name="FrameFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">FRAMEWORK</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">40:99</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+        <!-- IOC等のミドルで出力するログ コンソール出力 -->
+        <service name="FrameConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">FRAMEWORK</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">40:99</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+
+<!--=======================================================================
+カテゴリサービス Nimbusが出力するログのカテゴリ
+========================================================================-->
+<!-- ログレベル：DEBUG -->
+        <!-- グループ -->
+        <service name="SysDebugGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_DEBUG_CATEGORY</attribute>
+            <attribute name="CategoryServiceNames">
+                #SysDebugFileCategory
+                #SysDebugConsoleCategory
+            </attribute>
+            <attribute name="Enabled">false</attribute>
+            <attribute name="Labels">
+                0:49=SYSTEM_DEBUG
+            </attribute>
+            <depends>SysDebugFileCategory</depends>
+            <depends>SysDebugConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="SysDebugFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_DEBUG_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">0:49</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="SysDebugConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_DEBUG_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">0:49</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：INFO -->
+        <!-- グループ -->
+        <service name="SysInfoGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_INFO_CATEGORY</attribute>
+            <attribute name="CategoryServiceNames">
+                #SysInfoFileCategory
+                #SysInfoConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                50:99=SYSTEM_INFO
+            </attribute>
+            <depends>SysInfoFileCategory</depends>
+            <depends>SysInfoConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="SysInfoFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_INFO_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">50:99</attribute>
+            <attribute name="Enabled">true</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="SysInfoConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_INFO_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">50:99</attribute>
+            <attribute name="Enabled">false</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：WARNING -->
+        <!-- グループ -->
+        <service name="SysWarnGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_WARN_CATEGORY</attribute>
+            <attribute name="CategoryServiceNames">
+                #SysWarnFileCategory
+                #SysWarnConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                100:149=SYSTEM_WARN
+            </attribute>
+            <depends>SysWarnFileCategory</depends>
+            <depends>SysWarnConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="SysWarnFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_WARN_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">100:149</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="SysWarnConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_WARN_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">100:149</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：ERROR -->
+        <!-- グループ -->
+        <service name="SysErrorGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_ERROR_CATEGORY</attribute>
+            <attribute name="CategoryServiceNames">
+                #SysErrorFileCategory
+                #SysErrorConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                150:199=SYSTEM_ERROR
+            </attribute>
+            <depends>SysErrorFileCategory</depends>
+            <depends>SysErrorConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="SysErrorFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_ERROR_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">150:199</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="SysErrorConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_ERROR_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">150:199</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：FATAL -->
+        <!-- グループ -->
+        <service name="SysFatalGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_FATAL_CATEGORY</attribute>
+            <attribute name="CategoryServiceNames">
+                #SysFatalFileCategory
+                #SysFatalConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                200:249=SYSTEM_FATAL
+            </attribute>
+            <depends>SysFatalFileCategory</depends>
+            <depends>SysFatalConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="SysFatalFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_FATAL_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">200:249</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="SysFatalConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.SYSTEM_FATAL_CATEGORY</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">200:249</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+
+<!--=======================================================================
+カテゴリサービス Commonsが出力するログのカテゴリ
+========================================================================-->
+<!-- ログレベル：TRACE -->
+        <!-- グループ -->
+        <service name="ComTraceGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_TRACE</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComTraceFileCategory
+                #ComTraceConsoleCategory
+            </attribute>
+            <attribute name="Enabled">false</attribute>
+            <attribute name="Labels">
+                0:9=COMMONS_TRACE
+            </attribute>
+            <depends>ComTraceFileCategory</depends>
+            <depends>ComTraceConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComTraceFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_TRACE</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">0:9</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComTraceConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_TRACE</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">0:9</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：DEBUG -->
+        <!-- グループ -->
+        <service name="ComDebugGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_DEBUG</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComDebugFileCategory
+                #ComDebugConsoleCategory
+            </attribute>
+            <attribute name="Enabled">false</attribute>
+            <attribute name="Labels">
+                10:19=COMMONS_DEBUG
+            </attribute>
+            <depends>ComDebugFileCategory</depends>
+            <depends>ComDebugConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComDebugFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_DEBUG</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">10:19</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComDebugConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_DEBUG</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">10:19</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：INFO -->
+        <!-- グループ -->
+        <service name="ComInfoGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_INFO</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComInfoFileCategory
+                #ComInfoConsoleCategory
+            </attribute>
+            <attribute name="Enabled">false</attribute>
+            <attribute name="Labels">
+                20:29=COMMONS_INFO
+            </attribute>
+            <depends>ComInfoFileCategory</depends>
+            <depends>ComInfoConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComInfoFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_INFO</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">20:29</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComInfoConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_INFO</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">20:29</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：WARNING -->
+        <!-- グループ -->
+        <service name="ComWarnGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_WARN</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComWarnFileCategory
+                #ComWarnConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                30:39=COMMONS_WARN
+            </attribute>
+            <depends>ComWarnFileCategory</depends>
+            <depends>ComWarnConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComWarnFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_WARN</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">30:39</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComWarnConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_WARN</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">30:39</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：ERROR -->
+        <!-- グループ -->
+        <service name="ComErrorGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_ERROR</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComErrorFileCategory
+                #ComErrorConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                40:49=COMMONS_ERROR
+            </attribute>
+            <depends>ComErrorFileCategory</depends>
+            <depends>ComErrorConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComErrorFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_ERROR</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">40:49</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComErrorConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_ERROR</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">40:49</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!-- ログレベル：FATAL -->
+        <!-- グループ -->
+        <service name="ComFatalGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_FATAL</attribute>
+            <attribute name="CategoryServiceNames">
+                #ComFatalFileCategory
+                #ComFatalConsoleCategory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                50:59=COMMONS_FATAL
+            </attribute>
+            <depends>ComFatalFileCategory</depends>
+            <depends>ComFatalConsoleCategory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ComFatalFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_FATAL</attribute>
+            <attribute name="MessageWriterServiceName">#FrameLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">50:59</attribute>
+            <depends>FrameLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ComFatalConsoleCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">jp.ossc.nimbus.service.log.DefaultCommonsLogService.CATEGORY_COMMONS_FATAL</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">50:59</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+<!--=======================================================================
+カテゴリサービス ビジネスロジックが出力するログのカテゴリ
+========================================================================-->
+        <!-- グループ -->
+        <service name="ApplGroupCategory"
+                 code="jp.ossc.nimbus.service.log.GroupCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">APPLICATION</attribute>
+            <attribute name="CategoryServiceNames">
+                #ApplFileCategory
+                #ApplConsoleCagegory
+            </attribute>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="Labels">
+                0:9=APPLICATION_DEBUG
+                10:19=APPLICATION_INFORMATION
+                20:29=APPLICATION_WARNING
+                30:39=APPLICATION_ERROR
+                40:49=APPLICATION_FATAL
+            </attribute>
+            <depends>ApplFileCategory</depends>
+            <depends>ApplConsoleCagegory</depends>
+        </service>
+        <!-- ファイル出力 -->
+        <service name="ApplFileCategory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">APPLICATION</attribute>
+            <attribute name="MessageWriterServiceName">#ApplLogWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">20:49</attribute>
+            <depends>ApplLogWriter</depends>
+            <depends>LogFileWritableRecordFactory</depends>
+        </service>
+        <!-- コンソール出力 -->
+        <service name="ApplConsoleCagegory"
+                 code="jp.ossc.nimbus.service.log.SimpleCategoryService"
+                 instance="template">
+            <attribute name="CategoryName">APPLICATION</attribute>
+            <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
+            <attribute name="PriorityRange">20:49</attribute>
+            <depends>ConsoleWriter</depends>
+            <depends>LogConsoleWritableRecordFactory</depends>
+        </service>
+
+    </manager>
+</server>

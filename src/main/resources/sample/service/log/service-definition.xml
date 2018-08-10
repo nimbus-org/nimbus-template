@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <log>Sample.Log#Logger</log>
+    
+    <manager name="Sample.Log" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">./target/</manager-property>
+
+<!--=======================================================================
+ログサービス
+========================================================================-->
+
+        <!-- LOGGERサービス -->
+        <service template="Template.Service.Log#Logger"/>
+
+
+<!--=======================================================================
+メッセージ定義
+========================================================================-->
+
+        <!-- ログメッセージサービス -->
+        <service template="Template.Service.Log#LogMessageRecordFactory"/>
+
+
+<!--=======================================================================
+ログレコード生成サービス
+========================================================================-->
+        <!-- ファイル出力用レコード生成 -->
+        <service template="Template.Service.Log#LogFileWritableRecordFactory"/>
+        
+        <!-- コンソール出力用レコード生成 -->
+        <service template="Template.Service.Log#LogConsoleWritableRecordFactory"/>
+
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        <!-- フレームワークログ出力 -->
+        <service template="Template.Service.Log#FrameLogWriter"/>
+
+        <!-- アプリケーションログ出力 -->
+        <service template="Template.Service.Log#ApplLogWriter"/>
+
+        <!-- コンソールログ出力 -->
+        <service template="Template.Service.Log#ConsoleWriter"/>
+
+
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.Log#Context"/>
+
+        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.Log#ThreadContext"/>
+
+        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
+        <service template="Template.Service.Log#ServerInfo"/>
+
+
+<!--=======================================================================
+カテゴリサービス IOC等のミドルで出力するログのカテゴリ
+========================================================================-->
+        <!-- IOC等のミドルで出力するログ グループ -->
+        <service template="Template.Service.Log#FrameGroupCategory"/>
+
+        <!-- IOC等のミドルで出力するログ ファイル出力 -->
+        <service template="Template.Service.Log#FrameFileCategory"/>
+
+        <!-- IOC等のミドルで出力するログ コンソール出力 -->
+        <service template="Template.Service.Log#FrameConsoleCategory"/>
+
+
+<!--=======================================================================
+カテゴリサービス Nimbusが出力するログのカテゴリ
+========================================================================-->
+<!-- ログレベル：DEBUG -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#SysDebugGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#SysDebugFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#SysDebugConsoleCategory"/>
+
+<!-- ログレベル：INFO -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#SysInfoGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#SysInfoFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#SysInfoConsoleCategory"/>
+        
+<!-- ログレベル：WARNING -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#SysWarnGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#SysWarnFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#SysWarnConsoleCategory"/>
+
+<!-- ログレベル：ERROR -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#SysErrorGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#SysErrorFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#SysErrorConsoleCategory"/>
+
+<!-- ログレベル：FATAL -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#SysFatalGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#SysFatalFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#SysFatalConsoleCategory"/>
+
+
+<!--=======================================================================
+カテゴリサービス Commonsが出力するログのカテゴリ
+========================================================================-->
+<!-- ログレベル：TRACE -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComTraceGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComTraceFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComTraceConsoleCategory"/>
+
+<!-- ログレベル：DEBUG -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComDebugGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComDebugFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComDebugConsoleCategory"/>
+
+<!-- ログレベル：INFO -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComInfoGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComInfoFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComInfoConsoleCategory"/>
+
+<!-- ログレベル：WARNING -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComWarnGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComWarnFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComWarnConsoleCategory"/>
+
+<!-- ログレベル：ERROR -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComErrorGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComErrorFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComErrorConsoleCategory"/>
+
+<!-- ログレベル：FATAL -->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ComFatalGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ComFatalFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ComFatalConsoleCategory"/>
+
+<!--=======================================================================
+カテゴリサービス ビジネスロジックが出力するログのカテゴリ
+========================================================================-->
+        <!-- グループ -->
+        <service template="Template.Service.Log#ApplGroupCategory"/>
+        
+        <!-- ファイル出力 -->
+        <service template="Template.Service.Log#ApplFileCategory"/>
+        
+        <!-- コンソール出力 -->
+        <service template="Template.Service.Log#ApplConsoleCagegory"/>
+
+    </manager>
+</server>
