@@ -4,9 +4,11 @@
     <property name="project.name" value="service-threadcontext"/>
     <property name="project.dependencies" value=""/>
     
-    <target name="test">
-        
+    <target name="clean">
         <delete dir="../target/${project.name}/"/>
+    </target>
+    
+    <target name="test">
         
         <property name="target.dir" value="../target/${project.name}/${timestamp}"/>
         
@@ -55,5 +57,24 @@
             <arg value="sample/${project.name}/main.txt"/>
         </java>
         
+    </target>
+    
+    <target name="package">
+        
+        <property name="target.dir" value="../target/${project.name}/${timestamp}"/>
+        
+        <mkdir dir="${target.dir}"/>
+        
+        <ac:for list="${project.dependencies}" param="dependency" xmlns:ac="antlib:net.sf.antcontrib">
+            <sequential>
+                <copy todir="${target.dir}/template/@{dependency}/">
+                    <fileset dir="../@{dependency}/template/"/>
+                </copy>
+            </sequential>
+        </ac:for>
+        
+        <copy todir="${target.dir}/template/${project.name}/">
+            <fileset dir="template"/>
+        </copy>
     </target>
 </project>

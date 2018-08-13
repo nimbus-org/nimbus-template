@@ -54,6 +54,7 @@
     </developers>
     
     <modules>
+        <module>service-threadcontext</module>
         <module>service-log</module>
     </modules>
 </project>
