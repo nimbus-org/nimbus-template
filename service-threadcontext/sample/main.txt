@@ -1,0 +1,13 @@
+import jp.ossc.nimbus.service.context.*;
+import jp.ossc.nimbus.core.*;
+
+ThreadContextService threadContext = (ThreadContextService)ServiceManagerFactory.getServiceObject("Sample.ThreadContext","ThreadContext");
+threadContext.put("TEST_KEY","TEST_VALUE");
+Thread.sleep(1000);
+print(threadContext.get("TEST_KEY"));
+
+
+GroupContextService groupContext = (GroupContextService)ServiceManagerFactory.getServiceObject("Sample.ThreadContext","Context");
+print(groupContext.get("JAVA_VERSION"));
+
+return "OK";

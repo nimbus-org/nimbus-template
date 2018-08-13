@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.ThreadContext" shutdown-hook="true">
+        
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#Context"/>
+
+        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#ThreadContext"/>
+
+        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#ServerInfo"/>
+
+    </manager>
+</server>

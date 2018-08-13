@@ -15,7 +15,7 @@
     
     <manager name="Template.Service.Log">
         
-        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">./log</manager-property>
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
 
 <!--=======================================================================
 ログサービス

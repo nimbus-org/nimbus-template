@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.ThreadContext">
+        
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
+        <service name="Context"
+                 code="jp.ossc.nimbus.service.context.GroupContextService"
+                 instance="template">
+            <attribute name="ContextServiceNames">
+                #ThreadContext
+                #ServerInfo
+            </attribute>
+            <depends>ThreadContext</depends>
+            <depends>ServerInfo</depends>
+        </service>
+
+        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
+        <service name="ThreadContext"
+                 code="jp.ossc.nimbus.service.context.ThreadContextService"
+                 instance="template">
+            <attribute name="REQUEST_ID">UNKNOWN</attribute>
+        </service>
+
+        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
+        <service name="ServerInfo"
+                 code="jp.ossc.nimbus.service.context.ServerInfoService"
+                 instance="template"/>
+    </manager>
+</server>
