@@ -7,9 +7,9 @@
         <version>SNAPSHOT</version>
     </parent>
     <groupId>com.github.nimbus-org</groupId>
-    <artifactId>nimbus-template-service-threadcontext</artifactId>
+    <artifactId>nimbus-template-service-context</artifactId>
     <packaging>pom</packaging>
-    <version>SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
     <name>nimbus</name>
     <description>Nimbus Framework</description>
     <url>https://github.com/nimbus-org/nimbus-template</url>
@@ -40,6 +40,7 @@
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <id>set-custom-property</id>
@@ -135,7 +136,7 @@
                         <configuration>
                             <excludeScope>provided</excludeScope>
                             <outputDirectory>
-                                ${basedir}/../target/service-threadcontext/${timestamp}/lib
+                                ${basedir}/../target/service-context/${timestamp}/lib
                             </outputDirectory>
                         </configuration>
                     </execution>

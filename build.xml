@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-    <property name="project.name" value="service-threadcontext"/>
-    <property name="project.dependencies" value=""/>
-
+    
     <target name="clean">
         <delete dir="../target/${project.name}/"/>
     </target>
-
+    
     <target name="test">
-
+        
         <property name="target.dir" value="../target/${project.name}/${timestamp}"/>
-
+        
         <mkdir dir="${target.dir}"/>
-
+        
         <property name="temp.properties.file" value="${target.dir}/temp.properties"/>
-
+        
         <echo file="${temp.properties.file}" append="true">servicepath=</echo>
-
+        
         <ac:for list="${project.dependencies}" param="dependency" xmlns:ac="antlib:net.sf.antcontrib">
             <sequential>
                 <echo file="${temp.properties.file}" append="true">template/@{dependency}/service-definition.xml;</echo>
@@ -26,34 +24,34 @@
                 </copy>
             </sequential>
         </ac:for>
-
+        
         <echo file="${temp.properties.file}" append="true">template/${project.name}/service-definition.xml;</echo>
         <copy todir="${target.dir}/template/${project.name}/">
             <fileset dir="template"/>
         </copy>
-
+        
         <echo file="${temp.properties.file}" append="true">sample/${project.name}/service-definition.xml</echo>
         <copy todir="${target.dir}/sample/${project.name}/">
             <fileset dir="sample"/>
         </copy>
-
+        
         <property file="${temp.properties.file}"/>
-
+        
         <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" classpath="${classpath.runtime}" dir="${target.dir}">
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
             <arg value="sample/${project.name}/main.txt"/>
         </java>
-
+        
     </target>
-
+    
     <target name="package">
-
+        
         <property name="target.dir" value="../target/${project.name}/${timestamp}"/>
-
+        
         <mkdir dir="${target.dir}"/>
-
+        
         <ac:for list="${project.dependencies}" param="dependency" xmlns:ac="antlib:net.sf.antcontrib">
             <sequential>
                 <copy todir="${target.dir}/template/@{dependency}/">
@@ -61,7 +59,7 @@
                 </copy>
             </sequential>
         </ac:for>
-
+        
         <copy todir="${target.dir}/template/${project.name}/">
             <fileset dir="template"/>
         </copy>
