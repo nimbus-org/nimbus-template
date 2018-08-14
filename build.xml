@@ -31,13 +31,15 @@
         </copy>
         
         <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/service-definition.xml</echo>
-        <copy todir="${target.dir}/sample/${project.name}/">
-            <fileset dir="sample"/>
+        <copy todir="${target.dir}/${sample.name}/${project.name}/">
+            <fileset dir="${sample.name}"/>
         </copy>
+        
+        <available property="file.exists" file = "C:\hoge.txt"/>
         
         <property file="${temp.properties.file}"/>
         
-        <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" classpath="${classpath.runtime}" dir="${target.dir}">
+        <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" classpath="${classpath.runtime};${sample.name}/${project.name}/" dir="${target.dir}">
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
