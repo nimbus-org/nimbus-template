@@ -13,6 +13,9 @@
     <name>nimbus</name>
     <description>Nimbus Framework</description>
     <url>https://github.com/nimbus-org/nimbus-template</url>
+    <properties>
+        <service.name>service-connection</service.name>
+    </properties>
     <dependencies>
         
         <dependency>
@@ -149,7 +152,7 @@
                         <configuration>
                             <excludeScope>provided</excludeScope>
                             <outputDirectory>
-                                ${basedir}/../target/service-connection/${timestamp}/lib
+                                ${basedir}/../target/${service.name}/${timestamp}/lib
                             </outputDirectory>
                         </configuration>
                     </execution>
