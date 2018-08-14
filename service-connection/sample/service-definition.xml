@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Connection.JDBC">
+        
+        <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
+        <service template="Template.Service.Connection.JDBC#ConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+    </manager>
+        
+    <manager name="Sample.Service.Connection.DataSource">
+        <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">#DataSource</manager-property>
+        
+        <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
+        <service template="Template.Service.Connection.DataSource#ConnectionFactory"/>
+        
+<ifdef name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED" value="true">
+        <service name="DataSource"
+                 code="org.apache.derby.jdbc.EmbeddedDataSource">
+            <attribute name="DatabaseName">javadb/sample</attribute>
+            <attribute name="CreateDatabase">create</attribute>
+        </service>
+</ifdef>
+    </manager>
+    
+    <manager name="Sample.Service.Connection.Wrapper">
+        <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection.JDBC#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">true</manager-property>
+        
+        <!-- ラップしたConnectionを取得するConnectionFactoryサービス -->
+        <service name="ConnectionFactory" template="Template.Service.Connection.Wrapper#WrappedConnectionFactory"/>
+        
+<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED" value="true">
+        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"/>
+</ifdef>
+    </manager>
+</server>

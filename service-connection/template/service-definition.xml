@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+
+    <manager name="Template.Service.Connection.JDBC">
+
+        <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.connection.JDBCConnectionFactoryService"
+                 instance="template">
+<!--
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+            <attribute name="AutoCommit">true</attribute>
+            <attribute name="ConnectionProperties"></attribute>
+            <attribute name="UserName"></attribute>
+            <attribute name="Password"></attribute>
+-->
+        </service>
+    </manager>
+
+    <manager name="Template.Service.Connection.DataSource">
+
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_ENABLED">false</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+
+        <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED">false</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">#DataSource</manager-property>
+
+        <manager-property name="Template.Service.Connection.DataSource.CONTEXT_ENABLED">false</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME">#Context</manager-property>
+
+        <!-- データソースからConnectionを取得するConnectionFactoryサービス -->
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.connection.DataSourceConnectionFactoryService"
+                 instance="template">
+
+<ifdef name="Template.Service.Connection.DataSource.JNDI_ENABLED" value="true">
+            <attribute name="Name">java:/DataSource</attribute>
+            <attribute name="JndiFinderServiceName">${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED" value="true">
+            <attribute name="DataSourceServiceName">${Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Connection.DataSource.CONTEXT_ENABLED" value="true">
+            <attribute name="ContextServiceName">${Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+    </manager>
+
+    <manager name="Template.Service.Connection.Wrapper">
+
+        <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+
+        <manager-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">#Journal</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED">false</manager-property>
+
+        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">false</manager-property>
+
+        <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED">false</manager-property>
+
+        <!-- ラップしたConnectionを取得するConnectionFactoryサービス -->
+        <service name="WrappedConnectionFactory"
+                 code="jp.ossc.nimbus.service.connection.WrappedConnectionFactoryService"
+                 instance="template">
+
+            <!-- ラップする元となるConnectionを生成するConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+
+            <!-- ラップする元となるConnectionラッパークラス名を設定する -->
+            <attribute name="ConnectionWrapperClassName">jp.ossc.nimbus.util.sql.WrappedConnection</attribute>
+
+            <!-- Connectionラッパーに設定するプロパティを設定する
+              ConnectionラッパーとStatementラッパーにJournalサービスを設定する
+            -->
+            <attribute name="ConnectionWrapperProperties">
+
+                <object code="java.util.LinkedHashMap">
+
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+                    <!-- ConnectionラッパーにJournalサービスを設定する -->
+                    <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+                    <!-- Statementラッパーに設定するプロパティを設定する -->
+                    <attribute name="StatementProperties">
+
+                        <object code="java.util.HashMap">
+
+                            <!-- StatementラッパーにJournalサービスを設定する -->
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+                            <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED" value="true">
+                            <!-- StatementラッパーにSQLMetricsCollectorサービスを設定する -->
+                            <attribute name="SQLMetricsCollector"><service-ref>#SQLMetricsCollector</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED" value="true">
+                            <!-- StatementラッパーにPerformanceRecorderサービスを設定する -->
+                            <attribute name="PerformanceRecorder"><service-ref>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+                        </object>
+
+                    </attribute>
+
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+                    <!-- ConnectionラッパーのJournal開始属性を設定する -->
+                    <attribute name="StartJournal" type="boolean">true</attribute>
+</ifdef>
+
+                </object>
+            </attribute>
+
+            <depends>${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED" value="true">
+            <depends>SQLMetricsCollector</depends>
+</ifdef>
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+            <depends>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED" value="true">
+            <depends>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+
+        </service>
+
+        <!-- SQLメトリクス取得サービス -->
+        <service name="SQLMetricsCollector"
+                 code="jp.ossc.nimbus.service.connection.SQLMetricsCollectorService"
+                 instance="template"/>
+
+    </manager>
+</server>
