@@ -5,6 +5,6 @@ import jp.ossc.nimbus.service.connection.*;
 
 ConnectionFactory factory = ServiceManagerFactory.getServiceObject("Sample.Service.Connection.Wrapper", "ConnectionFactory");
 Connection con = factory.getConnection();
-print("ƒRƒlƒNƒVƒ‡ƒ“‚ğæ“¾‚µ‚Ü‚µ‚½B" + con);
+print("ã‚³ãƒã‚¯ã‚·ãƒ§ãƒ³ã‚’å–å¾—ã—ã¾ã—ãŸã€‚" + con);
 con.createStatement().execute("select * from SYSIBM.SYSDUMMY1");
 con.close();
