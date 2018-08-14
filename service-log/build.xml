@@ -32,17 +32,6 @@
             <fileset dir="template"/>
         </copy>
         
-        <ac:for list="${project.dependencies}" param="dependency" xmlns:ac="antlib:net.sf.antcontrib">
-            <sequential>
-                <echo file="${temp.properties.file}" append="true">sample/@{dependency}/service-definition.xml;</echo>
-                <copy todir="${target.dir}/sample/@{dependency}/">
-                    <fileset dir="../@{dependency}/sample/">
-                        <exclude name="main.txt"/>
-                    </fileset>
-                </copy>
-            </sequential>
-        </ac:for>
-        
         <echo file="${temp.properties.file}" append="true">sample/${project.name}/service-definition.xml</echo>
         <copy todir="${target.dir}/sample/${project.name}/">
             <fileset dir="sample"/>

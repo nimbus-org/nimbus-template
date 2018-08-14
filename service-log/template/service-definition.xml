@@ -16,6 +16,7 @@
     <manager name="Template.Service.Log">
         
         <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
 <!--=======================================================================
 ログサービス
@@ -44,7 +45,7 @@
             <attribute name="DefaultWritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
             <attribute name="DefaultMessageWriterServiceName">#ConsoleWriter</attribute>
             <attribute name="DebugEnabled">false</attribute>
-            <attribute name="ContextServiceName">#Context</attribute>
+            <attribute name="ContextServiceName">${Template.Service.Log.CONTEXT_SERVICE_NAME}</attribute>
             <attribute name="ContextFormatKeys">
                 REQUEST_ID
             </attribute>
@@ -64,7 +65,7 @@
             <depends>ApplGroupCategory</depends>
             <depends>LogConsoleWritableRecordFactory</depends>
             <depends>ConsoleWriter</depends>
-            <depends>Context</depends>
+            <depends>${Template.Service.Log.CONTEXT_SERVICE_NAME}</depends>
         </service>
 
 
@@ -139,35 +140,6 @@
                  instance="template">
             <attribute name="Output">STDOUT</attribute>
         </service>
-
-
-<!--=======================================================================
-リクエスト情報を管理するスレッドコンテキスト
-========================================================================-->
-        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
-        <service name="Context"
-                 code="jp.ossc.nimbus.service.context.GroupContextService"
-                 instance="template">
-            <attribute name="ContextServiceNames">
-                #ThreadContext
-                #ServerInfo
-            </attribute>
-            <depends>ThreadContext</depends>
-            <depends>ServerInfo</depends>
-        </service>
-
-        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
-        <service name="ThreadContext"
-                 code="jp.ossc.nimbus.service.context.ThreadContextService"
-                 instance="template">
-            <attribute name="REQUEST_ID">UNKNOWN</attribute>
-        </service>
-
-        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
-        <service name="ServerInfo"
-                 code="jp.ossc.nimbus.service.context.ServerInfoService"
-                 instance="template"/>
-
 
 <!--=======================================================================
 カテゴリサービス IOC等のミドルで出力するログのカテゴリ

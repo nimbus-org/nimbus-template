@@ -10,6 +10,7 @@
     <manager name="Sample.Log" shutdown-hook="true">
         
         <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
 <!--=======================================================================
 ログサービス
@@ -47,20 +48,6 @@
 
         <!-- コンソールログ出力 -->
         <service template="Template.Service.Log#ConsoleWriter"/>
-
-
-<!--=======================================================================
-リクエスト情報を管理するスレッドコンテキスト
-========================================================================-->
-        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
-        <service template="Template.Service.Log#Context"/>
-
-        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
-        <service template="Template.Service.Log#ThreadContext"/>
-
-        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
-        <service template="Template.Service.Log#ServerInfo"/>
-
 
 <!--=======================================================================
 カテゴリサービス IOC等のミドルで出力するログのカテゴリ
@@ -203,6 +190,18 @@
         
         <!-- コンソール出力 -->
         <service template="Template.Service.Log#ApplConsoleCagegory"/>
+        
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <!-- 複数のコンテキスト情報をグルーピングして、参照専用のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#Context"/>
+
+        <!-- スレッド単位のコンテキスト情報を提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#ThreadContext"/>
+
+        <!-- サーバ情報を静的コンテキスト情報として提供するコンテキストサービス -->
+        <service template="Template.Service.ThreadContext#ServerInfo"/>
 
     </manager>
 </server>
