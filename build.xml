@@ -30,7 +30,7 @@
             <fileset dir="template"/>
         </copy>
         
-        <echo file="${temp.properties.file}" append="true">sample/${project.name}/service-definition.xml</echo>
+        <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/service-definition.xml</echo>
         <copy todir="${target.dir}/sample/${project.name}/">
             <fileset dir="sample"/>
         </copy>
