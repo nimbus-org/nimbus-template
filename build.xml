@@ -8,6 +8,8 @@
     
     <target name="test">
         
+        <antcall target="clean"/>
+        
         <property name="target.dir" value="../target/${project.name}"/>
         
         <mkdir dir="${target.dir}"/>
@@ -34,8 +36,6 @@
         <copy todir="${target.dir}/${sample.name}/${project.name}/">
             <fileset dir="${sample.name}"/>
         </copy>
-        
-        <available property="file.exists" file = "C:\hoge.txt"/>
         
         <property file="${temp.properties.file}"/>
         
