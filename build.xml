@@ -39,7 +39,11 @@
         
         <property file="${temp.properties.file}"/>
         
-        <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" classpath="${classpath.runtime};${sample.name}/${project.name}/" dir="${target.dir}">
+        <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" dir="${target.dir}">
+            <classpath>
+                <pathelement path="${classpath.runtime}"/>
+                <pathelement path="${target.dir}/${sample.name}/${project.name}"/>
+            </classpath>
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
