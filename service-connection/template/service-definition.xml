@@ -33,6 +33,7 @@
 
         <manager-property name="Template.Service.Connection.DataSource.JNDI_ENABLED">false</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</manager-property>
 
         <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED">false</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">#DataSource</manager-property>
@@ -46,7 +47,7 @@
                  instance="template">
 
 <ifdef name="Template.Service.Connection.DataSource.JNDI_ENABLED" value="true">
-            <attribute name="Name">java:/DataSource</attribute>
+            <attribute name="Name">${Template.Service.Connection.DataSource.JNDI_NAME}</attribute>
             <attribute name="JndiFinderServiceName">${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</depends>
 </ifdef>
@@ -146,5 +147,13 @@
                  code="jp.ossc.nimbus.service.connection.SQLMetricsCollectorService"
                  instance="template"/>
 
+    </manager>
+
+    <manager name="Template.Service.Connection.PersistentManager">
+        
+        <service name="PersistentManager"
+                 code="jp.ossc.nimbus.service.connection.DefaultPersistentManagerService"
+                 instance="template"/>
+    
     </manager>
 </server>
