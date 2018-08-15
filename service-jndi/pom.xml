@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.github.nimbus-org</groupId>
     <artifactId>nimbus-template-service-jndi</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>1-SNAPSHOT</version>
     <name>nimbus</name>
     <description>Nimbus Framework</description>
@@ -39,6 +39,8 @@
     </dependencies>
     
     <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>

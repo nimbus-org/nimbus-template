@@ -14,6 +14,8 @@
         
         <mkdir dir="${target.dir}"/>
         
+        <mkdir dir="target/classes"/>
+        
         <property name="temp.properties.file" value="${target.dir}/temp.properties"/>
         
         <echo file="${temp.properties.file}" append="false">servicepath=</echo>
@@ -35,6 +37,9 @@
         <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/service-definition.xml</echo>
         <copy todir="${target.dir}/${sample.name}/${project.name}/">
             <fileset dir="${sample.name}"/>
+            <fileset dir="target/classes">
+                <include name="**/*.class"/>
+            </fileset>
         </copy>
         
         <property file="${temp.properties.file}"/>
