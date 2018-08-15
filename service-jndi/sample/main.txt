@@ -1,0 +1,10 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.repository.*;
+import jp.ossc.nimbus.service.jndi.*;
+
+Repository repository = ServiceManagerFactory.getServiceObject("Sample.Service.JNDI", "LocalRMIRepository");
+SampleRemoteObject remote = new SampleRemoteObject();
+repository.register("test", java.rmi.server.UnicastRemoteObject.exportObject(remote, 10000));
+
+JndiFinder finder = ServiceManagerFactory.getServiceObject("Sample.Service.JNDI", "JndiFinder");
+print(finder.lookup("test").getMessage());

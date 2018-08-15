@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.JNDI">
+        
+        <service template="Template.Service.JNDI#JndiFinder">
+            <depends>LocalRMIRepository</depends>
+        </service>
+        
+        <service name="LocalRMIRepository"
+                 code="jp.ossc.nimbus.service.repository.RMIRepositoryService">
+            <attribute name="CreateRegistry">true</attribute>
+            <attribute name="Port">1099</attribute>
+        </service>
+        
+    </manager>
+</server>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Connection">
+        
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        <manager-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</manager-property>
+        
+        <!-- データソースからConnectionを取得するConnectionFactoryサービス -->
+        <service template="Template.Service.Connection.DataSource#ConnectionFactory"/>
+        
+        <!-- データソースを取得するJndiFinderサービス -->
+        <service template="Template.Service.JNDI#JndiFinder">
+            <depends>JNDIRepository</depends>
+        </service>
+        
+        <!-- Derbyのデータソース -->
+        <service name="DataSource"
+                 code="org.apache.derby.jdbc.EmbeddedDataSource">
+            <attribute name="DatabaseName">javadb/sample</attribute>
+            <attribute name="CreateDatabase">create</attribute>
+        </service>
+        
+        <!-- RMIレジストリをJNDIサーバに見立てて、データソースを登録するサービス -->
+        <service name="JNDIRepository"
+                 code="jp.ossc.nimbus.service.repository.JNDIRepositoryService">
+            <attribute name="Environment">
+                java.naming.factory.initial=com.sun.jndi.rmi.registry.RegistryContextFactory
+                java.naming.provider.url=rmi://localhost:1099
+            </attribute>
+            <invoke name="register" callState="Started">
+                <argument type="java.lang.String">DataSource</argument>
+                <argument type="java.lang.Object"><service-ref>DataSource</service-ref></argument>
+            </invoke>
+            <depends>
+                <!-- RMIレジストリを作成するサービス -->
+                <service name="LocalRMIRepository"
+                         code="jp.ossc.nimbus.service.repository.RMIRepositoryService">
+                    <attribute name="CreateRegistry">true</attribute>
+                    <attribute name="Port">1099</attribute>
+                    <depends>DataSource</depends>
+                </service>
+            </depends>
+        </service>
+        
+    </manager>
+</server>

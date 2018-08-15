@@ -47,7 +47,9 @@
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
-            <arg value="sample/${project.name}/main.txt"/>
+            <arg value="${sample.name}/${project.name}/main.txt"/>
+            <arg value="-encoding"/>
+            <arg value="UTF-8"/>
         </java>
         
     </target>

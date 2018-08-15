@@ -1,0 +1,18 @@
+import java.sql.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.connection.*;
+
+ConnectionFactory factory = ServiceManagerFactory.getServiceObject("Sample.Service.Connection", "ConnectionFactory");
+Connection con = factory.getConnection();
+String result = null;
+try{
+    print("コネクションを取得しました。" + con);
+    String query = "select count(*) from SYSIBM.SYSDUMMY1";
+    ResultSet rs = con.createStatement().executeQuery(query);
+    rs.next();
+    result = query + " : " + rs.getInt(1);
+}finally{
+    con.close();
+}
+return result;
