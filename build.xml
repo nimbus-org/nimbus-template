@@ -14,7 +14,7 @@
         
         <property name="temp.properties.file" value="${target.dir}/temp.properties"/>
         
-        <echo file="${temp.properties.file}" append="true">servicepath=</echo>
+        <echo file="${temp.properties.file}" append="false">servicepath=</echo>
         
         <ac:for list="${project.dependencies}" param="dependency" xmlns:ac="antlib:net.sf.antcontrib">
             <sequential>
