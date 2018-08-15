@@ -3,7 +3,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-journal"/>
-    <property name="project.dependencies" value="service-context"/>
+    <property name="project.dependencies" value=""/>
     
     <!-- target処理は../build.xmlに記載 -->
     

@@ -85,16 +85,4 @@ Editorサービス
         
     </manager>
     
-    <manager name="Sample.ThreadContext" shutdown-hook="true">
-        
-<!--=======================================================================
-リクエスト情報を管理するスレッドコンテキスト
-========================================================================-->
-        <service template="Template.Service.ThreadContext#Context"/>
-        
-        <service template="Template.Service.ThreadContext#ThreadContext"/>
-        
-        <service template="Template.Service.ThreadContext#ServerInfo"/>
-
-    </manager>
 </server>
