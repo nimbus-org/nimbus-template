@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Journal.AccessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        
+<!--=======================================================================
+ジャーナルサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournal"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalQueue"/>
+        
+<!--=======================================================================
+カテゴリサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalCategory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalCategory"/>
+        
+<!--=======================================================================
+WritableRecordFactoryサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#SimpleElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ErrorSimpleElement" instance="factory"/>
+        
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWriter"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWriter"/>
+        
+<!--=======================================================================
+EditorFinderサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorFinder"/>
+        
+<!--=======================================================================
+Editorサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectArrayJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ByteArrayJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpServletRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ServletResponseJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpSessionMapJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ThrowableJournalEditor"/>
+        
+    </manager>
+    
+    <manager name="Sample.ThreadContext" shutdown-hook="true">
+        
+<!--=======================================================================
+リクエスト情報を管理するスレッドコンテキスト
+========================================================================-->
+        <service template="Template.Service.ThreadContext#Context"/>
+        
+        <service template="Template.Service.ThreadContext#ThreadContext"/>
+        
+        <service template="Template.Service.ThreadContext#ServerInfo"/>
+
+    </manager>
+</server>
