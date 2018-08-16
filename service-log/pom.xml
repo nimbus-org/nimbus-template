@@ -66,8 +66,6 @@
                         </goals>
                         <configuration>
                             <source>
-                                def timestamp = new Date().format('yyyyMMdd.HHmmss')
-                                project.properties.setProperty('timestamp', timestamp)
                                 def sampleName = project.properties.getProperty('sample.target')
                                 if(sampleName == null){
                                     project.properties.setProperty('sample.name', 'sample')
