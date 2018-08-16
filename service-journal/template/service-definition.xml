@@ -16,6 +16,7 @@
     <manager name="Template.Service.Journal.AccessJournal">
         
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
         
 <!--=======================================================================
 ジャーナルサービス
@@ -40,7 +41,7 @@
         <service name="AccessJournalQueue"
                  code="jp.ossc.nimbus.service.queue.DefaultQueueService"
                  instance="template">
-            <attribute name="MaxThresholdSize">1000</attribute>
+            <attribute name="MaxThresholdSize">${Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
         
 <!--=======================================================================
@@ -168,7 +169,6 @@ WritableRecordFactoryサービス
             <attribute name="FilePostfix">_%DATE%_%REQUEST_ID%.log</attribute>
         </service>
 
-
 <!--=======================================================================
 EditorFinderサービス
 ========================================================================-->
@@ -196,7 +196,6 @@ EditorFinderサービス
             <depends>AccessRequestJournalEditor</depends>
             <depends>ByteArrayJournalEditor</depends>
         </service>
-
 
 <!--=======================================================================
 Editorサービス
@@ -309,4 +308,336 @@ Editorサービス
                  instance="template"/>
 
     </manager>
+    
+    <manager name="Template.Service.Journal.BusinessJournal">
+        
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+<!--=======================================================================
+ジャーナルサービス
+========================================================================-->
+        <!-- Businessジャーナル -->
+        <service name="BusinessJournal"
+                 code="jp.ossc.nimbus.service.journal.ThreadManagedJournalService"
+                 instance="template">
+            <attribute name="EditorFinderName">#BusinessJournalEditorFinder</attribute>
+            <attribute name="WritableElementKey">Business</attribute>
+            <attribute name="CategoryServiceNames">
+                #BusinessJournalCategory
+                #BusinessErrorJournalCategory
+            </attribute>
+            <attribute name="QueueServiceName">#BusinessJournalQueue</attribute>
+            <depends>BusinessJournalEditorFinder</depends>
+            <depends>BusinessJournalCategory</depends>
+            <depends>BusinessErrorJournalCategory</depends>
+            <depends>BusinessJournalQueue</depends>
+        </service>
+
+        <service name="BusinessJournalQueue"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template">
+            <attribute name="MaxThresholdSize">${Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
+        </service>
+
+<!--=======================================================================
+カテゴリサービス
+========================================================================-->
+        <!-- Businessジャーナルカテゴリ -->
+        <service name="BusinessJournalCategory"
+                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 instance="template">
+            <attribute name="Enabled">${Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED}</attribute>
+            <attribute name="MessageWriterServiceName">#BusinessJournalWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#BusinessJournalWritableRecordFactory</attribute>
+            <depends>BusinessJournalWriter</depends>
+            <depends>BusinessJournalWritableRecordFactory</depends>
+        </service>
+
+        <!-- Businessエラージャーナルカテゴリ -->
+        <service name="BusinessErrorJournalCategory"
+                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 instance="template">
+            <attribute name="Enabled">true</attribute>
+            <attribute name="WritableConditions">
+                @Business.JournalRecords.Exception[0]@!=null  
+            </attribute>
+            <attribute name="MessageWriterServiceName">#BusinessErrorJournalWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#BusinessErrorJournalWritableRecordFactory</attribute>
+            <depends>BusinessErrorJournalWriter</depends>
+            <depends>BusinessErrorJournalWritableRecordFactory</depends>
+        </service>
+
+<!--=======================================================================
+WritableRecordFactoryサービス
+========================================================================-->
+        <!-- Businessジャーナルのフォーマッタ -->
+        <service name="BusinessJournalWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                ACTION_FLOW=Business.JournalRecords.Flow[0]
+            </attribute>
+            <attribute name="Format">*****************************************${line.separator}%ACTION_FLOW%</attribute>
+        </service>
+
+        <!-- Businessエラージャーナルのフォーマッタ -->
+        <service name="BusinessErrorJournalWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Business.StartTime
+                REQUEST_ID=Business.RequestID
+                ACTION_FLOW=Business.JournalRecords.Flow[0]
+                EXCEPTION=Business.JournalRecords.Exception[0]
+            </attribute>
+            <attribute name="Format">
+                時刻=%DATE%${line.separator}リクエスト通番=%REQUEST_ID%${line.separator}発生例外:%EXCEPTION%${line.separator}BeanFlowトレース:${line.separator}Action=%ACTION_FLOW%
+            </attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#ErrorDateElement
+                EXCEPTION=#ErrorThrowableElement
+            </attribute>
+            <depends>ErrorDateElement</depends>
+            <depends>ErrorThrowableElement</depends>
+        </service>
+
+        <service name="ErrorDateElement"
+                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 instance="template">
+            <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
+        </service>
+        
+        <service name="ErrorThrowableElement"
+                 code="jp.ossc.nimbus.service.writer.ThrowableSimpleElement"
+                 instance="template">
+            <attribute name="OutputCause">true</attribute>
+        </service>
+
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        <!-- Businessジャーナル書き込みサービス -->
+        <service name="BusinessJournalWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="Append">true</attribute>
+            <attribute name="BufferedIO">false</attribute>
+            <attribute name="File">${Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH}/businessjournal%INDEX%.log</attribute>
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="Header"></attribute>
+            <attribute name="MaximumFileSize">10485760</attribute>
+            <attribute name="MaxBackupIndex">100</attribute>
+        </service>
+
+        <!-- Businessエラージャーナル書き込みサービス -->
+        <service name="BusinessErrorJournalWriter"
+                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 instance="template">
+            <attribute name="File">${Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH}/error-journal/businessjournal-error</attribute>
+            <attribute name="FilePostfix">_%DATE%_%REQUEST_ID%.log</attribute>
+        </service>
+
+<!--=======================================================================
+EditorFinderサービス
+========================================================================-->
+
+        <!-- 業務ジャーナルに必要な型に対応するJournalEditorサービスを検索するEditorFinderサービス -->
+        <service name="BusinessJournalEditorFinder"
+                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 instance="template">
+            <attribute name="EditorProperties">
+                java.lang.Object=#MutableObjectJournalEditor
+                jp.ossc.nimbus.service.journal.RequestJournal=#MapRequestJournalEditor
+            </attribute>
+            <depends>MutableObjectJournalEditor</depends>
+            <depends>MapRequestJournalEditor</depends>
+        </service>
+
+        <!-- 業務フロージャーナルに必要な型に対応するJournalEditorサービスを検索するEditorFinderサービス -->
+        <service name="BeanFlowJournalEditorFinder"
+                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 instance="template">
+            <attribute name="EditorProperties">
+                java.lang.Object=#ObjectJournalEditor
+                java.lang.Class=#ClassJournalEditor
+                java.util.Date=#DateJournalEditor
+                java.util.List=#ListJournalEditor
+                java.lang.Throwable=#ThrowableJournalEditor
+                jp.ossc.nimbus.service.journal.RequestJournal,Flow=#FlowRequestJournalEditor
+                jp.ossc.nimbus.service.journal.RequestJournal,Execute=#ExecuteRequestJournalEditor
+                jp.ossc.nimbus.service.journal.RequestJournal=#StepRequestJournalEditor
+                jp.ossc.nimbus.beans.dataset.DataSet=#DataSetJournalEditor
+                jp.ossc.nimbus.beans.dataset.Header=#HeaderJournalEditor
+                jp.ossc.nimbus.beans.dataset.Record=#RecordJournalEditor
+                jp.ossc.nimbus.beans.dataset.RecordList=#RecordListJournalEditor
+                jp.ossc.nimbus.servlet.BeanFlowServletContext=#BeanJournalEditor
+            </attribute>
+            <depends>ObjectJournalEditor</depends>
+            <depends>ClassJournalEditor</depends>
+            <depends>DateJournalEditor</depends>
+            <depends>ListJournalEditor</depends>
+            <depends>ThrowableJournalEditor</depends>
+            <depends>FlowRequestJournalEditor</depends>
+            <depends>StepRequestJournalEditor</depends>
+            <depends>ExecuteRequestJournalEditor</depends>
+            <depends>DataSetJournalEditor</depends>
+            <depends>HeaderJournalEditor</depends>
+            <depends>RecordJournalEditor</depends>
+            <depends>RecordListJournalEditor</depends>
+            <depends>BeanJournalEditor</depends>
+        </service>
+
+<!--=======================================================================
+Editorサービス
+========================================================================-->
+        <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
+        <service name="BusinessRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 instance="template">
+            <attribute name="OutputRequestId">true</attribute>
+            <attribute name="OutputStartTime">true</attribute>
+            <attribute name="OutputRecords">true</attribute>
+            <attribute name="OutputEndTime">false</attribute>
+            <attribute name="OutputPerformance">false</attribute>
+        </service>
+
+        <service name="MutableObjectJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
+                 instance="template"/>
+
+        <service name="MapRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 instance="template">
+            <attribute name="OutputJournalKey">false</attribute>
+            <attribute name="OutputRequestId">true</attribute>
+            <attribute name="OutputStartTime">true</attribute>
+            <attribute name="OutputRecords">true</attribute>
+            <attribute name="OutputEndTime">false</attribute>
+            <attribute name="OutputPerformance">false</attribute>
+        </service>
+
+        <service name="ObjectJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ObjectJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+        </service>
+
+        <service name="ClassJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ClassJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="ShortClassName">true</attribute>
+        </service>
+
+        <service name="DateJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DateJournalEditorService"
+                 instance="template">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+        </service>
+
+        <service name="ListJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ListJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="MaxSize">10</attribute>
+        </service>
+
+        <service name="FlowRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputHeader">false</attribute>
+            <attribute name="OutputRequestId">false</attribute>
+            <attribute name="OutputStartTime">true</attribute>
+            <attribute name="OutputEndTime">true</attribute>
+            <attribute name="OutputPerformance">true</attribute>
+        </service>
+
+        <service name="StepRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputHeader">false</attribute>
+            <attribute name="OutputRequestId">false</attribute>
+            <attribute name="OutputStartTime">true</attribute>
+            <attribute name="OutputEndTime">true</attribute>
+            <attribute name="OutputPerformance">true</attribute>
+        </service>
+
+        <service name="ExecuteRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputHeader">false</attribute>
+            <attribute name="OutputRequestId">false</attribute>
+            <attribute name="OutputStartTime">false</attribute>
+            <attribute name="OutputEndTime">false</attribute>
+            <attribute name="OutputPerformance">true</attribute>
+        </service>
+
+        <service name="ThrowableJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+        </service>
+
+        <service name="DataSetJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DataSetJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+        </service>
+
+        <service name="RecordJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.RecordJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputCSVProperties">true</attribute>
+            <attribute name="SecretProperties">password</attribute>
+            <attribute name="SecretString">****</attribute>
+        </service>
+
+        <service name="HeaderJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HeaderJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputCSVProperties">true</attribute>
+            <attribute name="SecretProperties">password</attribute>
+            <attribute name="SecretString">****</attribute>
+        </service>
+
+        <service name="RecordListJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.RecordListJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="MaxSize">10</attribute>
+        </service>
+
+        <service name="BeanJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.BeanJournalEditorService"
+                 instance="template">
+            <attribute name="Indent">${\t}</attribute>
+            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
+            <attribute name="OutputPropertyType">false</attribute>
+            <attribute name="EnabledProperties">
+                jp.ossc.nimbus.servlet.BeanFlowServletContext#Input,
+                jp.ossc.nimbus.servlet.BeanFlowServletContext#Output
+            </attribute>
+        </service>
+        
+    </manager>
+    
 </server>
