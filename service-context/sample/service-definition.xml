@@ -5,7 +5,7 @@
 
 <server>
     
-    <manager name="Sample.ThreadContext" shutdown-hook="true">
+    <manager name="Sample.Service.ThreadContext" shutdown-hook="true">
         
 <!--=======================================================================
 リクエスト情報を管理するスレッドコンテキスト

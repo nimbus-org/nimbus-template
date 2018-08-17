@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.BeanControl">
+        
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.METRICS_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        <!-- BeanShellInterpreterの場合は以下
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#BeanShellInterpreter</manager-property>
+        -->
+<!--=======================================================================
+BeanFlowサービス
+========================================================================-->
+        <service name="BeanFlowInvokerFactory"
+                 code="jp.ossc.nimbus.service.beancontrol.DefaultBeanFlowInvokerFactoryService"
+                 instance="template">
+            <attribute name="ThreadContextServiceName">${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
+            <attribute name="EditorFinderServiceName">${Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME}</attribute>
+            <attribute name="InterceptorChainFactoryServiceName">#BeanFlowInterceptorChainFactory</attribute>
+            <attribute name="InterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
+            <attribute name="TestInterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
+            <attribute name="ExpressionInterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
+            <attribute name="TemplateEngineServiceName">#TemplateEngine</attribute>
+            <attribute name="BeanFlowInvokerAccessClass">jp.ossc.nimbus.service.beancontrol.BeanFlowInvokerAccessImpl2</attribute>
+            <attribute name="Validate">true</attribute>
+            <attribute name="DirPaths">${Template.Service.BeanControl.DIR_PATHS}</attribute>
+            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
+            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+            <depends>${Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME}</depends>
+            <depends>BeanFlowInterceptorChainFactory</depends>
+            <depends>${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</depends>
+            <depends>TemplateEngine</depends>   
+        </service>
+
+        <service name="JavaScriptInterpreter"
+                code="jp.ossc.nimbus.service.interpreter.ScriptEngineInterpreterService"
+                instance="template">
+            <attribute name="EngineName">JavaScript</attribute>
+        </service>
+
+        <service name="BeanShellInterpreter"
+                 code="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService"
+                 instance="template"/>
+
+        <service name="TemplateEngine"
+                 code="jp.ossc.nimbus.service.template.VelocityTemplateEngineService"
+                 instance="template">
+            <attribute name="Properties">
+                runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
+            </attribute>
+        </service>
+
+        <service name="BeanFlowInterceptorChainFactory"
+                 code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainFactoryService"
+                 instance="template">
+            <attribute name="DefaultInterceptorChainListServiceName">#BeanFlowInterceptorChainList</attribute>
+            <depends>BeanFlowInterceptorChainList</depends>
+        </service>
+
+        <service name="BeanFlowInterceptorChainList"
+                 code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainListService"
+                 instance="template">
+<ifdef name="Template.Service.BeanControl.METRICS_ENABLED" value="true">
+            <attribute name="InterceptorServiceNames">
+                #JournalInterceptor
+                #BeanFlowMetricsInterceptor
+                #BeanFlowExceptionHandlingInterceptor
+            </attribute>
+            <depends>BeanFlowMetricsInterceptor</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.METRICS_ENABLED" value="false">
+            <attribute name="InterceptorServiceNames">
+                #JournalInterceptor
+                #BeanFlowExceptionHandlingInterceptor
+            </attribute>
+</ifdef>
+            <depends>JournalInterceptor</depends>
+            <depends>BeanFlowExceptionHandlingInterceptor</depends>
+        </service>
+
+        <service name="JournalInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodJournalInterceptorService"
+                 instance="template">
+            <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
+            <attribute name="ThreadContextServiceName">${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <attribute name="RequestIdKey">REQUEST_ID</attribute>
+            <attribute name="BushingCallBlock">true</attribute>
+            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="BeanFlowMetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.BeanFlowMetricsInterceptorService"
+                 instance="template"/>
+            
+        <service name="BeanFlowExceptionHandlingInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionHandlingInterceptorService"
+                 instance="template">
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
+                 instance="template">
+            <attribute name="ThrowException">true</attribute>
+            <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="BeanFlowSelector"
+                 code="jp.ossc.nimbus.servlet.DefaultBeanFlowSelectorService"
+                 instance="template">
+            <attribute name="BeanFlowPathPostfix">${Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX}</attribute>
+        </service>
+        
+    </manager>
+</server>
