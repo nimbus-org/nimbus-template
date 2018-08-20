@@ -7,14 +7,14 @@
         <version>SNAPSHOT</version>
     </parent>
     <groupId>com.github.nimbus-org</groupId>
-    <artifactId>nimbus-template-service-context</artifactId>
+    <artifactId>nimbus-template-service-filter</artifactId>
     <packaging>pom</packaging>
     <version>1-SNAPSHOT</version>
     <name>nimbus</name>
     <description>Nimbus Framework</description>
     <url>https://github.com/nimbus-org/nimbus-template</url>
     <properties>
-        <service.name>service-context</service.name>
+        <service.name>service-filter</service.name>
     </properties>
     <dependencies>
         
@@ -35,6 +35,42 @@
             <groupId>bsh</groupId>
             <artifactId>bsh</artifactId>
             <version>2.0b4</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-jexl</groupId>
+            <artifactId>commons-jexl</artifactId>
+            <version>1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4-20030804.000000</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>jta</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
     

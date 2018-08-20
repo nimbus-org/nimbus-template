@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <import file="../build.xml"/>
+    <property name="project.name" value="service-filter"/>
+    <property name="project.dependencies" value="service-context,service-log,service-journal,service-beancontrol,service-connection"/>
+    
+    <!-- target処理は../build.xmlに記載 -->
+    
+</project>

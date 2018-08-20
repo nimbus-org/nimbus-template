@@ -146,7 +146,7 @@
                         <configuration>
                             <excludeScope>provided</excludeScope>
                             <outputDirectory>
-                                ${basedir}/../target/${service.name}/${timestamp}/lib
+                                ${basedir}/../target/${service.name}/lib
                             </outputDirectory>
                         </configuration>
                     </execution>

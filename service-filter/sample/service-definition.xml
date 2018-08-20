@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.Filter" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Filter.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Filter.REQUEST_PROCESS_CHECK_INTERCEPTOR_CHECK_INTERVAL">1000</manager-property>
+        
+        <manager-property name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        <manager-property name="Template.Service.Filter.CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        <manager-property name="Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.AccessJournal#AccessJournal</manager-property>
+        <manager-property name="Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME">Sample.Service.BeanControl#BeanFlowSelector</manager-property>
+        <manager-property name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.BeanControl#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME">Sample.Service.Connection.PersistentManager#PersistentManager</manager-property>
+        
+        <service template="Template.Service.Filter#FilterInterceptorChainFactory"/>
+        
+        <service template="Template.Service.Filter#FilterInterceptorChainList">
+            <attribute name="InterceptorServiceNames">
+                #HttpServletRequestMetricsInterceptor
+                #ThreadContextInitializeInterceptor
+                #RequestProcessCheckInterceptor
+                #AccessJournalInterceptor
+                #BeanFlowSelectCheckInterceptor
+                #HttpServletResponseDeflateInterceptor
+                #HttpExceptionHandlerInterceptor
+                #HttpCheckInterceptor
+                #ExchangeInterceptor
+                #ExceptionHandlerInterceptor
+            </attribute>
+            <depends>HttpServletRequestMetricsInterceptor</depends>
+            <depends>ThreadContextInitializeInterceptor</depends>
+            <depends>RequestProcessCheckInterceptor</depends>
+            <depends>AccessJournalInterceptor</depends>
+            <depends>BeanFlowSelectCheckInterceptor</depends>
+            <depends>HttpServletResponseDeflateInterceptor</depends>
+            <depends>HttpExceptionHandlerInterceptor</depends>
+            <depends>HttpCheckInterceptor</depends>
+            <depends>ExchangeInterceptor</depends>
+            <depends>ExceptionHandlerInterceptor</depends>
+        </service>
+        
+        <service template="Template.Service.Filter#HttpServletRequestMetricsInterceptor"/>
+        
+        <service template="Template.Service.Filter#AccessPerformance"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalCategory"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalWriter"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Filter#NormalDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Filter#ThreadContextInitializeInterceptor"/>
+        
+        <service template="Template.Service.Filter#Sequence"/>
+        
+        <service template="Template.Service.Filter#RequestProcessCheckInterceptor">
+            <attribute name="Threshold">
+                60000=REQUEST_PROCESS_CHECK_THRESHOLD_OVER
+            </attribute>
+        </service>
+        
+        <service template="Template.Service.Filter#AccessJournalInterceptor"/>
+        
+        <service template="Template.Service.Filter#BeanFlowSelectCheckInterceptor"/>
+        
+        <service template="Template.Service.Filter#HttpServletResponseDeflateInterceptor"/>
+        
+        <service name="HttpExceptionHandlerInterceptor" 
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.ExceptionHandlingInterceptorService"
+                 template="Template.Service.Filter#ExceptionHandlerInterceptor">
+<!--
+            <attribute name="ExceptionAndHandlerMapping">
+                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletRequestCheckException=#HttpServletRequestCheckExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.InputExchangeException=#InputExchangeExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.OutputExchangeException=#HttpDefaultExceptionHandler
+            </attribute>
+-->
+            <attribute name="ExceptionAndHandlerMapping">
+                jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletRequestCheckException=#HttpServletRequestCheckExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.InputExchangeException=#InputExchangeExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.OutputExchangeException=#HttpDefaultExceptionHandler
+            </attribute>
+            <attribute name="DefaultExceptionHandlerServiceName">#HttpDefaultExceptionHandler</attribute>
+            <depends>IgnoreExchangeExceptionHandler</depends>
+            <depends>HttpServletRequestCheckExceptionHandler</depends>
+            <depends>InputExchangeExceptionHandler</depends>
+            <depends>HttpDefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="IgnoreExchangeExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
+                 template="Template.Service.Filter#ExceptionHandler">
+            <attribute name="ThrowException">true</attribute>
+        </service>
+        
+        <service name="InputExchangeExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
+                 template="Template.Service.Filter#ExceptionHandler">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">HTTP_SERVLET_REQUEST_CHECK_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
+            <depends>Sample.Service.Log#LogMessageRecordFactory</depends>
+        </service>
+        
+        <service name="HttpServletRequestCheckExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
+                 template="Template.Service.Filter#ExceptionHandler">
+            <attribute name="OutputStackTraceLog">false</attribute>
+            <attribute name="LogMessageCode">HTTP_SERVLET_REQUEST_CHECK_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
+            <depends>Sample.Service.Log#LogMessageRecordFactory</depends>
+        </service>
+        
+        <service name="HttpDefaultExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
+                 template="Template.Service.Filter#ExceptionHandler">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">HTTP_DEFAULT_EXCEPTION_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
+            <depends>Sample.Service.Log#LogMessageRecordFactory</depends>
+        </service>
+        
+        <service template="Template.Service.Filter#HttpCheckInterceptor"/>
+        
+        <service template="Template.Service.Filter#ExchangeInterceptor">
+            <attribute name="ResponseContentType">application/json;charset=utf-8</attribute>
+            <attribute name="RequestStreamConverterServiceName">#DataSetJSONConverter</attribute>
+            <attribute name="ResponseStreamConverterServiceName">#DataSetJSONConverter</attribute>
+            <depends>
+                <service name="DataSetJSONConverter"
+                         code="jp.ossc.nimbus.util.converter.DataSetJSONConverter">
+                    <attribute name="IgnoreUnknownElement">true</attribute>
+                    <attribute name="OutputPropertyNameOfHeader">true</attribute>
+                    <attribute name="OutputPropertyNameOfRecordList">true</attribute>
+                    <attribute name="OutputSchema">false</attribute>
+                    <attribute name="OutputNullProperty">false</attribute>
+                    <attribute name="CloneBindingObject">false</attribute>
+                </service>
+            </depends>
+        </service>
+        
+        <service name="ExceptionHandlerInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.ExceptionHandlingInterceptorService"
+                 template="Template.Service.Filter#ExceptionHandlerInterceptor">
+<!--
+            <attribute name="ExceptionAndHandlerMapping">
+                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
+            </attribute>
+-->
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>IgnoreExchangeExceptionHandler</depends>
+            <depends>DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
+                 template="Template.Service.Filter#ExceptionHandler">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">DEFAULT_EXCEPTION_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
+            <depends>Sample.Service.Log#LogMessageRecordFactory</depends>
+        </service>
+        
+<!--
+        <service template="Template.Service.Filter#AuthenticateInterceptor">
+        
+        </service>
+        
+        <service template="Template.Service.Filter#AuthenticateStoreService">
+        
+        </service>
+-->
+    </manager>
+    
+    <manager name="Sample.Service.ThreadContext" shutdown-hook="true">
+        
+        <service template="Template.Service.ThreadContext#Context"/>
+        
+        <service template="Template.Service.ThreadContext#ThreadContext"/>
+        
+        <service template="Template.Service.ThreadContext#ServerInfo"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Log" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        
+        <service template="Template.Service.Log#Logger"/>
+        
+        <service template="Template.Service.Log#LogMessageRecordFactory"/>
+        <service template="Template.Service.Log#LogFileWritableRecordFactory"/>
+        
+        <service template="Template.Service.Log#LogConsoleWritableRecordFactory"/>
+        <service template="Template.Service.Log#FrameLogWriter"/>
+        <service template="Template.Service.Log#ApplLogWriter"/>
+        <service template="Template.Service.Log#ConsoleWriter"/>
+        
+        <service template="Template.Service.Log#FrameGroupCategory"/>
+        <service template="Template.Service.Log#FrameFileCategory"/>
+        <service template="Template.Service.Log#FrameConsoleCategory"/>
+        
+        <service template="Template.Service.Log#SysDebugGroupCategory"/>
+        <service template="Template.Service.Log#SysDebugFileCategory"/>
+        <service template="Template.Service.Log#SysDebugConsoleCategory"/>
+        
+        <service template="Template.Service.Log#SysInfoGroupCategory"/>
+        <service template="Template.Service.Log#SysInfoFileCategory"/>
+        <service template="Template.Service.Log#SysInfoConsoleCategory"/>
+        
+        <service template="Template.Service.Log#SysWarnGroupCategory"/>
+        <service template="Template.Service.Log#SysWarnFileCategory"/>
+        <service template="Template.Service.Log#SysWarnConsoleCategory"/>
+        >
+        <service template="Template.Service.Log#SysErrorGroupCategory"/>
+        <service template="Template.Service.Log#SysErrorFileCategory"/>
+        <service template="Template.Service.Log#SysErrorConsoleCategory"/>
+        
+        <service template="Template.Service.Log#SysFatalGroupCategory"/>
+        <service template="Template.Service.Log#SysFatalFileCategory"/>
+        <service template="Template.Service.Log#SysFatalConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComTraceGroupCategory"/>
+        <service template="Template.Service.Log#ComTraceFileCategory"/>
+        <service template="Template.Service.Log#ComTraceConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComDebugGroupCategory"/>
+        <service template="Template.Service.Log#ComDebugFileCategory"/>
+        <service template="Template.Service.Log#ComDebugConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComInfoGroupCategory"/>
+        <service template="Template.Service.Log#ComInfoFileCategory"/>
+        <service template="Template.Service.Log#ComInfoConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComWarnGroupCategory"/>
+        <service template="Template.Service.Log#ComWarnFileCategory"/>
+        <service template="Template.Service.Log#ComWarnConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComErrorGroupCategory"/>
+        <service template="Template.Service.Log#ComErrorFileCategory"/>
+        <service template="Template.Service.Log#ComErrorConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ComFatalGroupCategory"/>
+        <service template="Template.Service.Log#ComFatalFileCategory"/>
+        <service template="Template.Service.Log#ComFatalConsoleCategory"/>
+        
+        <service template="Template.Service.Log#ApplGroupCategory"/>
+        <service template="Template.Service.Log#ApplFileCategory"/>
+        <service template="Template.Service.Log#ApplConsoleCagegory"/>
+        
+    </manager>
+    
+    
+    <manager name="Sample.Service.Journal.AccessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournal"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalQueue"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalCategory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalCategory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#SimpleElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ErrorSimpleElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWriter"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWriter"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorFinder"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectArrayJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ByteArrayJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpServletRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ServletResponseJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpSessionMapJournalEditor"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ThrowableJournalEditor"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Journal.BusinessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournal"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalQueue"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalCategory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalCategory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ErrorDateElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ErrorThrowableElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalWriter"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalWriter"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorFinder"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#MapRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ClassJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#DateJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ListJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#FlowRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#StepRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ExecuteRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ThrowableJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#DataSetJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#RecordJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#HeaderJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#RecordListJournalEditor"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanJournalEditor"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.BeanControl" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.METRICS_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        
+        <service template="Template.Service.BeanControl#JavaScriptInterpreter"/>
+        
+        <service template="Template.Service.BeanControl#BeanShellInterpreter"/>
+        
+        <service template="Template.Service.BeanControl#TemplateEngine"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList"/>
+        
+        <service template="Template.Service.BeanControl#JournalInterceptor"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowMetricsInterceptor"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowExceptionHandlingInterceptor"/>
+        
+        <service template="Template.Service.BeanControl#DefaultExceptionHandler"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowSelector"/>
+        
+    </manager>
+
+    <manager name="Sample.Service.Connection">
+        
+        <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">true</manager-property>
+        
+        <service name="JDBCConnectionFactory"
+                 template="Template.Service.Connection.JDBC#ConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+        <service name="ConnectionFactory"
+                 template="Template.Service.Connection.Wrapper#WrappedConnectionFactory"/>
+        
+        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Connection.PersistentManager">
+        
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager"/>
+        
+    </manager>
+    
+</server>
