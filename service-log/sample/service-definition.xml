@@ -5,11 +5,11 @@
 
 <server>
     
-    <log>Sample.Log#Logger</log>
+    <log>Sample.Service.Log#Logger</log>
     
     <manager name="Sample.Service.Log" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">./target/</manager-property>
         <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
 <!--=======================================================================
@@ -27,6 +27,8 @@
         <!-- ログメッセージサービス -->
         <service template="Template.Service.Log#LogMessageRecordFactory"/>
 
+        <!-- メッセージサービス -->
+        <service template="Template.Service.Log#MessageRecordFactory"/>
 
 <!--=======================================================================
 ログレコード生成サービス

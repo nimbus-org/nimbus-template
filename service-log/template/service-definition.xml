@@ -83,6 +83,15 @@
             <attribute name="SecretMode">true</attribute>
         </service>
 
+        <!-- メッセージサービス -->
+        <service name="MessageRecordFactory"
+                 code="jp.ossc.nimbus.service.message.MessageRecordFactoryService"
+                 instance="template">
+            <attribute name="ExtentionOfMessageFile">def</attribute>
+            <attribute name="LoadNimbusMessageFile">false</attribute>
+            <attribute name="MessageFiles">messages/message</attribute>
+            <attribute name="SecretMode">true</attribute>
+        </service>
 
 <!--=======================================================================
 ログレコード生成サービス
