@@ -378,7 +378,7 @@ WritableRecordFactoryサービス
                  code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
                  instance="template">
             <attribute name="FormatKeyMapping">
-                ACTION_FLOW=Business.JournalRecords.Flow[0]
+                ACTION_FLOW=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Flow[0]}}
             </attribute>
             <attribute name="Format">*****************************************${line.separator}%ACTION_FLOW%</attribute>
         </service>
