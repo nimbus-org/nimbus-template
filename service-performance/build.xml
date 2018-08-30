@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <import file="../build.xml"/>
+    <property name="project.name" value="service-performance"/>
+    <property name="project.dependencies" value=""/>
+    
+    <!-- target処理は../build.xmlに記載 -->
+    
+</project>

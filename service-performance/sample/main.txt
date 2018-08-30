@@ -1,0 +1,30 @@
+import java.util.*;
+import java.text.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.performance.*;
+
+PerformanceRecorder recorder = ServiceManagerFactory.getServiceObject("Sample.Service.Performance", "PerformanceRecorder");
+
+SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+
+
+Thread.sleep(1000l);
+
+long currentTime = System.currentTimeMillis();
+
+print(format.format(new Date(currentTime)) + " : " + 100);
+recorder.record(currentTime, currentTime + 100);
+print(format.format(new Date(currentTime)) + " : " + 200);
+recorder.record(currentTime, currentTime + 200);
+print(format.format(new Date(currentTime)) + " : " + 300);
+recorder.record(currentTime, currentTime + 300);
+
+Thread.sleep(1000l);
+currentTime = System.currentTimeMillis();
+
+print(format.format(new Date(currentTime)) + " : " + 100);
+recorder.record(currentTime, currentTime + 100);
+print(format.format(new Date(currentTime)) + " : " + 200);
+recorder.record(currentTime, currentTime + 200);
+
