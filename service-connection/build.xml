@@ -3,7 +3,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-connection"/>
-    <property name="project.dependencies" value="service-jndi"/>
+    <property name="project.dependencies" value="service-jndi,service-performance"/>
     
     <!-- target処理は../build.xmlに記載 -->
     
