@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.WebServer.AccessJournal" shutdown-hook="true">
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournal" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalQueue" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalDateElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#SimpleElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorDateElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ErrorSimpleElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessNormalJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorFinder" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#AccessRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ObjectArrayJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ByteArrayJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpServletRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ServletResponseJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#HttpSessionMapJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#ThrowableJournalEditor" instance="template"/>
+        
+    </manager>
+    
+</server>

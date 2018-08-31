@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="WebServer.BusinessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">./target/</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournal"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalQueue"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalCategory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessErrorJournalCategory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalWritableRecordFactory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ErrorDateElement" instance="factory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ErrorThrowableElement" instance="factory"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalWriter"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessErrorJournalWriter"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalEditorFinder"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BusinessRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#MapRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ClassJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#DateJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ListJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#FlowRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#StepRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ExecuteRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#ThrowableJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#DataSetJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#RecordJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#HeaderJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#RecordListJournalEditor"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BeanJournalEditor"/>
+        
+    </manager>
+    
+</server>

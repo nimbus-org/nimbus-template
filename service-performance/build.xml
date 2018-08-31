@@ -4,6 +4,8 @@
     <import file="../build.xml"/>
     <property name="project.name" value="service-performance"/>
     <property name="project.dependencies" value=""/>
+    <property name="template.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="service-definition.xml"/>
     
     <!-- target処理は../build.xmlに記載 -->
     
