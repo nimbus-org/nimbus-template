@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Performance">
+        
+        <manager-property name="Template.Service.Performance.LOG_OUTPUT_PATH">.</manager-property>
+        
+        <service name="PerformanceRecorder"
+                 code="jp.ossc.nimbus.service.performance.DefaultPerformanceRecorderService"
+                 instance="template">
+            <attribute name="CategoryServiceName">#PerformanceJournalCategory</attribute>
+            <attribute name="ResetInterval">1000</attribute>
+            <depends>PerformanceJournalCategory</depends>
+        </service>
+        
+        <service name="PerformanceJournalCategory"
+                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 instance="template">
+            <attribute name="MessageWriterServiceName">#PerformanceJournalWriter</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#PerformanceJournalWritableRecordFactory</attribute>
+            <depends>PerformanceJournalWriter</depends>
+            <depends>PerformanceJournalWritableRecordFactory</depends>
+        </service>
+        
+        <service name="PerformanceJournalWriter"
+                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 instance="template">
+            <attribute name="File">${Template.Service.Performance.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
+            <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median"${line.separator}"</attribute>
+            <attribute name="Append">true</attribute>
+        </service>
+        
+        <service name="PerformanceJournalWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.writer.WritableRecordFactoryService"
+                 instance="template">
+            <attribute name="Format">""%Timestamp%","%Count%","%Best%","%Worst%","%Average%","%Median%"${line.separator}"</attribute>
+            <attribute name="ImplementServiceNames">
+                Timestamp=#DateElement
+            </attribute>
+            <depends>DateElement</depends>
+        </service>
+        
+        <service name="DateElement"
+                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 instance="template">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss</attribute>
+        </service>
+    </manager>
+    
+</server>

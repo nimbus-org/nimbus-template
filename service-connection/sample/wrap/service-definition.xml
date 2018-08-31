@@ -18,6 +18,11 @@
         <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</manager-property>
         <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">true</manager-property>
         
+        <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED">true</manager-property>
+        
+        <manager-property name="Template.Service.Performance.LOG_OUTPUT_PATH">.</manager-property>
+        
         <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
         <service name="JDBCConnectionFactory"
                  template="Template.Service.Connection.JDBC#ConnectionFactory">
@@ -29,6 +34,21 @@
                  template="Template.Service.Connection.Wrapper#WrappedConnectionFactory"/>
         
         <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"/>
+        
+        <service template="Template.Service.Performance#PerformanceRecorder"/>
+        
+        <service template="Template.Service.Performance#PerformanceJournalCategory"/>
+        
+        <service template="Template.Service.Performance#PerformanceJournalWriter"/>
+        
+        <service template="Template.Service.Performance#PerformanceJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Performance#DateElement"
+                 instance="factory"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Performance">
         
     </manager>
 </server>
