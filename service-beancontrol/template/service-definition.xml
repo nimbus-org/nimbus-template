@@ -114,11 +114,11 @@ BeanFlowサービス
         <service name="BeanFlowExceptionHandlingInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.ExceptionHandlingInterceptorService"
                  instance="template">
-            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
-            <depends>DefaultExceptionHandler</depends>
+            <attribute name="DefaultExceptionHandlerServiceName">#BeanFlowDefaultExceptionHandler</attribute>
+            <depends>BeanFlowDefaultExceptionHandler</depends>
         </service>
         
-        <service name="DefaultExceptionHandler"
+        <service name="BeanFlowDefaultExceptionHandler"
                  code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
                  instance="template">
             <attribute name="ThrowException">true</attribute>
