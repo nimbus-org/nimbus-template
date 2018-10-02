@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Publish">
+        
+        <manager-property name="Template.Service.Publish.Local.USE_ASYNCH">true</manager-property>
+        <manager-property name="Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME">#AsynchSendQueueFactory</manager-property>
+        
+        <service template="Template.Service.Publish.Local#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Local#AsynchSendQueueFactory"
+                 instance="factory"/>
+        
+    </manager>
+</server>

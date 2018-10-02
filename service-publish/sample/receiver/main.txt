@@ -1,0 +1,37 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.publish.*;
+
+ServerConnectionFactory scf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Server", "ConnectionFactory");
+ServerConnection sc = scf.getServerConnection();
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+
+MessageReceiver mr = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Client", "MessageReceiver");
+for(int i = 0; i < 5; i++){
+    final int id = i;
+    mr.addSubject(
+        new MessageListener(){
+            public void onMessage(Message message){
+                print("メッセージリスナ" + id + "：メッセージを受信しました : " + message.getObject());
+            }
+        },
+        "test"
+    );
+}
+mr.startReceive();
+print("クライアント：受信を開始しました。");
+
+Thread.sleep(1000l);
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+Message message = sc.createMessage("test", null);
+message.setObject("こんにちは");
+print("サーバ：メッセージを同期送信します : " + message.getObject());
+long start1 = System.currentTimeMillis();
+sc.send(message);
+print("サーバ：メッセージを同期送信しました : " + (System.currentTimeMillis() - start1) + "[ms]");
+
+Thread.sleep(1000l);
+mr.close();
+
+return "終了";

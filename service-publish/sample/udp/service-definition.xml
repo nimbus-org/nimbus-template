@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Publish.Server">
+        
+        <manager-property name="Template.Service.Publish.UDP.USE_ASYNCH">true</manager-property>
+        <manager-property name="Template.Service.Publish.UDP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Publish.UDP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.UDP#AsynchSendQueue"/>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastCluster"/>
+    </manager>
+    
+    <manager name="Sample.Service.Publish.Client">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastClientCluster"/>
+        
+    </manager>
+</server>

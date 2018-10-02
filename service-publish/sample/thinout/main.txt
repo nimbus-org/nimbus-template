@@ -1,0 +1,77 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.publish.*;
+
+print("///////// サーバ側で間引き /////////////");
+ServerConnectionFactory scf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Server.ThinOut", "ThinOutServerConnectionFactory");
+ServerConnection sc = scf.getServerConnection();
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+
+ClientConnectionFactory ccf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Client", "ClusterClientConnectionFactory");
+ClientConnection client = ccf.getClientConnection();
+client.connect();
+client.addSubject("test");
+client.setMessageListener(
+    new MessageListener(){
+        public void onMessage(Message message){
+            print("クライアント：メッセージを受信しました : " + message.getObject());
+        }
+    }
+);
+client.startReceive();
+print("クライアント：受信を開始しました。");
+
+Thread.sleep(1000l);
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+Message message = null;
+for(int i = 0; i < 10; i++){
+    message = sc.createMessage("test", null);
+    message.setObject("こんにちは : " + i);
+    print("サーバ：メッセージを同期送信します : " + message.getObject());
+    long start1 = System.currentTimeMillis();
+    sc.send(message);
+    print("サーバ：メッセージを同期送信しました : " + (System.currentTimeMillis() - start1) + "[ms]");
+    Thread.sleep(200l);
+}
+
+Thread.sleep(1000l);
+client.close();
+
+print("///////// クライアント側で間引き /////////////");
+scf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Server", "ConnectionFactory");
+sc = scf.getServerConnection();
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+
+ccf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Client.ThinOut", "ThinOutClientConnectionFactory");
+client = ccf.getClientConnection();
+client.connect();
+client.addSubject("test");
+client.setMessageListener(
+    new MessageListener(){
+        public void onMessage(Message message){
+            print("クライアント：メッセージを受信しました : " + message.getObject());
+        }
+    }
+);
+client.startReceive();
+print("クライアント：受信を開始しました。");
+
+Thread.sleep(1000l);
+
+print("サーバ：クライアント数=" + sc.getClientCount());
+for(int i = 0; i < 10; i++){
+    message = sc.createMessage("test", null);
+    message.setObject("こんにちは : " + i);
+    print("サーバ：メッセージを同期送信します : " + message.getObject());
+    long start1 = System.currentTimeMillis();
+    sc.send(message);
+    print("サーバ：メッセージを同期送信しました : " + (System.currentTimeMillis() - start1) + "[ms]");
+    Thread.sleep(200l);
+}
+
+Thread.sleep(1000l);
+client.close();
+
+return "終了";

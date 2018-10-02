@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Publish.Local">
+        
+        <manager-property name="Template.Service.Publish.Local.USE_ASYNCH">false</manager-property>
+        <manager-property name="Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME">#AsynchSendQueueFactory</manager-property>
+        
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.local.ConnectionFactoryService"
+                 instance="template">
+<ifdef name="Template.Service.Publish.Local.USE_ASYNCH" value="true">
+            <attribute name="AsynchSendThreadSize">1</attribute>
+            <attribute name="AsynchSendQueueFactoryServiceName">${Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="AsynchSendQueueFactory"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.TCP">
+        
+        <manager-property name="Template.Service.Publish.TCP.USE_ASYNCH">false</manager-property>
+        <manager-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
+        
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.tcp.ConnectionFactoryService"
+                 instance="template">
+<ifdef name="Template.Service.Publish.TCP.USE_ASYNCH" value="true">
+            <attribute name="AsynchSendThreadSize">1</attribute>
+            <attribute name="AsynchSendQueueServiceName">${Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="AsynchSendQueue"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.UDP">
+        
+        <manager-property name="Template.Service.Publish.UDP.USE_ASYNCH">false</manager-property>
+        <manager-property name="Template.Service.Publish.UDP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
+        
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.udp.ConnectionFactoryService"
+                 instance="template">
+<ifdef name="Template.Service.Publish.UDP.USE_ASYNCH" value="true">
+            <attribute name="AsynchSendThreadSize">1</attribute>
+            <attribute name="AsynchSendQueueServiceName">${Template.Service.Publish.UDP.ASYNCH_SEND_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.UDP.ASYNCH_SEND_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="AsynchSendQueue"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Multicast">
+        
+        <manager-property name="Template.Service.Publish.Multicast.USE_ASYNCH">false</manager-property>
+        <manager-property name="Template.Service.Publish.Multicast.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
+        
+        <service name="ConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.udp.ConnectionFactoryService"
+                 instance="template">
+            <attribute name="MulticastGroupAddress">239.0.0.1</attribute>
+            <attribute name="MulticastPort">10000</attribute>
+            <attribute name="TimeToLive">1</attribute>
+<ifdef name="Template.Service.Publish.Multicast.USE_ASYNCH" value="true">
+            <attribute name="AsynchSendThreadSize">1</attribute>
+            <attribute name="AsynchSendQueueServiceName">${Template.Service.Publish.Multicast.ASYNCH_SEND_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Multicast.ASYNCH_SEND_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="AsynchSendQueue"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Dist">
+        
+        <manager-property name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">#ConnectionFactoryFactory</manager-property>
+        
+        <service name="DistributedConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.DistributedConnectionFactoryService"
+                 instance="template">
+            <attribute name="DistributedSize">2</attribute>
+            <attribute name="ConnectionFactoryFactoryServiceName">${Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME}</depends>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Cluster">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES"></manager-property>
+        
+        <service name="ClusterConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.ClusterConnectionFactoryService"
+                 instance="template">
+            <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME}</attribute>
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <attribute name="FlexibleConnect">true</attribute>
+            <depends>${Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="ClusterClientConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.ClusterClientConnectionFactoryService"
+                 instance="template">
+            <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</attribute>
+            <attribute name="FlexibleConnect">true</attribute>
+            <depends>${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="UnicastCluster"
+                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
+                 instance="template">
+            <attribute name="UnicastMemberAddresses">${UNICASET_MEMBER_ADDRESSES}</attribute>
+            <attribute name="UnicastPort">20000</attribute>
+            <attribute name="JoinOnStart">false</attribute>
+        </service>
+        
+        <service name="UnicastClientCluster"
+                 template="#UnicastCluster"
+                 instance="template">
+            <attribute name="Client">true</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+        <service name="MulticastCluster"
+                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
+                 instance="template">
+            <attribute name="MulticastGroupAddress">239.0.1.1</attribute>
+            <attribute name="MulticastPort">20000</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="TimeToLive">1</attribute>
+            <attribute name="JoinOnStart">false</attribute>
+        </service>
+        
+        <service name="MulticastClientCluster"
+                 template="#MulticastCluster"
+                 instance="template">
+            <attribute name="Client">true</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.ThinOut">
+        
+        <manager-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+            #TimeIntervalThinOutFilter
+        </manager-property>
+        
+        <service name="ThinOutServerConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.ThinOutServerConnectionFactoryService"
+                 instance="template">
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <attribute name="ThinOutFilterServiceNames">${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</attribute>
+            <attribute name="ThinOutTimeoutCheckInterval">500</attribute>
+            <attribute name="ThinOutTimeout">1000</attribute>
+            <depends>${Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
+        </service>
+        
+        <service name="ThinOutClientConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.ThinOutClientConnectionFactoryService"
+                 instance="template">
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <attribute name="ThinOutFilterServiceNames">${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</attribute>
+            <attribute name="ThinOutTimeoutCheckInterval">500</attribute>
+            <attribute name="ThinOutTimeout">1000</attribute>
+            <depends>${Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
+        </service>
+        
+        <service name="TimeIntervalThinOutFilter"
+                 code="jp.ossc.nimbus.service.publish.TimeIntervalThinOutFilterService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Receiver">
+        
+        <manager-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.USE_MESSAGE_QUEUE">false</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME">#MessageQueueFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.USE_MESSAGE_LISTENER_QUEUE">false</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME">#MessageListenerQueueFactory</manager-property>
+        
+        <service name="MessageReceiver"
+                 code="jp.ossc.nimbus.service.publish.MessageReceiverService"
+                 instance="template">
+            
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+            
+<ifdef name="Template.Service.Publish.Receiver.USE_MESSAGE_QUEUE" value="true">
+            <attribute name="MessageQueueFactoryServiceName">${Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME}</attribute>
+            <attribute name="MessageQueueDistributedSize">2</attribute>
+            <depends>${Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.Receiver.USE_MESSAGE_LISTENER_QUEUE" value="true">
+            <attribute name="MessageListenerQueueFactoryServiceName">${Template.Service.Publish.Receiver.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME}</attribute>
+            <attribute name="MessageListenerQueueDistributedSize">2</attribute>
+            <depends>${Template.Service.Publish.Receiver.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="MessageQueueFactory"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+        <service name="MessageListenerQueueFactory"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Forward">
+        
+        <manager-property name="Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Forward.USE_MESSAGE_QUEUE">false</manager-property>
+        <manager-property name="Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME">#MessageQueueFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Forward.USE_MESSAGE_LISTENER_QUEUE">false</manager-property>
+        <manager-property name="Template.Service.Publish.Forward.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME">#MessageListenerQueueFactory</manager-property>
+        
+        <service name="MessageForward"
+                 code="jp.ossc.nimbus.service.publish.MessageForwardingService"
+                 instance="template">
+            
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+            
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
+            
+<ifdef name="Template.Service.Publish.Forward.USE_MESSAGE_QUEUE" value="true">
+            <attribute name="MessageQueueFactoryServiceName">${Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME}</attribute>
+            <attribute name="MessageQueueDistributedSize">2</attribute>
+            <depends>${Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.Forward.USE_MESSAGE_LISTENER_QUEUE" value="true">
+            <attribute name="MessageListenerQueueFactoryServiceName">${Template.Service.Publish.Forward.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME}</attribute>
+            <attribute name="MessageListenerQueueDistributedSize">2</attribute>
+            <depends>${Template.Service.Publish.Forward.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="MessageQueueFactory"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+        <service name="MessageListenerQueueFactory"
+                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 instance="template"/>
+        
+    </manager>
+    
+</server>

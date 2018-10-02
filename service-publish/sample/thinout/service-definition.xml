@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Publish.Server">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastCluster"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Publish.Server.ThinOut">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+            #TimeIntervalThinOutFilter
+        </manager-property>
+        
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.ThinOut#ThinOutServerConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.ThinOut#TimeIntervalThinOutFilter">
+            <attribute name="ThinOutInterval">1000</attribute>
+        </service>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastCluster">
+            <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
+            <attribute name="MulticastPort">20001</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Publish.Client">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastClientCluster">
+            <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
+            <attribute name="MulticastPort">20001</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Publish.Client.ThinOut">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+            #TimeIntervalThinOutFilter
+        </manager-property>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.ThinOut#ThinOutClientConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.ThinOut#TimeIntervalThinOutFilter">
+            <attribute name="ThinOutInterval">1000</attribute>
+        </service>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#MulticastClientCluster"/>
+        
+    </manager>
+</server>
