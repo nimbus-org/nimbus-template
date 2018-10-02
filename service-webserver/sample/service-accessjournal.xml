@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="WebServer.AccessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">./target/</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+        <service template="Template.WebServer.AccessJournal#AccessJournal"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessJournalQueue"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessNormalJournalCategory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessErrorJournalCategory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessNormalJournalWritableRecordFactory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessNormalDateElement" instance="factory"/>
+        
+        <service template="Template.WebServer.AccessJournal#SimpleElement" instance="factory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessErrorDateElement" instance="factory"/>
+        
+        <service template="Template.WebServer.AccessJournal#ErrorSimpleElement" instance="factory"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessNormalJournalWriter"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessErrorJournalWriter"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessJournalEditorFinder"/>
+        
+        <service template="Template.WebServer.AccessJournal#AccessRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#ObjectArrayJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#ByteArrayJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#HttpServletRequestJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#ServletResponseJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#HttpSessionMapJournalEditor"/>
+        
+        <service template="Template.WebServer.AccessJournal#ThrowableJournalEditor"/>
+        
+    </manager>
+    
+</server>

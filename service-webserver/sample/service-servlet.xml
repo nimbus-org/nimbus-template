@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="WebServer.Servlet" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Filter.LOG_OUTPUT_PATH">./target/</manager-property>
+        <manager-property name="Template.Service.Filter.REQUEST_PROCESS_CHECK_INTERCEPTOR_CHECK_INTERVAL">1000</manager-property>
+        
+        <manager-property name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">WebServer.Log#ThreadContext</manager-property>
+        <manager-property name="Template.Service.Filter.CONTEXT_SERVICE_NAME">WebServer.Log#Context</manager-property>
+        <manager-property name="Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME">WebServer.AccessJournal#AccessJournal</manager-property>
+        <manager-property name="Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME">#BeanFlowSelector</manager-property>
+        <manager-property name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME">WebServer.Resource#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME">v#PersistentManager</manager-property>
+        
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.METRICS_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">WebServer.Log#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">WebServer.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">WebServer.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        
+        <manager-property name="Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME">WebServer.Log#LogMessageRecordFactory</manager-property>
+        
+        <service template="Template.WebServer.Servlet#FilterInterceptorChainFactory"/>
+        
+        <service template="Template.WebServer.Servlet#FilterInterceptorChainList"/>
+        
+        <service template="Template.WebServer.Servlet#HttpServletRequestMetricsInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#AccessPerformance"/>
+        
+        <service template="Template.WebServer.Servlet#PerformanceJournalCategory"/>
+        
+        <service template="Template.WebServer.Servlet#PerformanceJournalWriter"/>
+        
+        <service template="Template.WebServer.Servlet#PerformanceJournalWritableRecordFactory"/>
+        
+        <service template="Template.WebServer.Servlet#NormalDateElement" instance="factory"/>
+        
+        <service template="Template.WebServer.Servlet#ThreadContextInitializeInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#Sequence"/>
+        
+        <service template="Template.WebServer.Servlet#RequestProcessCheckInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#AccessJournalInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowSelectCheckInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#HttpServletResponseDeflateInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#HttpExceptionHandlerInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#IgnoreExchangeExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#InputExchangeExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#HttpServletRequestCheckExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#HttpDefaultExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#HttpCheckInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#ExchangeInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#DataSetJSONConverter"/>
+        
+        <service template="Template.WebServer.Servlet#ExceptionHandlerInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#DefaultExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowInvokerFactory"/>
+        
+        <service template="Template.WebServer.Servlet#JavaScriptInterpreter"/>
+        
+        <service template="Template.WebServer.Servlet#BeanShellInterpreter"/>
+        
+        <service template="Template.WebServer.Servlet#TemplateEngine"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowInterceptorChainFactory"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowInterceptorChainList"/>
+        
+        <service template="Template.WebServer.Servlet#JournalInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowMetricsInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowExceptionHandlingInterceptor"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowDefaultExceptionHandler"/>
+        
+        <service template="Template.WebServer.Servlet#BeanFlowSelector"/>
+    </manager>
+    
+</server>

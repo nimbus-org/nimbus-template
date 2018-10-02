@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.WebServer.Resource">
+        
+        <service name="JDBCConnectionFactory"
+                 template="Template.Service.Connection.JDBC#ConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+        <service name="ConnectionFactory" template="Template.Service.Connection.Wrapper#WrappedConnectionFactory" instance="template"/>
+        
+        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector" instance="template"/>
+        
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager" instance="template"/>
+        
+    </manager>
+    
+</server>

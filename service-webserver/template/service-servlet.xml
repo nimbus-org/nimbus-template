@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.WebServer.Servlet" shutdown-hook="true">
+    
+        <manager-property name="Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME">#LogMessageRecordFactory</manager-property>
+        
+        <service template="Template.Service.Filter#FilterInterceptorChainFactory" instance="template"/>
+        
+        <service template="Template.Service.Filter#FilterInterceptorChainList" instance="template">
+            <attribute name="InterceptorServiceNames">
+                #HttpServletRequestMetricsInterceptor
+                #ThreadContextInitializeInterceptor
+                #RequestProcessCheckInterceptor
+                #AccessJournalInterceptor
+                #BeanFlowSelectCheckInterceptor
+                #HttpServletResponseDeflateInterceptor
+                #HttpExceptionHandlerInterceptor
+                #HttpCheckInterceptor
+                #ExchangeInterceptor
+                #ExceptionHandlerInterceptor
+            </attribute>
+            <depends>HttpServletRequestMetricsInterceptor</depends>
+            <depends>ThreadContextInitializeInterceptor</depends>
+            <depends>RequestProcessCheckInterceptor</depends>
+            <depends>AccessJournalInterceptor</depends>
+            <depends>BeanFlowSelectCheckInterceptor</depends>
+            <depends>HttpServletResponseDeflateInterceptor</depends>
+            <depends>HttpExceptionHandlerInterceptor</depends>
+            <depends>HttpCheckInterceptor</depends>
+            <depends>ExchangeInterceptor</depends>
+            <depends>ExceptionHandlerInterceptor</depends>
+        </service>
+        
+        <service template="Template.Service.Filter#HttpServletRequestMetricsInterceptor" instance="template"/>
+        
+        <service template="Template.Service.Filter#AccessPerformance" instance="template"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Filter#PerformanceJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Filter#NormalDateElement" instance="template"/>
+        
+        <service template="Template.Service.Filter#ThreadContextInitializeInterceptor" instance="template"/>
+        
+        <service template="Template.Service.Filter#Sequence" instance="template"/>
+        
+        <service template="Template.Service.Filter#RequestProcessCheckInterceptor" instance="template">
+            <attribute name="Threshold">
+                60000=REQUEST_PROCESS_CHECK_THRESHOLD_OVER,10000
+            </attribute>
+        </service>
+        
+        <service template="Template.Service.Filter#AccessJournalInterceptor" instance="template"/>
+        
+        <service template="Template.Service.Filter#BeanFlowSelectCheckInterceptor" instance="template"/>
+        
+        <service template="Template.Service.Filter#HttpServletResponseDeflateInterceptor" instance="template"/>
+        
+        <service name="HttpExceptionHandlerInterceptor" template="Template.Service.Filter#ExceptionHandlerInterceptor" instance="template">
+            <attribute name="ExceptionAndHandlerMapping">
+                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletRequestCheckException=#HttpServletRequestCheckExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.InputExchangeException=#InputExchangeExceptionHandler
+                jp.ossc.nimbus.service.aop.interceptor.servlet.OutputExchangeException=#HttpDefaultExceptionHandler
+            </attribute>
+            <attribute name="DefaultExceptionHandlerServiceName">#HttpDefaultExceptionHandler</attribute>
+            <depends>IgnoreExchangeExceptionHandler</depends>
+            <depends>HttpServletRequestCheckExceptionHandler</depends>
+            <depends>InputExchangeExceptionHandler</depends>
+            <depends>HttpDefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="IgnoreExchangeExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
+            <attribute name="ThrowException">true</attribute>
+        </service>
+        
+        <service name="InputExchangeExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">REQUEST_INPUT_EXCHANGE_CHECK_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
+            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="HttpServletRequestCheckExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
+            <attribute name="OutputStackTraceLog">false</attribute>
+            <attribute name="LogMessageCode">HTTP_REQUEST_CHECK_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
+            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="HttpDefaultExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">HTTP_DEFAULT_EXCEPTION_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
+            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
+        </service>
+        
+        <service template="Template.Service.Filter#HttpCheckInterceptor" instance="template"/>
+        
+        <service template="Template.Service.Filter#ExchangeInterceptor" instance="template">
+            <attribute name="ResponseContentType">application/json;charset=utf-8</attribute>
+            <attribute name="RequestStreamConverterServiceName">#DataSetJSONConverter</attribute>
+            <attribute name="ResponseStreamConverterServiceName">#DataSetJSONConverter</attribute>
+            <depends>DataSetJSONConverter</depends>
+        </service>
+        
+        <service name="DataSetJSONConverter" code="jp.ossc.nimbus.util.converter.DataSetJSONConverter" instance="template">
+            <attribute name="IgnoreUnknownElement">true</attribute>
+            <attribute name="OutputPropertyNameOfHeader">true</attribute>
+            <attribute name="OutputPropertyNameOfRecordList">true</attribute>
+            <attribute name="OutputSchema">false</attribute>
+            <attribute name="OutputNullProperty">false</attribute>
+            <attribute name="CloneBindingObject">false</attribute>
+        </service>
+        
+        <service name="ExceptionHandlerInterceptor" template="Template.Service.Filter#ExceptionHandlerInterceptor" instance="template">
+            <attribute name="ExceptionAndHandlerMapping">
+                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
+            </attribute>
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>IgnoreExchangeExceptionHandler</depends>
+            <depends>DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
+            <attribute name="OutputStackTraceLog">true</attribute>
+            <attribute name="LogMessageCode">DEFAULT_EXCEPTION_ERROR</attribute>
+            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
+            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
+        </service>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#JavaScriptInterpreter" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanShellInterpreter" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#TemplateEngine" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#JournalInterceptor" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowMetricsInterceptor" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowExceptionHandlingInterceptor" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowDefaultExceptionHandler" instance="template"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowSelector" instance="template"/>
+    </manager>
+    
+</server>

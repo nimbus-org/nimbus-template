@@ -36,7 +36,7 @@ BeanFlowサービス
         
         <service template="Template.Service.BeanControl#BeanFlowExceptionHandlingInterceptor"/>
         
-        <service template="Template.Service.BeanControl#DefaultExceptionHandler"/>
+        <service template="Template.Service.BeanControl#BeanFlowDefaultExceptionHandler"/>
         
         <service template="Template.Service.BeanControl#BeanFlowSelector"/>
         

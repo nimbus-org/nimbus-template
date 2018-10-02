@@ -14,6 +14,8 @@
         
         <mkdir dir="${target.dir}"/>
         
+        <mkdir dir="${target.dir}/target/"/>
+        
         <mkdir dir="target/classes"/>
         
         <property name="temp.properties.file" value="${target.dir}/temp.properties"/>
@@ -29,12 +31,22 @@
             </sequential>
         </ac:for>
         
-        <echo file="${temp.properties.file}" append="true">template/${project.name}/service-definition.xml;</echo>
+        <ac:for list="${template.service.definitions}" param="template.service.definition" xmlns:ac="antlib:net.sf.antcontrib">
+            <sequential>
+                <echo file="${temp.properties.file}" append="true">template/${project.name}/@{template.service.definition};</echo>
+            </sequential>
+        </ac:for>
+        
         <copy todir="${target.dir}/template/${project.name}/">
             <fileset dir="template"/>
         </copy>
         
-        <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/service-definition.xml</echo>
+        <ac:for list="${sample.service.definitions}" param="sample.service.definition" xmlns:ac="antlib:net.sf.antcontrib">
+            <sequential>
+                <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/@{sample.service.definition};</echo>
+            </sequential>
+        </ac:for>
+        
         <copy todir="${target.dir}/${sample.name}/${project.name}/">
             <fileset dir="${sample.name}"/>
             <fileset dir="target/classes">

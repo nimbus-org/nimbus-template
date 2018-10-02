@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="WebServer.Resource">
+        
+        <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">true</manager-property>
+        
+        <service template="Template.WebServer.Resource#JDBCConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource#ConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource#SQLMetricsCollector"/>
+        
+        <service template="Template.WebServer.Resource#PersistentManager"/>
+        
+    </manager>
+    
+</server>
