@@ -61,6 +61,7 @@
                 <pathelement path="${classpath.runtime}"/>
                 <pathelement path="${target.dir}/${sample.name}/${project.name}"/>
             </classpath>
+            <jvmarg value="-Dlocal.ip=${local.ip}"/>
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>

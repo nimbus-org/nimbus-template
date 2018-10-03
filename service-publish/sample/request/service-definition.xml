@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Publish.Server">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES">${local.ip}:20000,${local.ip}:20001</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
+        
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Receiver#MessageReceiver">
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.Service.Publish.Request#RequestConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#UnicastCluster">
+            <attribute name="UnicastPort">20000</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Publish.Client">
+        
+        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES">${local.ip}:20000,${local.ip}:20001</manager-property>
+        <manager-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
+        
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Receiver#MessageReceiver">
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.Service.Publish.Request#RequestConnectionFactory"/>
+        
+        <service name="Cluster"
+                 template="Template.Service.Publish.Cluster#UnicastCluster">
+            <attribute name="UnicastPort">20001</attribute>
+        </service>
+    </manager>
+</server>

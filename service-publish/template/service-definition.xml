@@ -142,7 +142,7 @@
         <service name="UnicastCluster"
                  code="jp.ossc.nimbus.service.keepalive.ClusterService"
                  instance="template">
-            <attribute name="UnicastMemberAddresses">${UNICASET_MEMBER_ADDRESSES}</attribute>
+            <attribute name="UnicastMemberAddresses">${Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES}</attribute>
             <attribute name="UnicastPort">20000</attribute>
             <attribute name="JoinOnStart">false</attribute>
         </service>
@@ -286,6 +286,23 @@
         <service name="MessageListenerQueueFactory"
                  code="jp.ossc.nimbus.service.queue.DefaultQueueService"
                  instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Publish.Request">
+        
+        <manager-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
+        
+        <service name="RequestConnectionFactory"
+                 code="jp.ossc.nimbus.service.publish.RequestConnectionFactoryService"
+                 instance="template">
+            
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <attribute name="MessageReceiverServiceName">${Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+        </service>
         
     </manager>
     

@@ -1,0 +1,66 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.publish.*;
+
+ServerConnectionFactory serverScf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Server", "RequestConnectionFactory");
+final RequestServerConnection serverRsc = serverScf.getServerConnection();
+MessageReceiver mr = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Server", "RequestConnectionFactory");
+RequestMessageListener listener = new RequestMessageListener(){
+    public void onMessage(Message message){
+        print("サーバ：メッセージリスナ：メッセージを受信しました : " + message.getObject());
+    }
+    
+    public Message onRequestMessage(Object sourceId, int sequence, Message message, String responseSubject, String responseKey){
+        print("サーバ：メッセージリスナ：要求メッセージを受信しました : " + message.getObject());
+        Message responseMessage = serverRsc.createMessage(responseSubject, responseKey);
+        responseMessage.setObject("おかえり");
+        print("サーバ：メッセージリスナ：応答メッセージを送信しました : " + responseMessage.getObject());
+        return responseMessage;
+    }
+};
+mr.addSubject(listener, "test");
+
+print("サーバ：クライアント数=" + serverRsc.getClientCount());
+
+RequestConnectionFactoryService clientScf = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Client", "RequestConnectionFactory");
+final RequestServerConnection clientRsc = clientScf.getServerConnection();
+mr = ServiceManagerFactory.getServiceObject("Sample.Service.Publish.Client", "RequestConnectionFactory");
+listener = new RequestMessageListener(){
+    public void onMessage(Message message){
+        print("クライアント：メッセージリスナ：メッセージを受信しました : " + message.getObject());
+    }
+    
+    public Message onRequestMessage(Object sourceId, int sequence, Message message, String responseSubject, String responseKey){
+        print("クライアント：メッセージリスナ：要求メッセージを受信しました : " + message.getObject());
+        Message responseMessage = clientRsc.createMessage(responseSubject, responseKey);
+        responseMessage.setObject("おかえり");
+        print("クライアント：メッセージリスナ：応答メッセージを送信しました : " + responseMessage.getObject());
+        return responseMessage;
+    }
+};
+mr.addSubject(listener, "test");
+
+Message message = serverRsc.createMessage("test", null);
+message.setObject("こんにちは");
+print("サーバ：メッセージを同期送信します : " + message.getObject());
+long start1 = System.currentTimeMillis();
+serverRsc.send(message);
+print("サーバ：メッセージを同期送信しました : " + (System.currentTimeMillis() - start1) + "[ms]");
+
+Thread.sleep(1000l);
+
+message = serverRsc.createMessage("test", null);
+message.setObject("ただいま");
+print("サーバ：要求メッセージを送信します : " + message.getObject());
+long start2 = System.currentTimeMillis();
+Message[] responseMessages = serverRsc.request(message, 1, 1000l);
+print("サーバ：応答を受信しました : " + (System.currentTimeMillis() - start2) + "[ms]");
+if(responseMessages != null){
+    for(int i = 0; i < responseMessages.length; i++){
+        print("サーバ：応答メッセージ" + i + " : " + responseMessages[i].getObject());
+    }
+}
+
+Thread.sleep(1000l);
+mr.close();
+
+return "終了";
