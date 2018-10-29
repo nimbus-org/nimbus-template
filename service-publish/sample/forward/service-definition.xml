@@ -41,7 +41,13 @@
         
         <service template="Template.Service.Publish.Multicast#ConnectionFactory"/>
         
-        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <attribute name="SequenceServiceName">#Sequence</attribute>
+            <depends>
+                <service name="Sequence"
+                         code="jp.ossc.nimbus.service.sequence.NumberSequenceService"/>
+            </depends>
+        </service>
         
         <service name="Cluster"
                  template="Template.Service.Publish.Cluster#MulticastCluster">
