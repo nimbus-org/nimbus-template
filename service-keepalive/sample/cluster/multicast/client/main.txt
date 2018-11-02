@@ -1,0 +1,28 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.keepalive.*;
+
+ClusterService cluster = ServiceManagerFactory.getServiceObject("Sample.Service.KeepAlive.Cluster", "Cluster");
+cluster.addClusterListener(
+    new ClusterListener(){
+        public void memberInit(Object myId, List members){
+            System.out.println("初期メンバ：" + members);
+        }
+        
+        public void memberChange(List oldMembers, List newMembers){
+            System.out.println("メンバ変更：" + oldMembers + " → " + newMembers);
+        }
+        
+        public void changeMain() throws Exception{
+            System.out.println("稼働系になりました");
+        }
+        
+        public void changeSub(){
+            System.out.println("待機系になりました");
+        }
+    }
+);
+do{
+    Thread.sleep(1000l);
+}while(true);
+
+return "終了";

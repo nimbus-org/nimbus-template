@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.KeepAlive.Cluster">
+        
+        <service name="Cluster1"
+                 template="Template.Service.KeepAlive.Cluster.Unicast.Server#Cluster">
+            <attribute name="UnicastMemberAddresses">${local.ip}:20001,${local.ip}:20002</attribute>
+            <attribute name="UnicastPort">20001</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+        <service name="Cluster2"
+                 template="Template.Service.KeepAlive.Cluster.Unicast.Server#Cluster">
+            <attribute name="UnicastMemberAddresses">${local.ip}:20001,${local.ip}:20002</attribute>
+            <attribute name="UnicastPort">20002</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+            <depends>Cluster1</depends>
+        </service>
+    </manager>
+</server>

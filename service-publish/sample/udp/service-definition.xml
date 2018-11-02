@@ -26,8 +26,8 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastCluster"/>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+        
     </manager>
     
     <manager name="Sample.Service.Publish.Client">
@@ -36,8 +36,7 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastClientCluster"/>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         
     </manager>
 </server>

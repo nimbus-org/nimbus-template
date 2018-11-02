@@ -3,7 +3,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     
     <target name="clean">
-        <delete dir="../target/${project.name}/"/>
+        <delete dir="../target/${project.name}/" failonerror="false"/>
     </target>
     
     <target name="test">

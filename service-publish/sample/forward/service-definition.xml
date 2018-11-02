@@ -22,8 +22,8 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastCluster"/>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+        
     </manager>
     
     <manager name="Sample.Service.Publish.Forward">
@@ -37,7 +37,7 @@
         <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
         
         <service name="ClientCluster"
-                 template="Template.Service.Publish.Cluster#MulticastClientCluster"/>
+                 template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         
         <service template="Template.Service.Publish.Multicast#ConnectionFactory"/>
         
@@ -49,8 +49,7 @@
             </depends>
         </service>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastCluster">
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
             <attribute name="MulticastPort">20001</attribute>
         </service>
@@ -67,8 +66,7 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastClientCluster">
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
             <attribute name="MulticastPort">20001</attribute>
         </service>

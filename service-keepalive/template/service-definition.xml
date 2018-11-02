@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.KeepAlive.Cluster.Unicast.Server">
+        
+        <service name="Cluster"
+                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
+                 instance="template">
+            <attribute name="UnicastMemberAddresses"></attribute>
+            <attribute name="UnicastPort">20000</attribute>
+            <attribute name="JoinOnStart">false</attribute>
+        </service>
+    </manager>
+    
+    <manager name="Template.Service.KeepAlive.Cluster.Unicast.Client">
+        
+        <service name="Cluster"
+                 template="Template.Service.KeepAlive.Cluster.Unicast.Server#Cluster"
+                 instance="template">
+            <attribute name="Client">true</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.KeepAlive.Cluster.Multicast.Server">
+        
+        <service name="Cluster"
+                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
+                 instance="template">
+            <attribute name="MulticastGroupAddress">239.0.1.1</attribute>
+            <attribute name="MulticastPort">20000</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="TimeToLive">1</attribute>
+            <attribute name="JoinOnStart">false</attribute>
+        </service>
+    </manager>
+    
+    <manager name="Template.Service.KeepAlive.Cluster.Multicast.Client">
+        
+        <service name="Cluster"
+                 template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"
+                 instance="template">
+            <attribute name="Client">true</attribute>
+            <attribute name="AnonymousUnicastPort">true</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+    </manager>
+    
+</server>

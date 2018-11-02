@@ -119,7 +119,6 @@
         <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES"></manager-property>
         
         <service name="ClusterConnectionFactory"
                  code="jp.ossc.nimbus.service.publish.ClusterConnectionFactoryService"
@@ -137,40 +136,6 @@
             <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</attribute>
             <attribute name="FlexibleConnect">true</attribute>
             <depends>${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</depends>
-        </service>
-        
-        <service name="UnicastCluster"
-                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
-                 instance="template">
-            <attribute name="UnicastMemberAddresses">${Template.Service.Publish.Cluster.UNICASET_MEMBER_ADDRESSES}</attribute>
-            <attribute name="UnicastPort">20000</attribute>
-            <attribute name="JoinOnStart">false</attribute>
-        </service>
-        
-        <service name="UnicastClientCluster"
-                 template="#UnicastCluster"
-                 instance="template">
-            <attribute name="Client">true</attribute>
-            <attribute name="AnonymousUnicastPort">true</attribute>
-            <attribute name="JoinOnStart">true</attribute>
-        </service>
-        
-        <service name="MulticastCluster"
-                 code="jp.ossc.nimbus.service.keepalive.ClusterService"
-                 instance="template">
-            <attribute name="MulticastGroupAddress">239.0.1.1</attribute>
-            <attribute name="MulticastPort">20000</attribute>
-            <attribute name="AnonymousUnicastPort">true</attribute>
-            <attribute name="TimeToLive">1</attribute>
-            <attribute name="JoinOnStart">false</attribute>
-        </service>
-        
-        <service name="MulticastClientCluster"
-                 template="#MulticastCluster"
-                 instance="template">
-            <attribute name="Client">true</attribute>
-            <attribute name="AnonymousUnicastPort">true</attribute>
-            <attribute name="JoinOnStart">true</attribute>
         </service>
         
     </manager>

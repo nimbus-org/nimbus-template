@@ -22,8 +22,7 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastCluster"/>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
     </manager>
     
@@ -46,8 +45,7 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastCluster">
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
             <attribute name="MulticastPort">20001</attribute>
         </service>
@@ -60,8 +58,7 @@
         
         <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastClientCluster">
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
             <attribute name="MulticastPort">20001</attribute>
         </service>
@@ -84,8 +81,7 @@
             <attribute name="ThinOutInterval">1000</attribute>
         </service>
         
-        <service name="Cluster"
-                 template="Template.Service.Publish.Cluster#MulticastClientCluster"/>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         
     </manager>
 </server>
