@@ -22,6 +22,9 @@
         <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">#BusinessJournal</manager-property>
         <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">#BeanFlowJournalEditorFinder</manager-property>
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
+        
         <!-- BeanShellInterpreterの場合は以下
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#BeanShellInterpreter</manager-property>
         -->
@@ -31,23 +34,44 @@ BeanFlowサービス
         <service name="BeanFlowInvokerFactory"
                  code="jp.ossc.nimbus.service.beancontrol.DefaultBeanFlowInvokerFactoryService"
                  instance="template">
+            <attribute name="BeanFlowInvokerAccessClass">jp.ossc.nimbus.service.beancontrol.BeanFlowInvokerAccessImpl2</attribute>
+            <attribute name="Validate">true</attribute>
+            
+<ifdef name="Template.Service.BeanControl.DIR_PATHS">
+            <attribute name="DirPaths">${Template.Service.BeanControl.DIR_PATHS}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">
             <attribute name="ThreadContextServiceName">${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">
             <attribute name="EditorFinderServiceName">${Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME}</attribute>
-            <attribute name="InterceptorChainFactoryServiceName">#BeanFlowInterceptorChainFactory</attribute>
+            <depends>${Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">
+            <attribute name="InterceptorChainFactoryServiceName">${Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">
             <attribute name="InterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
             <attribute name="TestInterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
             <attribute name="ExpressionInterpreterServiceName">${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</attribute>
-            <attribute name="TemplateEngineServiceName">#TemplateEngine</attribute>
-            <attribute name="BeanFlowInvokerAccessClass">jp.ossc.nimbus.service.beancontrol.BeanFlowInvokerAccessImpl2</attribute>
-            <attribute name="Validate">true</attribute>
-            <attribute name="DirPaths">${Template.Service.BeanControl.DIR_PATHS}</attribute>
-            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
-            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
-            <depends>${Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME}</depends>
-            <depends>BeanFlowInterceptorChainFactory</depends>
             <depends>${Template.Service.BeanControl.INTERPRETER_SERVICE_NAME}</depends>
-            <depends>TemplateEngine</depends>   
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">
+            <attribute name="TemplateEngineServiceName">${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</depends>   
+</ifdef>
         </service>
 
         <service name="JavaScriptInterpreter"

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE flows PUBLIC
+  "-//Nimbus//DTD Nimbus Bean Flow 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/beanflow_1_0.dtd">
+
+<flows>
+    
+    <flow name="sample">
+        
+        <step name="step1">
+            <interpreter>
+                <!--
+                    for(var i = 0; i < 5; i++){
+                        input.put('sample' + i, Java.type('java.lang.Integer').valueOf(i));
+                    }
+                    input.entrySet();
+                -->
+            </interpreter>
+        </step>
+        
+        <step name="step2">
+            <template>
+                <!--
+                    #foreach( $entry in $step1)
+                    $entry.key, $entry.value
+                    #end
+                -->
+            </template>
+        </step>
+        
+    </flow>
+    
+</flows>

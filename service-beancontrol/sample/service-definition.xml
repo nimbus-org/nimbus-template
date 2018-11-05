@@ -14,6 +14,8 @@
         <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
         <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
         
 <!--=======================================================================
 BeanFlowサービス
@@ -131,7 +133,7 @@ Editorサービス
         
     </manager>
     
-     <manager name="Sample.Service.ThreadContext" shutdown-hook="true">
+    <manager name="Sample.Service.ThreadContext" shutdown-hook="true">
         
         <service template="Template.Service.ThreadContext#Context"/>
 
