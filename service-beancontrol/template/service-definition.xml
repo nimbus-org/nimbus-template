@@ -24,6 +24,9 @@
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
         <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
         <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_SIZE">10</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_WAIT_TIMEOUT">30000</manager-property>
         
         <!-- BeanShellInterpreterの場合は以下
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#BeanShellInterpreter</manager-property>
@@ -71,6 +74,10 @@ BeanFlowサービス
 <ifdef name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">
             <attribute name="TemplateEngineServiceName">${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</depends>   
+</ifdef>
+<ifdef name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME">
+            <attribute name="AsynchInvokeQueueHandlerContainerServiceName">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME}</depends>   
 </ifdef>
         </service>
 
@@ -155,6 +162,18 @@ BeanFlowサービス
                  instance="template">
             <attribute name="BeanFlowPathPostfix">${Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX}</attribute>
         </service>
+        
+        <service name="AsynchInvokeQueueHandlerContainer"
+                 code="jp.ossc.nimbus.service.queue.QueueHandlerContainerService"
+                 instance="template">
+            <attribute name="QueueServiceName">#AsynchInvokeQueue</attribute>
+            <attribute name="IgnoreNullElement">true</attribute>
+            <attribute name="QueueHandlerSize">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_SIZE}</attribute>
+            <attribute name="WaitTimeout">${Template.Service.BeanControl.ASYNCH_INVOKE_WAIT_TIMEOUT}</attribute>
+            <depends>AsynchInvokeQueue</depends>
+        </service>
+        
+        <service name="AsynchInvokeQueue" code="jp.ossc.nimbus.service.queue.DefaultQueueService" instance="template"/>
         
     </manager>
 </server>
