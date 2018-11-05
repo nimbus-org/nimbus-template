@@ -92,11 +92,11 @@ WritableRecordFactoryサービス
             <attribute name="Format">%DATE%,%REQUEST_ID%,%CLIENT_IP%,%SESSION_ID%,%REQUEST_URL%,%REQUEST_OBJ%,%RESPONSE_STATUS%,%RESPONSE_OBJ%,%PERFORMANCE%</attribute>
             <attribute name="ImplementServiceNames">
                 DATE=#AccessNormalDateElement
-                REQUEST_OBJ=#SimpleElement
-                RESPONSE_OBJ=#SimpleElement
+                REQUEST_OBJ=#CSVElement
+                RESPONSE_OBJ=#CSVElement
             </attribute>
             <depends>AccessNormalDateElement</depends>
-            <depends>SimpleElement</depends>
+            <depends>CSVElement</depends>
         </service>
         
         <service name="AccessNormalDateElement"
@@ -105,9 +105,30 @@ WritableRecordFactoryサービス
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
         
-        <service name="SimpleElement"
-                 code="jp.ossc.nimbus.service.writer.SimpleElement" 
-                 instance="template"/>
+        <service name="CSVElement"
+                 code="jp.ossc.nimbus.service.writer.LineSimpleElement" 
+                 instance="template">
+            <attribute name="Trim">true</attribute>
+            <attribute name="StringConverter"><service-ref>#CustomConverter</service-ref></attribute>
+            <depends>CustomConverter</depends>
+        </service>
+        
+        <service name="CustomConverter"
+                 code="jp.ossc.nimbus.util.converter.CustomConverter"
+                 instance="template">
+            <invoke name="add">
+                <argument type="jp.ossc.nimbus.util.converter.Converter">
+                    <service-ref>#CSVEscapeConverter</service-ref>
+                </argument>
+            </invoke>
+            <depends>#CSVEscapeConverter</depends>
+        </service>
+
+        <service name="CSVEscapeConverter"
+                 code="jp.ossc.nimbus.io.CSVWriter"
+                 instance="template">
+            <attribute name="Enclose">true</attribute>
+        </service>
         
         <!-- アクセスエラージャーナルのフォーマッタ -->
         <service name="AccessErrorJournalWritableRecordFactory"
@@ -347,9 +368,12 @@ Editorサービス
 ========================================================================-->
         <!-- Businessジャーナルカテゴリ -->
         <service name="BusinessJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
                  instance="template">
             <attribute name="Enabled">${Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED}</attribute>
+            <attribute name="WritableConditions">
+                @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]@!=null or @Business.JournalRecords.Flow[0]@!=null
+            </attribute>
             <attribute name="MessageWriterServiceName">#BusinessJournalWriter</attribute>
             <attribute name="WritableRecordFactoryServiceName">#BusinessJournalWritableRecordFactory</attribute>
             <depends>BusinessJournalWriter</depends>
@@ -362,7 +386,7 @@ Editorサービス
                  instance="template">
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
-                @Business.JournalRecords.Exception[0]@!=null  
+                @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Business.JournalRecords.Exception[0]@!=null
             </attribute>
             <attribute name="MessageWriterServiceName">#BusinessErrorJournalWriter</attribute>
             <attribute name="WritableRecordFactoryServiceName">#BusinessErrorJournalWritableRecordFactory</attribute>
@@ -390,8 +414,8 @@ WritableRecordFactoryサービス
             <attribute name="FormatKeyMapping">
                 DATE=Business.StartTime
                 REQUEST_ID=Business.RequestID
-                ACTION_FLOW=Business.JournalRecords.Flow[0]
-                EXCEPTION=Business.JournalRecords.Exception[0]
+                ACTION_FLOW=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Flow[0]}}
+                EXCEPTION=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]}|{Exception[0]}}
             </attribute>
             <attribute name="Format">
                 時刻=%DATE%${line.separator}リクエスト通番=%REQUEST_ID%${line.separator}発生例外:%EXCEPTION%${line.separator}BeanFlowトレース:${line.separator}Action=%ACTION_FLOW%

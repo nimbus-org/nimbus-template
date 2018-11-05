@@ -25,6 +25,8 @@
         <manager-property name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
         <manager-property name="Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
+        <manager-property name="Template.Service.Filter.BLOCKADE_CODEMASTER_KEY">BLOCKADE</manager-property>
+        <manager-property name="Template.Service.Filter.SPECIALUSER_CODEMASTER_KEY">SPECIAL_USER</manager-property>
         
         <service name="FilterInterceptorChainFactory"
                  code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainFactoryService"
@@ -193,5 +195,14 @@
             <depends>${Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
         </service>
 
+        <service name="BlockadeInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.BlockadeInterceptorService"
+                 instance="template">
+            <attribute name="ThreadContextServiceName">${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <attribute name="BlockadeCodeMasterKey">${Template.Service.Filter.BLOCKADE_CODEMASTER_KEY}</attribute>
+            <attribute name="SpecialUserCodeMasterKey">${Template.Service.Filter.SPECIALUSER_CODEMASTER_KEY}</attribute>
+            <depends>${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</depends>
+        </service>
+        
     </manager>
 </server>
