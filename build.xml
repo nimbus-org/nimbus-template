@@ -28,6 +28,9 @@
                 <copy todir="${target.dir}/template/@{dependency}/">
                     <fileset dir="../@{dependency}/template/"/>
                 </copy>
+                <copy todir="${target.dir}/sample/@{dependency}/">
+                    <fileset dir="../@{dependency}/sample/"/>
+                </copy>
             </sequential>
         </ac:for>
         

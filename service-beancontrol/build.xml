@@ -5,7 +5,7 @@
     <property name="project.name" value="service-beancontrol"/>
     <property name="project.dependencies" value="service-context,service-journal"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
-    <property name="sample.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="service-definition.xml,../service-journal/businessjournal/service-definition.xml,../service-context/service-definition.xml"/>
     
     <!-- target処理は../build.xmlに記載 -->
     
