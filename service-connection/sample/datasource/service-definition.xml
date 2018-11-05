@@ -15,7 +15,6 @@
     
     <manager name="Sample.Service.Connection">
         
-        <manager-property name="Template.Service.Connection.DataSource.JNDI_ENABLED">true</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</manager-property>
         

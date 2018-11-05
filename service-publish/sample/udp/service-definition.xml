@@ -15,7 +15,6 @@
     
     <manager name="Sample.Service.Publish.Server">
         
-        <manager-property name="Template.Service.Publish.UDP.USE_ASYNCH">true</manager-property>
         <manager-property name="Template.Service.Publish.UDP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
         <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>

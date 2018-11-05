@@ -31,14 +31,11 @@
 
     <manager name="Template.Service.Connection.DataSource">
 
-        <manager-property name="Template.Service.Connection.DataSource.JNDI_ENABLED">false</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</manager-property>
 
-        <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED">false</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">#DataSource</manager-property>
 
-        <manager-property name="Template.Service.Connection.DataSource.CONTEXT_ENABLED">false</manager-property>
         <manager-property name="Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
         <!-- データソースからConnectionを取得するConnectionFactoryサービス -->
@@ -46,16 +43,16 @@
                  code="jp.ossc.nimbus.service.connection.DataSourceConnectionFactoryService"
                  instance="template">
 
-<ifdef name="Template.Service.Connection.DataSource.JNDI_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">
             <attribute name="Name">${Template.Service.Connection.DataSource.JNDI_NAME}</attribute>
             <attribute name="JndiFinderServiceName">${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</depends>
 </ifdef>
-<ifdef name="Template.Service.Connection.DataSource.DATA_SOURCE_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">
             <attribute name="DataSourceServiceName">${Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME}</depends>
 </ifdef>
-<ifdef name="Template.Service.Connection.DataSource.CONTEXT_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME">
             <attribute name="ContextServiceName">${Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
@@ -67,12 +64,10 @@
         <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
 
         <manager-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">#Journal</manager-property>
-        <manager-property name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED">false</manager-property>
 
-        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">false</manager-property>
+        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">#SQLMetricsCollector</manager-property>
 
         <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
-        <manager-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED">false</manager-property>
 
         <!-- ラップしたConnectionを取得するConnectionFactoryサービス -->
         <service name="WrappedConnectionFactory"
@@ -92,7 +87,7 @@
 
                 <object code="java.util.LinkedHashMap">
 
-<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
                     <!-- ConnectionラッパーにJournalサービスを設定する -->
                     <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
@@ -103,16 +98,16 @@
                         <object code="java.util.HashMap">
 
                             <!-- StatementラッパーにJournalサービスを設定する -->
-<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
                             <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
 
-<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">
                             <!-- StatementラッパーにSQLMetricsCollectorサービスを設定する -->
-                            <attribute name="SQLMetricsCollector"><service-ref>#SQLMetricsCollector</service-ref></attribute>
+                            <attribute name="SQLMetricsCollector"><service-ref>${Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
 
-<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">
                             <!-- StatementラッパーにPerformanceRecorderサービスを設定する -->
                             <attribute name="PerformanceRecorder"><service-ref>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
@@ -121,7 +116,7 @@
 
                     </attribute>
 
-<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
                     <!-- ConnectionラッパーのJournal開始属性を設定する -->
                     <attribute name="StartJournal" type="boolean">true</attribute>
 </ifdef>
@@ -130,13 +125,13 @@
             </attribute>
 
             <depends>${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</depends>
-<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">
             <depends>SQLMetricsCollector</depends>
 </ifdef>
-<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
             <depends>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</depends>
 </ifdef>
-<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_ENABLED" value="true">
+<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">
             <depends>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
 </ifdef>
 

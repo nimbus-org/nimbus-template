@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Sequence">
+        
+        <manager-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">Sample.Service.Context#Context</manager-property>
+        
+        <service name="Sequence"
+                 template="Template.Service.Sequence#StringSequence"/>
+    </manager>
+    
+    <manager name="Sample.Service.Context">
+        <service template="Template.Service.ThreadContext#Context"/>
+        
+        <service template="Template.Service.ThreadContext#ThreadContext"/>
+        
+        <service template="Template.Service.ThreadContext#ServerInfo"/>
+        
+    </manager>
+</server>

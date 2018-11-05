@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Sequence">
+        
+        <manager-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">#Context</manager-property>
+        
+        <service name="NumberSequence"
+                 code="jp.ossc.nimbus.service.sequence.NumberSequenceService"
+                 instance="template"/>
+        
+        <service name="StringSequence"
+                 code="jp.ossc.nimbus.service.sequence.StringSequenceService"
+                 instance="template">
+            
+            <attribute name="Format">%HOST_NAME%;_;TIME_SEQ(yyyyMMddHHmmssSSS,3)</attribute>
+            
+<ifdef name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.Sequence.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Sequence.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+</server>
