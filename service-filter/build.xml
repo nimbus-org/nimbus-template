@@ -3,9 +3,9 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-filter"/>
-    <property name="project.dependencies" value="service-context,service-log,service-journal,service-beancontrol,service-connection"/>
+    <property name="project.dependencies" value="service-context,service-log,service-journal,service-beancontrol,service-performance,service-connection"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
-    <property name="sample.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="service-definition.xml,../service-context/service-definition.xml,../service-log/service-definition.xml,../service-journal/accessjournal/service-definition.xml,../service-journal/businessjournal/service-definition.xml,../service-beancontrol/service-definition.xml,../service-performance/service-definition.xml,../service-connection/wrap/service-definition.xml,"/>
     
     <!-- target処理は../build.xmlに記載 -->
     
