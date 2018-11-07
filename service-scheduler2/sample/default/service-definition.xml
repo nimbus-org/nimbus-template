@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="true"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Scheduler2">
+        
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</manager-property>
+        <manager-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Sample.Service.Sequence#Sequence</manager-property>
+        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</manager-property>
+        
+        <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler">
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
+        
+        <service template="Template.Service.Scheduler2.ScheduleManager.Default#ScheduleManager">
+            
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+            
+            <!-- スケジュールマスタのサービス名を設定する -->
+            <attribute name="ScheduleMasterServiceNames">
+                #ScheduleMaster1
+                #ScheduleMaster2
+                #ScheduleMaster3
+                #ScheduleMaster4
+            </attribute>
+            
+            <!-- スケジュールの永続化ディレクトリを設定する -->
+            <attribute name="PersistDir">./schedule</attribute>
+            
+            <depends>
+                <!-- スケジュールマスタ1
+                    08:00:00にFlow1を実行するスケジュール
+                -->
+                <service name="ScheduleMaster1"
+                         code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleMaster">
+                    <attribute name="Id">Schedule1</attribute>
+                    <attribute name="TaskName">Flow1</attribute>
+                    <attribute name="StartTime">// 08:00:00 000</attribute>
+                </service>
+            </depends>
+            <depends>
+                <!-- スケジュールマスタ2
+                    スケジュールマスタ1の終了を待って、08:00:00にFlow2を実行するスケジュール
+                -->
+                <service name="ScheduleMaster2"
+                         code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleMaster">
+                    <attribute name="Id">Schedule2</attribute>
+                    <attribute name="TaskName">Flow2</attribute>
+                    <attribute name="StartTime">// 08:00:00 000</attribute>
+                    <attribute name="Input">100</attribute>
+                    <attribute name="Depends">
+                        <object code="jp.ossc.nimbus.service.scheduler2.ScheduleDepends[]">
+                            <constructor>
+                                <argument>
+                                    <object code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleDepends">
+                                        <attribute name="MasterId">Schedule1</attribute>
+                                    </object>
+                                </argument>
+                            </constructor>
+                        </object>
+                    </attribute>
+                </service>
+            </depends>
+            <depends>
+                <!-- スケジュールマスタ3
+                    スケジュールマスタ2の終了を待って、08:01:00から08:02:00まで5秒間隔にFlow3を実行するスケジュール
+                -->
+                <service name="ScheduleMaster3"
+                         code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleMaster">
+                    <attribute name="Id">Schedule3</attribute>
+                    <attribute name="TaskName">Flow3</attribute>
+                    <attribute name="StartTime">// 08:01:00 000</attribute>
+                    <attribute name="EndTime">// 08:02:00 000</attribute>
+                    <attribute name="RepeatInterval">5000</attribute>
+                    <attribute name="Depends">
+                        <object code="jp.ossc.nimbus.service.scheduler2.ScheduleDepends[]">
+                            <constructor>
+                                <argument>
+                                    <object code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleDepends">
+                                        <attribute name="MasterId">Schedule2</attribute>
+                                    </object>
+                                </argument>
+                            </constructor>
+                        </object>
+                    </attribute>
+                </service>
+            </depends>
+            <depends>
+                <!-- スケジュールマスタ4
+                    スケジュールマスタ1とスケジュールマスタ3の終了を待って、08:01:00から08:03:00までFlow4の結果でリトライを指示される限り、10秒間隔でFlow4を実行するスケジュール
+                    08:03:00に達しても、リトライを指示された場合は、エラー終了する
+                -->
+                <service name="ScheduleMaster4"
+                         code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleMaster">
+                    <attribute name="Id">Schedule4</attribute>
+                    <attribute name="TaskName">Flow4</attribute>
+                    <attribute name="StartTime">// 08:01:00 000</attribute>
+                    <attribute name="Depends">
+                        <object code="jp.ossc.nimbus.service.scheduler2.ScheduleDepends[]">
+                            <constructor>
+                                <argument>
+                                    <object code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleDepends">
+                                        <attribute name="MasterId">Schedule1</attribute>
+                                    </object>
+                                </argument>
+                                <argument>
+                                    <object code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleDepends">
+                                        <attribute name="MasterId">Schedule3</attribute>
+                                    </object>
+                                </argument>
+                            </constructor>
+                        </object>
+                    </attribute>
+                    <attribute name="RetryInterval">10000</attribute>
+                    <attribute name="RetryEndTime">// 08:03:00 000</attribute>
+                </service>
+            </depends>
+        </service>
+        
+        <service name="Time"
+                 code="jp.ossc.nimbus.service.system.DefaultTimeService">
+            <attribute name="Time">NOW/NOW/NOW 07:59:30 000</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.BeanControl">
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">Sample.Service.BeanControl#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">Sample.Service.BeanControl#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">Sample.Service.BeanControl#BeanFlowInterceptorChainFactory</manager-property>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        
+    </manager>
+</server>

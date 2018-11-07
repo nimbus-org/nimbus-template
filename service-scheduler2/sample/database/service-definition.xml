@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="true"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Scheduler2">
+        
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</manager-property>
+        <manager-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Sample.Service.Sequence#Sequence</manager-property>
+        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler">
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
+        
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB#ScheduleManager">
+            
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleDependsMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupDependsMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleDependsTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupDependsTableCreator</depends>
+        </service>
+        
+        <service name="Time"
+                 code="jp.ossc.nimbus.service.system.DefaultTimeService">
+            <attribute name="Time">NOW/NOW/NOW 07:59:55 000</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.Connection" shutdown-hook="true">
+        
+        <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
+        <service template="Template.Service.Connection.JDBC#ConnectionFactory">
+            <attribute name="DriverName">org.hsqldb.jdbcDriver</attribute>
+            <attribute name="ConnectionURL">jdbc:hsqldb:./localDB;hsqldb.lock_file=false;shutdown=false</attribute>
+            <attribute name="UserName">sa</attribute>
+            <attribute name="Password"></attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.BeanControl">
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">Sample.Service.BeanControl#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">Sample.Service.BeanControl#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">Sample.Service.BeanControl#BeanFlowInterceptorChainFactory</manager-property>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.TableCreator">
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
+        
+        
+        <!-- スケジュールテーブルのSEQUENCEの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleSequenceCreator"/>
+        
+        <!-- スケジュールテーブルのスケジュールID用のSEQUENCEテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleSequenceTableCreator"/>
+        
+        <!-- スケジュールマスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_master.csv</attribute>
+        </service>
+        
+        <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_depends_master.csv</attribute>
+        </service>
+        
+        <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_depends_master.csv</attribute>
+        </service>
+        
+        <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_master.csv</attribute>
+        </service>
+        
+        <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"/>
+        
+        <!-- スケジュールグループテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupTableCreator"/>
+        
+        <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleDependsTableCreator"/>
+        
+        <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupDependsTableCreator"/>
+        
+        <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
+        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#RecordListConverter"/>
+    </manager>
+</server>
