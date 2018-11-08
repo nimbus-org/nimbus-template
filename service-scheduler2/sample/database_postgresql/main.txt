@@ -5,6 +5,7 @@ import jp.ossc.nimbus.service.scheduler2.*;
 ScheduleManager scheduleManager = ServiceManagerFactory.getServiceObject("Sample.Service.Scheduler2", "ScheduleManager");
 Time time = ServiceManagerFactory.getServiceObject("Sample.Service.Scheduler2", "Time");
 java.util.List schedules = null;
+try{
 do{
     schedules = scheduleManager.findSchedules(
         new int[]{
@@ -14,8 +15,19 @@ do{
             Schedule.STATE_RETRY
         }
     );
+    StringBuilder buf = new StringBuilder();
+    if(schedules.size() != 0){
+        for(int i = 0; i < schedules.size(); i++){
+            buf.append(schedules.get(i).getMasterId());
+            if(i != schedules.size() - 1){
+                buf.append(',');
+            }
+        }
+    }
     Thread.sleep(1000);
-    System.out.println(new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(time.currentTimeMillis())));
+    System.out.println(new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(time.currentTimeMillis())) + "=>" + buf);
 }while(schedules.size() != 0);
-
+}catch(Exception e){
+    e.printStackTrace();
+}
 return "終了";
