@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <property file="build.properties"/>
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-log"/>

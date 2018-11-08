@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="true"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Scheduler2">
+        
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</manager-property>
+        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler">
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
+        
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB.PostgreSQL#ScheduleManager">
+            
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleDependsMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupDependsMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupMasterTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleDependsTableCreator</depends>
+            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupDependsTableCreator</depends>
+        </service>
+        
+        <service name="Time"
+                 code="jp.ossc.nimbus.service.system.DefaultTimeService">
+            <attribute name="Time">NOW/NOW/NOW 07:59:55 000</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.BeanControl">
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
+        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">Sample.Service.BeanControl#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">Sample.Service.BeanControl#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">Sample.Service.BeanControl#BeanFlowInterceptorChainFactory</manager-property>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.Connection" shutdown-hook="true">
+        
+        <service template="Template.Service.Connection.JDBC#ConnectionFactory">
+            <attribute name="DriverName">org.postgresql.Driver</attribute>
+            <attribute name="ConnectionURL">jdbc:postgresql://localhost:5432/test</attribute>
+            <attribute name="UserName">hoge</attribute>
+            <attribute name="Password">fuga</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Scheduler2.TableCreator">
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleSequenceCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleSequenceTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_depends_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleGroupDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_depends_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleGroupMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleGroupTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleDependsTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleGroupDependsTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#RecordListConverter"/>
+    </manager>
+</server>
