@@ -65,6 +65,8 @@
                 <pathelement path="${target.dir}/${sample.name}/${project.name}"/>
             </classpath>
             <jvmarg value="-Dlocal.ip=${local.ip}"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${debug.port},server=y,suspend=${suspend}"/>
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
