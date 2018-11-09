@@ -81,13 +81,17 @@
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowScheduleExecutorService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
             
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
             <!-- BeanFlowInvokerFactoryサービスのサービス名を設定する -->
             <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             
         </service>
         
@@ -96,9 +100,11 @@
                  code="jp.ossc.nimbus.service.scheduler2.CommandScheduleExecutorService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
             
         </service>
         
@@ -107,13 +113,17 @@
                  code="jp.ossc.nimbus.service.scheduler2.ConcentrateScheduleExecutorService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
             
+<ifdef name="Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">
             <!-- 集配信したファイルをバックアップ管理するConcentrateBackupManagerサービスのサービス名を設定する -->
             <attribute name="ConcentrateBackupManagerServiceName">${Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
             
         </service>
         
@@ -136,9 +146,11 @@
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowConditionScheduleMakerService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
             <!-- BeanFlowInvokerFactoryサービスのサービス名を設定する -->
             <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             
         </service>
         
@@ -146,8 +158,10 @@
         <service name="DatabaseConditionScheduleMaker"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseConditionScheduleMakerService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
         </service>
         
     </manager>
@@ -172,9 +186,11 @@
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
@@ -207,9 +223,11 @@
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
@@ -255,10 +273,11 @@
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
             
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
-            
+</ifdef>
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
             <attribute name="NextScheduleIdSelectQuery">SELECT nextval('sequence_schedule_id')</attribute>
@@ -288,12 +307,14 @@
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SEQUENCE_SCHEDULE_ID'</attribute>
             <attribute name="CreateTableQuery">create SEQUENCE SEQUENCE_SCHEDULE_ID AS INT MAXVALUE 999999 CYCLE</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -301,7 +322,10 @@
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -351,7 +375,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -359,7 +382,10 @@
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_DEPENDS_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -386,7 +412,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -394,7 +419,10 @@
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_GROUP_DEPENDS_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -414,7 +442,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -422,7 +449,10 @@
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_GROUP_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -440,7 +470,6 @@
                 :GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -448,7 +477,10 @@
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE'</attribute>
             <attribute name="CreateTableQuery">
@@ -511,7 +543,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -519,7 +550,10 @@
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_GROUP'</attribute>
             <attribute name="CreateTableQuery">
@@ -542,7 +576,6 @@
                 :MASTER_GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -550,7 +583,10 @@
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_DEPENDS'</attribute>
             <attribute name="CreateTableQuery">
@@ -580,7 +616,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -588,7 +623,10 @@
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE_GROUP_DEPENDS'</attribute>
             <attribute name="CreateTableQuery">
@@ -611,7 +649,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -633,13 +670,15 @@
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_SEQUENCES where SEQUENCE_NAME='SEQUENCE_SCHEDULE_ID'</attribute>
             <attribute name="PreCreateTableQueries">SET WRITE_DELAY FALSE</attribute>
             <attribute name="CreateTableQuery">create sequence SEQUENCE_SCHEDULE_ID as INTEGER start with 1 increment by 1</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -647,7 +686,10 @@
         <service name="ScheduleSequenceTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_ID_SEQUENCE'</attribute>
             <attribute name="CreateTableQuery">create table SCHEDULE_ID_SEQUENCE(SEQUENCE_SCHEDULE_ID INTEGER not null, PRIMARY KEY(SEQUENCE_SCHEDULE_ID))</attribute>
@@ -662,7 +704,6 @@
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
             <depends>ScheduleSequenceCreator</depends>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -670,7 +711,10 @@
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -720,7 +764,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -728,7 +771,10 @@
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_DEPENDS_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -755,7 +801,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -763,7 +808,10 @@
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_GROUP_DEPENDS_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -783,7 +831,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -791,7 +838,10 @@
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_GROUP_MST'</attribute>
             <attribute name="CreateTableQuery">
@@ -809,7 +859,6 @@
                 :GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -817,7 +866,10 @@
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE'</attribute>
             <attribute name="CreateTableQuery">
@@ -880,7 +932,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -888,7 +939,10 @@
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_GROUP'</attribute>
             <attribute name="CreateTableQuery">
@@ -911,7 +965,6 @@
                 :MASTER_GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -919,7 +972,10 @@
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_DEPENDS'</attribute>
             <attribute name="CreateTableQuery">
@@ -949,7 +1005,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -957,7 +1012,10 @@
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE_GROUP_DEPENDS'</attribute>
             <attribute name="CreateTableQuery">
@@ -980,7 +1038,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1001,7 +1058,10 @@
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT
@@ -1018,7 +1078,6 @@
                 create sequence SEQUENCE_SCHEDULE_ID start 1 increment by 1
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1026,7 +1085,10 @@
         <service name="ScheduleSequenceTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1053,7 +1115,6 @@
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
             <depends>ScheduleSequenceCreator</depends>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1061,7 +1122,10 @@
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1118,7 +1182,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1126,7 +1189,10 @@
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1160,7 +1226,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1168,7 +1233,10 @@
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1195,7 +1263,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1203,7 +1270,10 @@
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1228,7 +1298,6 @@
                 :GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1236,7 +1305,10 @@
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1306,7 +1378,6 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1314,7 +1385,10 @@
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1344,7 +1418,6 @@
                 :MASTER_GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1352,7 +1425,10 @@
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1389,7 +1465,6 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1397,7 +1472,10 @@
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
                 SELECT 
@@ -1427,7 +1505,6 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
             <depends>RecordListConverter</depends>
         </service>
         

@@ -104,8 +104,10 @@
                  code="jp.ossc.nimbus.service.publish.DistributedConnectionFactoryService"
                  instance="template">
             <attribute name="DistributedSize">2</attribute>
+<ifdef name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">
             <attribute name="ConnectionFactoryFactoryServiceName">${Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME}</depends>
+</ifdef>
         </service>
         
     </manager>
@@ -119,19 +121,25 @@
         <service name="ClusterConnectionFactory"
                  code="jp.ossc.nimbus.service.publish.ClusterConnectionFactoryService"
                  instance="template">
+<ifdef name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME}</attribute>
-            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
-            <attribute name="FlexibleConnect">true</attribute>
             <depends>${Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="FlexibleConnect">true</attribute>
         </service>
         
         <service name="ClusterClientConnectionFactory"
                  code="jp.ossc.nimbus.service.publish.ClusterClientConnectionFactoryService"
                  instance="template">
+<ifdef name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</attribute>
-            <attribute name="FlexibleConnect">true</attribute>
             <depends>${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="FlexibleConnect">true</attribute>
         </service>
         
     </manager>
@@ -147,23 +155,31 @@
         <service name="ThinOutServerConnectionFactory"
                  code="jp.ossc.nimbus.service.publish.ThinOutServerConnectionFactoryService"
                  instance="template">
+<ifdef name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
             <attribute name="ThinOutFilterServiceNames">${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</attribute>
+            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
+</ifdef>
             <attribute name="ThinOutTimeoutCheckInterval">500</attribute>
             <attribute name="ThinOutTimeout">1000</attribute>
-            <depends>${Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
-            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
         </service>
         
         <service name="ThinOutClientConnectionFactory"
                  code="jp.ossc.nimbus.service.publish.ThinOutClientConnectionFactoryService"
                  instance="template">
+<ifdef name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
             <attribute name="ThinOutFilterServiceNames">${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</attribute>
+            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
+</ifdef>
             <attribute name="ThinOutTimeoutCheckInterval">500</attribute>
             <attribute name="ThinOutTimeout">1000</attribute>
-            <depends>${Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
-            <depends>${Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES}</depends>
         </service>
         
         <service name="TimeIntervalThinOutFilter"
@@ -182,8 +198,10 @@
                  code="jp.ossc.nimbus.service.publish.MessageReceiverService"
                  instance="template">
             
+<ifdef name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
             
 <ifdef name="Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME">
             <attribute name="MessageQueueFactoryServiceName">${Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME}</attribute>
@@ -218,12 +236,14 @@
                  code="jp.ossc.nimbus.service.publish.MessageForwardingService"
                  instance="template">
             
+<ifdef name="Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME}</depends>
-            
+</ifdef>
+<ifdef name="Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
-            
+</ifdef>
 <ifdef name="Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME">
             <attribute name="MessageQueueFactoryServiceName">${Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME}</attribute>
             <attribute name="MessageQueueDistributedSize">2</attribute>
@@ -255,10 +275,14 @@
                  code="jp.ossc.nimbus.service.publish.RequestConnectionFactoryService"
                  instance="template">
             
+<ifdef name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>
-            <attribute name="MessageReceiverServiceName">${Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">
+            <attribute name="MessageReceiverServiceName">${Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+</ifdef>
         </service>
         
     </manager>

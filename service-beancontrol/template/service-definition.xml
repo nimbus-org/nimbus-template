@@ -130,12 +130,16 @@ BeanFlowサービス
         <service name="JournalInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.MethodJournalInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">
             <attribute name="ThreadContextServiceName">${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="RequestIdKey">REQUEST_ID</attribute>
             <attribute name="BushingCallBlock">true</attribute>
-            <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
-            <depends>${Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME}</depends>
         </service>
         
         <service name="BeanFlowMetricsInterceptor"
@@ -153,8 +157,10 @@ BeanFlowサービス
                  code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
                  instance="template">
             <attribute name="ThrowException">true</attribute>
+<ifdef name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
             <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
         </service>
         
         <service name="BeanFlowSelector"

@@ -91,7 +91,10 @@
         <service name="ThreadContextInitializeInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.ThreadContextInitializeInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">
             <attribute name="ThreadContextServiceName">${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="SequenceServiceName">#Sequence</attribute>
             <attribute name="OutputContextPath">true</attribute>
             <attribute name="OutputSessionID">true</attribute>
@@ -99,7 +102,6 @@
             <attribute name="NewSession">false</attribute>
             <attribute name="OutputThreadName">true</attribute>
             <attribute name="OutputThreadGroupName">true</attribute>
-            <depends>${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</depends>
             <depends>Sequence</depends>
         </service>
         
@@ -107,8 +109,10 @@
                  code="jp.ossc.nimbus.service.sequence.StringSequenceService"
                  instance="template">
             <attribute name="Format">%HOST_NAME%;_;TIME_SEQ(yyyyMMddHHmmssSSS,3)</attribute>
+<ifdef name="Template.Service.Filter.CONTEXT_SERVICE_NAME">
             <attribute name="ContextServiceName">${Template.Service.Filter.CONTEXT_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
         </service>
         
         <service name="RequestProcessCheckInterceptor"
@@ -120,23 +124,31 @@
         <service name="AccessJournalInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.AccessJournalInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.CONTEXT_SERVICE_NAME">
             <attribute name="ContextServiceName">${Template.Service.Filter.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Filter.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="OutputResponseSession">true</attribute>
             <attribute name="ResponseWrap">true</attribute>
             <attribute name="ResponseBufferedOutput">true</attribute>
             <attribute name="BushingRequestBlock">true</attribute>
-            <depends>${Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME}</depends>
-            <depends>${Template.Service.Filter.CONTEXT_SERVICE_NAME}</depends>
         </service>
 
         <service name="BeanFlowSelectCheckInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.BeanFlowSelectCheckInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME">
             <attribute name="BeanFlowSelectorServiceName">${Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME}</attribute>
-            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
         </service>
 
         <service name="HttpServletResponseDeflateInterceptor"
@@ -165,32 +177,46 @@
         <service name="ExchangeInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.StreamExchangeInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME}</attribute>
-            <attribute name="ThreadContextServiceName">${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
-            <attribute name="BeanFlowSelectorServiceName">${Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME">
+            <attribute name="BeanFlowSelectorServiceName">${Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
         </service>
 
         <service name="AuthenticateInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.AuthenticateInterceptorService"
                  instance="template">
+<ifdef name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">
             <attribute name="ThreadContextServiceName">${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <attribute name="AuthenticateStoreServiceName">#AuthenticateStoreService</attribute>
             <depends>${Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="AuthenticateStoreServiceName">#AuthenticateStoreService</attribute>
             <depends>AuthenticateStoreService</depends>
         </service>
 
         <service name="AuthenticateStoreService"
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.DatabaseAuthenticateStoreService"
                  instance="template">
+<ifdef name="Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
-            <attribute name="PersistentManagerServiceName">${Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME">
+            <attribute name="PersistentManagerServiceName">${Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
         </service>
 
     </manager>

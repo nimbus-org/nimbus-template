@@ -45,7 +45,10 @@
             <attribute name="DefaultWritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
             <attribute name="DefaultMessageWriterServiceName">#ConsoleWriter</attribute>
             <attribute name="DebugEnabled">false</attribute>
+<ifdef name="Template.Service.Log.CONTEXT_SERVICE_NAME">
             <attribute name="ContextServiceName">${Template.Service.Log.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Log.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
             <attribute name="ContextFormatKeys">
                 REQUEST_ID
             </attribute>
@@ -65,7 +68,6 @@
             <depends>ApplGroupCategory</depends>
             <depends>LogConsoleWritableRecordFactory</depends>
             <depends>ConsoleWriter</depends>
-            <depends>${Template.Service.Log.CONTEXT_SERVICE_NAME}</depends>
         </service>
 
 
