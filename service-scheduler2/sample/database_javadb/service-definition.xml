@@ -29,12 +29,11 @@
         
         <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
         
-        <service template="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB#ScheduleManager">
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB.JavaDB#ScheduleManager">
             
             <attribute name="TimeServiceName">#Time</attribute>
             <depends>Time</depends>
             <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceCreator</depends>
-            <depends>Sample.Service.Scheduler2.TableCreator#ScheduleSequenceTableCreator</depends>
             <depends>Sample.Service.Scheduler2.TableCreator#ScheduleMasterTableCreator</depends>
             <depends>Sample.Service.Scheduler2.TableCreator#ScheduleDependsMasterTableCreator</depends>
             <depends>Sample.Service.Scheduler2.TableCreator#ScheduleGroupDependsMasterTableCreator</depends>
@@ -68,46 +67,42 @@
     <manager name="Sample.Service.Scheduler2.Connection" shutdown-hook="true">
         
         <service template="Template.Service.Connection.JDBC#ConnectionFactory">
-            <attribute name="DriverName">org.hsqldb.jdbcDriver</attribute>
-            <attribute name="ConnectionURL">jdbc:hsqldb:./localDB;hsqldb.lock_file=false;shutdown=false</attribute>
-            <attribute name="UserName">sa</attribute>
-            <attribute name="Password"></attribute>
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
         </service>
         
     </manager>
     
     <manager name="Sample.Service.Scheduler2.TableCreator">
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME">APP</manager-property>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleSequenceCreator"/>
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleSequenceCreator"/>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleSequenceTableCreator"/>
-        
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleMasterTableCreator">
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleMasterTableCreator">
             <attribute name="InsertRecordsFilePath">schedule_master.csv</attribute>
         </service>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleDependsMasterTableCreator">
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleDependsMasterTableCreator">
             <attribute name="InsertRecordsFilePath">schedule_depends_master.csv</attribute>
         </service>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupDependsMasterTableCreator">
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupDependsMasterTableCreator">
             <attribute name="InsertRecordsFilePath">schedule_group_depends_master.csv</attribute>
         </service>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupMasterTableCreator">
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupMasterTableCreator">
             <attribute name="InsertRecordsFilePath">schedule_group_master.csv</attribute>
         </service>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleTableCreator"
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"/>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupTableCreator"/>
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupTableCreator"/>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleDependsTableCreator"/>
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleDependsTableCreator"/>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#ScheduleGroupDependsTableCreator"/>
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupDependsTableCreator"/>
         
-        <service template="Template.Service.Scheduler2.TableCreator.HSQLDB#RecordListConverter"/>
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#RecordListConverter"/>
     </manager>
 </server>
