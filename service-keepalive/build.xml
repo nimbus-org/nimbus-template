@@ -4,9 +4,9 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-keepalive"/>
-    <property name="project.dependencies" value=""/>
+    <property name="project.dependencies" value="service-connection"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
-    <property name="sample.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="../../../../service-connection/jdbc/service-definition.xml,service-definition.xml"/>
     
     <!-- target処理は../build.xmlに記載 -->
     

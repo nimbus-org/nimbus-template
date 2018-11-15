@@ -1,0 +1,26 @@
+import java.net.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.keepalive.*;
+
+KeepAliveChecker checker = ServiceManagerFactory.getServiceObject("Sample.Service.KeepAlive.KeepAliveChecker", "KeepAliveChecker");
+
+print("監視結果：" + checker.isAlive());
+
+final ServerSocket ss = new ServerSocket(80);
+Thread thread = new Thread(){
+    public void run(){
+        print("サーバ待ち受け：開始");
+        Socket s = ss.accept();
+        s.close();
+        ss.close();
+        print("サーバ待ち受け：終了");
+    }
+};
+thread.start();
+Thread.sleep(1000);
+print("監視結果：" + checker.isAlive());
+Thread.sleep(1000);
+print("監視結果：" + checker.isAlive());
+
+return "終了";

@@ -1,0 +1,10 @@
+import java.net.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.keepalive.*;
+
+KeepAliveChecker checker = ServiceManagerFactory.getServiceObject("Sample.Service.KeepAlive.KeepAliveChecker", "KeepAliveChecker");
+
+print("監視結果：" + checker.isAlive());
+
+return "終了";
