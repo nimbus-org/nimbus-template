@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Journal.ProxyJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        
+        
+<!--=======================================================================
+ジャーナルサービス
+========================================================================-->
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournal"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalQueue"/>
+        
+<!--=======================================================================
+カテゴリサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalCategory"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalCategory"/>
+        
+<!--=======================================================================
+WritableRecordFactoryサービス
+========================================================================-->
+    
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#NormalDateElement"
+                 instance="factory"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ErrorDateElement"
+                 instance="factory"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ParametersElement"
+                 instance="factory"/>
+
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalWriter"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalWriter"/>
+
+<!--=======================================================================
+EditorFinderサービス
+========================================================================-->
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalEditorFinder"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessRequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ClassJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#RequestJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#MethodJournalEditor"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ThrowableJournalEditor"/>
+        
+    </manager>
+    
+</server>
