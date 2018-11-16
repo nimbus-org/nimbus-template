@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.AOP.Interceptor">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        
+        <!-- 性能統計を取得するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <service name="MetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodMetricsInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 業務フローの性能統計を取得するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <service name="BeanFlowMetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.BeanFlowMetricsInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- コンテキスト情報をエクスポートするInterceptorサービス -->
+        <service name="ContextExportInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ContextExportInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- コンテキスト情報をインポートするInterceptorサービス -->
+        <service name="ContextImportInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ContextImportInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- ジャーナルを出力するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">#AccessJournal</manager-property>
+        <service name="MethodJournalInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodJournalInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 例外処理Interceptorサービス -->
+        <service name="ExceptionHandlingInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionHandlingInterceptorService"
+                 instance="template"/>
+        
+        <!-- 例外ハンドラ -->
+        <manager-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">#AccessJournal</manager-property>
+        <service name="DefaultExceptionHandler"
+                 code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
+                 instance="template">
+            <attribute name="LogMessageCode">ERROR</attribute>
+            <attribute name="ThrowException">true</attribute>
+<ifdef name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- クラス互換性のない例外をラップしてthrowするInterceptorサービス -->
+        <service name="IncompatibleExceptionWrapInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.IncompatibleExceptionWrapInterceptorService"
+                 instance="template"/>
+        
+        <!-- 処理時間をチェックするInterceptorサービス -->
+        <service name="RequestProcessCheckInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.RequestProcessCheckInterceptorService"
+                 instance="template">
+            <attribute name="CheckInterval">
+                60000=WARN,60000
+                300000=ERROR,-1
+            </attribute>
+        </service>
+    </manager>
+    
+</server>

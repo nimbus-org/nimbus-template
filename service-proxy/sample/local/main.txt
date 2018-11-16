@@ -1,0 +1,13 @@
+import java.util.Map;
+
+import jp.ossc.nimbus.core.*;
+
+Map map = ServiceManagerFactory.getServiceObject("Sample.Service.Proxy.Client", "Map");
+
+print(map.toString());
+
+map.put("hoge", new Integer(100));
+
+print(map.toString());
+
+return "終了";

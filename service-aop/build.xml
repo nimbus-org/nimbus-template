@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <property file="build.properties"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <import file="../build.xml"/>
+    <property name="project.name" value="service-aop"/>
+    <property name="project.dependencies" value=""/>
+    <property name="template.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="service-definition.xml"/>
+    
+    <!-- target処理は../build.xmlに記載 -->
+    
+</project>
