@@ -73,10 +73,9 @@
     <manager name="Template.Service.Scheduler2.ScheduleExecutor">
         
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</manager-property>
         
         <!-- 業務フローでスケジュールを処理するScheduleExecuterサービス -->
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
         <service name="BeanFlowScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowScheduleExecutorService"
                  instance="template">
@@ -109,6 +108,7 @@
         </service>
         
         <!-- 集配信スケジュールを処理するScheduleExecuterサービス -->
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</manager-property>
         <service name="ConcentrateScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.ConcentrateScheduleExecutorService"
                  instance="template">
@@ -132,6 +132,26 @@
                  code="jp.ossc.nimbus.service.scheduler2.FileConcentrateBackupManagerService"
                  instance="template"/>
         
+        <!-- クラスタ化されたScheduleExecuterサービス -->
+        <manager-property name="Template.Service.Scheduler2.LOCAL_SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</manager-property>
+        <service name="ClusterScheduleExecutor"
+                 template="Template.Service.Proxy.Client#RemoteClient"
+                 instance="template">
+            <attribute name="RemoteInterfaceClassName">jp.ossc.nimbus.service.scheduler2.ScheduleExecutor</attribute>
+            <attribute name="RemoteServiceName">${Template.Service.Scheduler2.LOCAL_SCHEDULE_EXECUTOR_SERVICE_NAME}</attribute>
+        </service>
+        
+        <!-- ScheduleExecuterをクラスタ化して呼び出すInvokerサービス -->
+        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</manager-property>
+        <service name="ScheduleExecutorInvoker"
+                 code="jp.ossc.nimbus.service.scheduler2.ScheduleExecutorClusterInvokerService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">
+            <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
     </manager>
     
     <manager name="Template.Service.Scheduler2.ScheduleMaker">
