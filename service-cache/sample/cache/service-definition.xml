@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Cache">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <service template="Template.Service.Cache.Cache.Memory#Cache"/>
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</manager-property>
+        <manager-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</manager-property>
+        <service template="Template.Service.Cache.OverflowController#OverflowController"/>
+        
+        <service name="OverflowValidator" template="Template.Service.Cache.OverflowValidator#CacheSizeOverflowValidator">
+            <attribute name="MaxSize">2</attribute>
+        </service>
+        
+        <service name="OverflowAlgorithm" template="Template.Service.Cache.OverflowAlgorithm#LFUOverflowAlgorithm"/>
+        
+    </manager>
+</server>

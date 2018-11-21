@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Cache.Cache.Memory">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME">#PersistCache</manager-property>
+        
+        <!-- メモリ中にキャッシュするCacheサービス -->
+        <service name="Cache"
+                 code="jp.ossc.nimbus.service.cache.MemoryCacheService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME">
+            <!-- 永続化を行うCacheサービスのサービス名を設定する -->
+            <attribute name="PersistCacheServiceName">${Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.Cache.File">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">#Externalizer</manager-property>
+        
+        <!-- 直列化してファイルにキャッシュするCacheサービス -->
+        <service name="Cache"
+                 code="jp.ossc.nimbus.service.cache.FileCacheService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">
+            <!-- 直列化を行うExternalizerサービスのサービス名を設定する -->
+            <attribute name="ExternalizerServiceName">${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.Cache.Serialize">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">#Externalizer</manager-property>
+        
+        <!-- 直列化してメモリ中にキャッシュするCacheサービス -->
+        <service name="Cache"
+                 code="jp.ossc.nimbus.service.cache.SerializedMemoryCacheService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">
+            <!-- 直列化を行うExternalizerサービスのサービス名を設定する -->
+            <attribute name="ExternalizerServiceName">${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.CacheMap.Memory">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME">#PersistCache</manager-property>
+        
+        <!-- メモリ中にキャッシュするCacheMapサービス -->
+        <service name="CacheMap"
+                 code="jp.ossc.nimbus.service.cache.MemoryCacheMapService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME">
+            <!-- 永続化を行うCacheサービスのサービス名を設定する -->
+            <attribute name="PersistCacheServiceName">${Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.PERSIST_CACHE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.CacheMap.File">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">#Externalizer</manager-property>
+        
+        <!-- 直列化してファイルにキャッシュするCacheMapサービス -->
+        <service name="CacheMap"
+                 code="jp.ossc.nimbus.service.cache.FileCacheMapService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">
+            <!-- 直列化を行うExternalizerサービスのサービス名を設定する -->
+            <attribute name="ExternalizerServiceName">${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.CacheMap.Serialize">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
+        <manager-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">#Externalizer</manager-property>
+        
+        <!-- 直列化してメモリ中にキャッシュするCacheMapサービス -->
+        <service name="CacheMap"
+                 code="jp.ossc.nimbus.service.cache.SerializedMemoryCacheMapService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">
+            <!-- あふれ制御を行うOverflowControllerサービスのサービス名を設定する -->
+            <attribute name="OverflowControllerServiceNames">${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">
+            <!-- 直列化を行うExternalizerサービスのサービス名を設定する -->
+            <attribute name="ExternalizerServiceName">${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.EXTERNALIZER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.OverflowController">
+        
+        <manager-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</manager-property>
+        <manager-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</manager-property>
+        <manager-property name="Template.Service.Cache.OVERFLOW_ACTION_SERVICE_NAME">#OverflowAction</manager-property>
+        
+        <!-- デフォルトのOverflowControllerサービス -->
+        <service name="OverflowController"
+                 code="jp.ossc.nimbus.service.cache.DefaultOverflowControllerService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">
+            <!-- あふれ検証を行うOverflowValidatorサービスのサービス名を設定する -->
+            <attribute name="OverflowValidatorServiceName">${Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">
+            <!-- あふれアルゴリズムを決定するOverflowAlgorithmサービスのサービス名を設定する -->
+            <attribute name="OverflowAlgorithmServiceName">${Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.OVERFLOW_ACTION_SERVICE_NAME">
+            <!-- あふれ動作を決定するOverflowActionサービスのサービス名を設定する -->
+            <attribute name="OverflowActionServiceName">${Template.Service.Cache.OVERFLOW_ACTION_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OVERFLOW_ACTION_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.OverflowValidator">
+        
+        <!-- キャッシュ件数であふれ検証を行うOverflowValidatorサービス -->
+        <service name="CacheSizeOverflowValidator"
+                 code="jp.ossc.nimbus.service.cache.CacheSizeOverflowValidatorService"
+                 instance="template">
+            
+            <!-- 最大キャッシュ数を設定する -->
+            <attribute name="MaxSize">1000</attribute>
+            
+        </service>
+        
+        <!-- キャッシュ時間であふれ検証を行うOverflowValidatorサービス -->
+        <service name="TimeExpierOverflowValidator"
+                 code="jp.ossc.nimbus.service.cache.TimeExpierOverflowValidatorService"
+                 instance="template">
+            
+            <!-- 有効時間[ms]を設定する -->
+            <attribute name="ExpierTerm">60000</attribute>
+            
+        </service>
+        
+        <!-- ヒープ全体のメモリ使用量であふれ検証を行うOverflowValidatorサービス -->
+        <service name="MemorySizeOverflowValidator"
+                 code="jp.ossc.nimbus.service.cache.MemorySizeOverflowValidatorService"
+                 instance="template"/>
+        
+        <!-- キャッシュされたオブジェクトの理論メモリ使用量であふれ検証を行うOverflowValidatorサービス -->
+        <service name="CalculateMemorySizeOverflowValidator"
+                 code="jp.ossc.nimbus.service.cache.CalculateMemorySizeOverflowValidatorService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.OverflowAlgorithm">
+        
+        <!-- FIFOであふれを決定するOverflowAlgorithmサービス -->
+        <service name="FIFOOverflowAlgorithm"
+                 code="jp.ossc.nimbus.service.cache.FIFOOverflowAlgorithmService"
+                 instance="template"/>
+        
+        <!-- LIFOであふれを決定するOverflowAlgorithmサービス -->
+        <service name="LIFOOverflowAlgorithm"
+                 code="jp.ossc.nimbus.service.cache.LIFOOverflowAlgorithmService"
+                 instance="template"/>
+        
+        <!-- LFUであふれを決定するOverflowAlgorithmサービス -->
+        <service name="LFUOverflowAlgorithm"
+                 code="jp.ossc.nimbus.service.cache.LFUOverflowAlgorithmService"
+                 instance="template"/>
+        
+        <!-- LRUであふれを決定するOverflowAlgorithmサービス -->
+        <service name="LRUOverflowAlgorithm"
+                 code="jp.ossc.nimbus.service.cache.LRUOverflowAlgorithmService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Cache.OverflowAction">
+        
+        <!-- あふれたオブジェクトをキャッシュから削除するOverflowActionサービス -->
+        <service name="RemoveOverflowAction"
+                 code="jp.ossc.nimbus.service.cache.RemoveOverflowActionService"
+                 instance="template"/>
+        
+        <!-- あふれたオブジェクトをキャッシュから削除してContextサービスに永続化するOverflowActionサービス -->
+        <manager-property name="Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME">#Context</manager-property>
+        <service name="ContextSaveOverflowAction"
+                 code="jp.ossc.nimbus.service.cache.ContextSaveOverflowActionService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME">
+            <!-- あふれ先のContextサービスのサービス名を設定する -->
+            <attribute name="ContextServiceName">${Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME}</attribute>
+</ifdef>
+            
+        </service>
+        
+        <!-- あふれたオブジェクトを別のキャッシュに退避させるOverflowActionサービス -->
+        <manager-property name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME">#Cache</manager-property>
+        <manager-property name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
+        <service name="StoreCacheOverflowAction"
+                 code="jp.ossc.nimbus.service.cache.StoreCacheOverflowActionService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME">
+            <!-- あふれ先のCacheサービスのサービス名を設定する -->
+            <attribute name="PersistCacheServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME">
+            <!-- あふれ先のCacheMapサービスのサービス名を設定する -->
+            <attribute name="PersistCacheMapServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+        <!-- あふれたオブジェクトをソフト参照に変え、ソフト参照がGCされると別のキャッシュに退避させるOverflowActionサービス -->
+        <manager-property name="Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_SERVICE_NAME">#Cache</manager-property>
+        <manager-property name="Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
+        <service name="SoftReferenceOverflowAction"
+                 code="jp.ossc.nimbus.service.cache.SoftReferenceOverflowActionService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_SERVICE_NAME">
+            <!-- あふれ先のCacheサービスのサービス名を設定する -->
+            <attribute name="PersistCacheServiceName">${Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_MAP_SERVICE_NAME">
+            <!-- あふれ先のCacheMapサービスのサービス名を設定する -->
+            <attribute name="PersistCacheMapServiceName">${Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Cache.OverflowAction.SoftReference.PERSIST_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+    </manager>
+</server>

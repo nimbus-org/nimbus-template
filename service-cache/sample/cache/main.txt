@@ -1,0 +1,24 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.cache.*;
+
+Cache cache = ServiceManagerFactory.getServiceObject("Sample.Service.Cache", "Cache");
+
+
+print("hogeを登録");
+CachedReference hoge_ref = cache.add("hoge");
+
+print("fugaを登録");
+CachedReference fuga_ref = cache.add("fuga");
+
+print("hogeを参照=" + hoge_ref.get());
+print("hogeを参照=" + hoge_ref.get());
+print("fugaを参照=" + fuga_ref.get());
+
+print("piyoを登録");
+CachedReference piyo_ref = cache.add("piyo");
+
+print("hogeを参照=" + hoge_ref.get());
+print("fugaを参照=" + fuga_ref.get());
+print("piyoを参照=" + piyo_ref.get());
+
+return "終了";
