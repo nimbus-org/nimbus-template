@@ -1,0 +1,8 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.interpreter.Interpreter;
+
+Interpreter interpreter = ServiceManagerFactory.getServiceObject("Sample.Service.Interpreter", "Interpreter");
+
+print(interpreter.evaluate("'test';"));
+
+return "終了";

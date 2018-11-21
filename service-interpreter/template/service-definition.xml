@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Interpreter">
+        
+        <!-- BeanShellスクリプトを実行するInterpreterサービス -->
+        <service name="BeanShellInterpreter"
+                 code="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService"
+                 instance="template"/>
+        
+        <!-- ScriptEngineでスクリプトを実行するInterpreterサービス -->
+        <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
+        <manager-property name="Template.Service.Interpreter.ScriptEngine.MIME_TYPE">text/javascript</manager-property>
+        <manager-property name="Template.Service.Interpreter.ScriptEngine.EXTENTION">js</manager-property>
+        <service name="ScriptEngineInterpreter"
+                 code="jp.ossc.nimbus.service.interpreter.ScriptEngineInterpreterService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">
+            <attribute name="EngineName">${Template.Service.Interpreter.ScriptEngine.ENGINE_NAME}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Interpreter.ScriptEngine.MIME_TYPE">
+            <attribute name="MimeType">${Template.Service.Interpreter.ScriptEngine.MIME_TYPE}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Interpreter.ScriptEngine.EXTENTION">
+            <attribute name="Extension">${Template.Service.Interpreter.ScriptEngine.EXTENTION}</attribute>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+</server>
