@@ -212,4 +212,34 @@
         
     </manager>
     
+    <manager name="Template.Service.Context.KeyDistributor">
+        
+        <!-- MD5のハッシュ値でキー分散を行うSharedContextKeyDistributorサービス -->
+        <service name="MD5HashSharedContextKeyDistributor"
+                 code="jp.ossc.nimbus.service.context.MD5HashSharedContextKeyDistributorService"
+                 instance="template"/>
+        
+        <!-- データベースのマスタを元にキー分散を行うSharedContextKeyDistributorサービス -->
+        <manager-property name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
+        <service name="DatabaseSharedContextKeyDistributor"
+                 code="jp.ossc.nimbus.service.context.DatabaseSharedContextKeyDistributorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">
+            <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME">
+            <!-- データベースとのO/Rマッピングを行うPersistentManagerサービスのサービス名を設定する -->
+            <attribute name="PersistentManagerServiceName">${Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
 </server>
