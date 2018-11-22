@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.IO.Externalizer">
+        
+        <!-- Java標準の直列化処理を行うExternalizerサービス -->
+        <service name="JavaExternalizer"
+                 code="jp.ossc.nimbus.service.io.SerializableExternalizerService"
+                 instance="template"/>
+        
+        <!-- Nimbus独自の直列化処理を行うExternalizerサービス -->
+        <service name="NimbusExternalizer"
+                 code="jp.ossc.nimbus.service.io.NimbusExternalizerService"
+                 instance="template"/>
+        
+        <!-- Kryoで直列化処理を行うExternalizerサービス -->
+        <service name="KryoExternalizer"
+                 code="jp.ossc.nimbus.service.io.KryoExternalizerService"
+                 instance="template"/>
+        
+    </manager>
+</server>
