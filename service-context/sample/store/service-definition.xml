@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.Context.SharedContext.Server" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</manager-property>
+        <service template="Template.Service.Context.SharedContext#SharedContext">
+            <attribute name="LoadOnStart">true</attribute>
+        </service>
+        
+        <manager-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
+        <service template="Template.Service.Context.ContextStore#ContextStore">
+            
+            <invoke name="addDatabaseMapping">
+                <argument>
+                    <object code="jp.ossc.nimbus.service.context.DatabaseContextStoreService$DatabaseMapping">
+                        <attribute name="SelectQuery">
+                            select ID-&gt;{id},
+                                   NAME-&gt;{name},
+                                   AGE-&gt;{age},
+                                   SEX-&gt;{sex}
+                            from USER_MST
+                        </attribute>
+                        <attribute name="DatabaseRecord">
+                            <object code="jp.ossc.nimbus.service.context.SharedContextRecord">
+                                <attribute name="Schema">
+                                    :id,java.lang.String
+                                    :name,java.lang.String
+                                    :age,short
+                                    :sex,java.lang.String
+                                </attribute>
+                            </object>
+                        </attribute>
+                        <attribute name="KeyLoadPropertyName">id</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            
+            <depends>UserMasterTableCreator</depends>
+        </service>
+        
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager"/>
+        
+        <service name="UserMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService">
+            
+            <attribute name="ConnectionFactoryServiceName">Sample.Service.Connection#ConnectionFactory</attribute>
+            <depends>Sample.Service.Connection#ConnectionFactory</depends>
+            
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='USER_MST'</attribute>
+            <attribute name="CreateTableQuery">
+                create table USER_MST(
+                    ID              CHAR(5) not null,
+                    NAME            VARCHAR(256),
+                    AGE             NUMERIC(3,0),
+                    SEX             CHAR(1),
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into USER_MST values(?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :NAME,java.lang.String
+                :AGE,short
+                :SEX,java.lang.String
+            </attribute>
+            <attribute name="InsertRecords">
+                00001,山田太郎,25,M
+                00002,山田花子,20,F
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+            <depends>
+                <service name="RecordListConverter"
+                         code="jp.ossc.nimbus.util.converter.RecordListCSVConverter">
+                    <attribute name="IgnoreEmptyLine">true</attribute>
+                    <attribute name="NullValue">null</attribute>
+                </service>
+            </depends>
+        </service>
+    </manager>
+    
+    <manager name="Sample.Service.Context.SharedContext.Client" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</manager-property>
+        <service template="Template.Service.Context.SharedContext#SharedContext">
+            <attribute name="Client">true</attribute>
+        </service>
+        
+    </manager>
+</server>

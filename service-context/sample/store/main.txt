@@ -1,0 +1,11 @@
+import jp.ossc.nimbus.service.context.*;
+import jp.ossc.nimbus.core.*;
+
+SharedContext sc1 = ServiceManagerFactory.getServiceObject("Sample.Service.Context.SharedContext.Server","SharedContext");
+SharedContext sc2 = ServiceManagerFactory.getServiceObject("Sample.Service.Context.SharedContext.Client","SharedContext");
+
+print("クライアントモードの共有コンテキストからget(\"00001\")=" + sc2.get("00001"));
+
+print("サーバモードの共有コンテキストからget(\"00002\")=" + sc1.get("00002"));
+
+return "OK";

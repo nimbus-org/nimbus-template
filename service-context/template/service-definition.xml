@@ -42,4 +42,174 @@
                  code="jp.ossc.nimbus.service.context.ServerInfoService"
                  instance="template"/>
     </manager>
+    
+    <manager name="Template.Service.Context.SharedContext">
+        
+        <!-- サーバを跨ってデータを共有するSharedContextサービス -->
+        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">#Interpreter</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">#ExecuteQueue</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</manager-property>
+        <service name="SharedContext"
+                 code="jp.ossc.nimbus.service.context.SharedContextService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">
+            <!-- コンテキスト情報の変更を送受信するRequestConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="RequestConnectionFactoryServiceName">${Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">
+            <!-- コンテキスト情報の共有を管理するClusterサービスのサービス名を設定する -->
+            <attribute name="ClusterServiceName">${Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">
+            <!-- コンテキスト情報のトランザクションを管理するSharedContextTransactionManagerサービスのサービス名を設定する -->
+            <attribute name="SharedContextTransactionManagerServiceName">${Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">
+            <!-- クライアントモードの時に、データをキャッシュするCacheMapサービスのサービス名を設定する -->
+            <attribute name="ClientCacheMapServiceName">${Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">
+            <!-- サーバモードの時に、データをキャッシュするCacheMapサービスのサービス名を設定する -->
+            <attribute name="ServerCacheMapServiceName">${Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">
+            <!-- スクリプトを実行するInterpreterサービスのサービス名を設定する -->
+            <attribute name="InterpreterServiceName">${Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">
+            <!-- スクリプトを実行要求受付Queueサービスのサービス名を設定する -->
+            <attribute name="ExecuteQueueServiceName">${Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">
+            <!-- 永続化を行うContextStoreサービスのサービス名を設定する -->
+            <attribute name="ContextStoreServiceName">${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- サーバを跨ってデータを分散共有するSharedContextサービス -->
+        <manager-property name="Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME">#ParallelRequestQueue</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME">#KeyDistributor</manager-property>
+        <service name="DistributedSharedContext"
+                 code="jp.ossc.nimbus.service.context.DistributedSharedContextService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">
+            <!-- コンテキスト情報の変更を送受信するRequestConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="RequestConnectionFactoryServiceName">${Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">
+            <!-- コンテキスト情報の共有を管理するClusterサービスのサービス名を設定する -->
+            <attribute name="ClusterServiceName">${Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">
+            <!-- コンテキスト情報のトランザクションを管理するSharedContextTransactionManagerサービスのサービス名を設定する -->
+            <attribute name="SharedContextTransactionManagerServiceName">${Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">
+            <!-- クライアントモードの時に、データをキャッシュするCacheMapサービスのサービス名を設定する -->
+            <attribute name="ClientCacheMapServiceName">${Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">
+            <!-- サーバモードの時に、データをキャッシュするCacheMapサービスのサービス名を設定する -->
+            <attribute name="ServerCacheMapServiceName">${Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">
+            <!-- スクリプトを実行するInterpreterサービスのサービス名を設定する -->
+            <attribute name="InterpreterServiceName">${Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">
+            <!-- スクリプトを実行要求受付Queueサービスのサービス名を設定する -->
+            <attribute name="ExecuteQueueServiceName">${Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">
+            <!-- 永続化を行うContextStoreサービスのサービス名を設定する -->
+            <attribute name="ContextStoreServiceName">${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME">
+            <!-- 分散コンテキストへの要求を並列で処理するための受付Queueサービスのサービス名を設定する -->
+            <attribute name="ParallelRequestQueueServiceName">${Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME">
+            <!-- 分散コンテキストのキー分散を決める付SharedContextKeyDistributorサービスのサービス名を設定する -->
+            <attribute name="SharedContextKeyDistributorServiceName">${Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Context.ContextStore">
+        
+        <!-- コンテキストをデータベースに永続化するContextStoreサービス -->
+        <manager-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
+        <service name="ContextStore"
+                 code="jp.ossc.nimbus.service.context.DatabaseContextStoreService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">
+            <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">
+            <!-- データベースとのO/Rマッピングを行うPersistentManagerサービスのサービス名を設定する -->
+            <attribute name="PersistentManagerServiceName">${Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Context.TransactionManager">
+        
+        <!-- 共有コンテキストのトランザクション管理を行うSharedContextTransactionManagerサービス -->
+        <service name="TransactionManager"
+                 code="jp.ossc.nimbus.service.context.SharedContextTransactionManagerService"
+                 instance="template"/>
+        
+    </manager>
+    
 </server>

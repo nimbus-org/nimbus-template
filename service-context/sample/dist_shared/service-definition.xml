@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.Context.SharedContext.Server" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</manager-property>
+        <service template="Template.Service.Context.SharedContext#DistributedSharedContext"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Context.SharedContext.Client" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</manager-property>
+        <service template="Template.Service.Context.SharedContext#DistributedSharedContext">
+            <attribute name="Client">true</attribute>
+        </service>
+        
+    </manager>
+</server>
