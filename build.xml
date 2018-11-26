@@ -28,9 +28,15 @@
                 <copy todir="${target.dir}/template/@{dependency}/">
                     <fileset dir="../@{dependency}/template/"/>
                 </copy>
-                <copy todir="${target.dir}/sample/@{dependency}/">
-                    <fileset dir="../@{dependency}/sample/"/>
-                </copy>
+                <available property="@{dependency}.existsSample" file="../@{dependency}/sample/" type="dir"/>
+                <if>
+                    <equals arg1="${@{dependency}.existsSample}" arg2="true" />
+                    <then>
+                        <copy todir="${target.dir}/sample/@{dependency}/">
+                            <fileset dir="../@{dependency}/sample/"/>
+                        </copy>
+                    </then>
+                </if>
             </sequential>
         </ac:for>
         

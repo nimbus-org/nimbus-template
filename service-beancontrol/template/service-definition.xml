@@ -16,7 +16,6 @@
     <manager name="Template.Service.BeanControl">
         
         <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
-        <manager-property name="Template.Service.BeanControl.METRICS_ENABLED">true</manager-property>
         <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
         <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">#Context</manager-property>
         <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">#BusinessJournal</manager-property>
@@ -81,16 +80,6 @@ BeanFlowサービス
 </ifdef>
         </service>
 
-        <service name="JavaScriptInterpreter"
-                code="jp.ossc.nimbus.service.interpreter.ScriptEngineInterpreterService"
-                instance="template">
-            <attribute name="EngineName">JavaScript</attribute>
-        </service>
-
-        <service name="BeanShellInterpreter"
-                 code="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService"
-                 instance="template"/>
-
         <service name="TemplateEngine"
                  code="jp.ossc.nimbus.service.template.VelocityTemplateEngineService"
                  instance="template">
@@ -106,25 +95,37 @@ BeanFlowサービス
             <depends>BeanFlowInterceptorChainList</depends>
         </service>
 
+        
+        <manager-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</manager-property>
+        <manager-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</manager-property>
+        <manager-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#BeanFlowExceptionHandlingInterceptor</manager-property>
         <service name="BeanFlowInterceptorChainList"
                  code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainListService"
                  instance="template">
-<ifdef name="Template.Service.BeanControl.METRICS_ENABLED" value="true">
             <attribute name="InterceptorServiceNames">
-                #JournalInterceptor
-                #BeanFlowMetricsInterceptor
-                #BeanFlowExceptionHandlingInterceptor
-            </attribute>
-            <depends>BeanFlowMetricsInterceptor</depends>
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+<ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</argument>
 </ifdef>
-<ifdef name="Template.Service.BeanControl.METRICS_ENABLED" value="false">
-            <attribute name="InterceptorServiceNames">
-                #JournalInterceptor
-                #BeanFlowExceptionHandlingInterceptor
-            </attribute>
+<ifdef name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME}</argument>
 </ifdef>
-            <depends>JournalInterceptor</depends>
-            <depends>BeanFlowExceptionHandlingInterceptor</depends>
+<ifdef name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+                    </constructor>
+                </object>
+            </attribute>
+<ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
         </service>
 
         <service name="JournalInterceptor"
@@ -141,22 +142,17 @@ BeanFlowサービス
             <attribute name="RequestIdKey">REQUEST_ID</attribute>
             <attribute name="BushingCallBlock">true</attribute>
         </service>
-        
-        <service name="BeanFlowMetricsInterceptor"
-                 code="jp.ossc.nimbus.service.aop.interceptor.BeanFlowMetricsInterceptorService"
-                 instance="template"/>
             
         <service name="BeanFlowExceptionHandlingInterceptor"
-                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionHandlingInterceptorService"
+                 template="Template.Service.AOP.Interceptor#ExceptionHandlingInterceptor"
                  instance="template">
             <attribute name="DefaultExceptionHandlerServiceName">#BeanFlowDefaultExceptionHandler</attribute>
             <depends>BeanFlowDefaultExceptionHandler</depends>
         </service>
         
         <service name="BeanFlowDefaultExceptionHandler"
-                 code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
+                 template="Template.Service.AOP.Interceptor#DefaultExceptionHandler"
                  instance="template">
-            <attribute name="ThrowException">true</attribute>
 <ifdef name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</attribute>
             <depends>${Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME}</depends>

@@ -89,7 +89,6 @@
         <service name="DefaultExceptionHandler"
                  code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
                  instance="template">
-            <attribute name="LogMessageCode">ERROR</attribute>
             <attribute name="ThrowException">true</attribute>
 <ifdef name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">
             <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</attribute>
