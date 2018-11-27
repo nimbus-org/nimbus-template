@@ -17,20 +17,32 @@
         
         <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
         
-        <!-- 性能統計を取得するInterceptorサービス -->
-        <manager-property name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
-        <service name="MetricsInterceptor"
-                 code="jp.ossc.nimbus.service.aop.interceptor.MethodMetricsInterceptorService"
+        <!-- 業務フローのジャーナルの出力量統計を取得するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.JournalMetrics.JOURNAL_SERVICE_NAME">#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.JournalMetrics.EDITOR_FINDER_SERVICE_NAME">#BusinessJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.JournalMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#BusinessJournalPerformanceRecorder</manager-property>
+        <service name="BeanFlowJournalMetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.BeanFlowJournalMetricsInterceptorService"
                  instance="template">
             
-<ifdef name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">
-            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.JournalMetrics.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.JournalMetrics.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.JournalMetrics.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.JournalMetrics.EDITOR_FINDER_SERVICE_NAME">
+            <attribute name="EditorFinderServiceName">${Template.Service.AOP.Interceptor.JournalMetrics.EDITOR_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.JournalMetrics.EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.JournalMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.JournalMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.JournalMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
         
         <!-- 業務フローの性能統計を取得するInterceptorサービス -->
-        <manager-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#BeanFlowPerformanceRecorder</manager-property>
         <service name="BeanFlowMetricsInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.BeanFlowMetricsInterceptorService"
                  instance="template">
@@ -40,6 +52,28 @@
             <depends>${Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
+        
+        <!-- ブレイクポイントを設置するInterceptorサービス -->
+        <service name="BreakPointInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.BreakPointInterceptorService"
+                 instance="template"/>
+        
+        <!-- チェックポイントを設置するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.CheckPoint.CHECK_POINT_TRACER_SERVICE_NAME">#CheckPointTracer</manager-property>
+        <service name="CheckPointInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.CheckPointInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.CheckPoint.CHECK_POINT_TRACER_SERVICE_NAME">
+            <attribute name="CheckPointTracerServiceName">${Template.Service.AOP.Interceptor.CheckPoint.CHECK_POINT_TRACER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.CheckPoint.CHECK_POINT_TRACER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- チェックポイントをトレースするCheckPointTracerサービス -->
+        <service name="CheckPointTracer"
+                 code="jp.ossc.nimbus.service.aop.interceptor.CheckPointTracerService"
+                 instance="template"/>
         
         <!-- コンテキスト情報をエクスポートするInterceptorサービス -->
         <service name="ContextExportInterceptor"
@@ -63,22 +97,6 @@
 </ifdef>
         </service>
         
-        <!-- ジャーナルを出力するInterceptorサービス -->
-        <manager-property name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">#AccessJournal</manager-property>
-        <service name="MethodJournalInterceptor"
-                 code="jp.ossc.nimbus.service.aop.interceptor.MethodJournalInterceptorService"
-                 instance="template">
-            
-<ifdef name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">
-            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</depends>
-</ifdef>
-<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
-</ifdef>
-        </service>
-        
         <!-- 例外処理Interceptorサービス -->
         <service name="ExceptionHandlingInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.ExceptionHandlingInterceptorService"
@@ -96,10 +114,138 @@
 </ifdef>
         </service>
         
+        <!-- 例外消費Interceptorサービス -->
+        <service name="ExceptionConsumeInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionConsumeInterceptorService"
+                 instance="template"/>
+        
+        <!-- 例外発生Interceptorサービス -->
+        <service name="ExceptionThrowInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionThrowInterceptorService"
+                 instance="template"/>
+        
+        <!-- 例外ラップInterceptorサービス -->
+        <service name="ExceptionWrapInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ExceptionWrapInterceptorService"
+                 instance="template"/>
+        
+        <!-- 流量制御を行うInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.FlowControl.SEMAPHORE_SERVICE_NAME">#Semaphore</manager-property>
+        <service name="FlowControlInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.FlowControlInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.FlowControl.SEMAPHORE_SERVICE_NAME">
+            <attribute name="SemaphoreServiceName">${Template.Service.AOP.Interceptor.FlowControl.SEMAPHORE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.FlowControl.SEMAPHORE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
         <!-- クラス互換性のない例外をラップしてthrowするInterceptorサービス -->
         <service name="IncompatibleExceptionWrapInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.IncompatibleExceptionWrapInterceptorService"
                  instance="template"/>
+        
+        <!-- クラス互換性のない例外をアンラップしてthrowするInterceptorサービス -->
+        <service name="IncompatibleExceptionUnwrapInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.IncompatibleExceptionUnwrapInterceptorService"
+                 instance="template"/>
+        
+        <!-- 非同期呼び出しするInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.Asynchronous.REQUEST_QUEUE_SERVICE_NAME">#RequestQueue</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.Asynchronous.RESPONSE_QUEUE_SERVICE_NAME">#ResponseQueueFactory</manager-property>
+        <service name="MethodAsynchronousInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodAsynchronousInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.Asynchronous.REQUEST_QUEUE_SERVICE_NAME">
+            <attribute name="RequestQueueServiceName">${Template.Service.AOP.Interceptor.Asynchronous.REQUEST_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.Asynchronous.REQUEST_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.Asynchronous.RESPONSE_QUEUE_SERVICE_NAME">
+            <attribute name="ResponseQueueServiceName">${Template.Service.AOP.Interceptor.Asynchronous.RESPONSE_QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.Asynchronous.RESPONSE_QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- ジャーナルを出力するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">#AccessJournal</manager-property>
+        <service name="MethodJournalInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodJournalInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.MethodJournal.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 呼び出されたメソッドに対して使用するInterceptorを振り分けるInterceptorサービス -->
+        <service name="MethodMappingInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodMappingInterceptorService"
+                 instance="template"/>
+        
+        <!-- メソッド呼び出しの性能統計を取得するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <service name="MetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodMetricsInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.MethodMetrics.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 同期化Interceptorサービス -->
+        <service name="MethodSynchronizeInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MethodSynchronizeInterceptorService"
+                 instance="template"/>
+        
+        <!-- モックを応答するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.Mock.MOCK_FACTORY_SERVICE_NAME">#MockFactory</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.Mock.MOCK_SERVICE_NAME">#Mock</manager-property>
+        <service name="MockInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.MockInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.Mock.MOCK_FACTORY_SERVICE_NAME">
+            <attribute name="MockFactoryServiceName">${Template.Service.AOP.Interceptor.Mock.MOCK_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.Mock.MOCK_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.Mock.MOCK_SERVICE_NAME">
+            <attribute name="MockServiceName">${Template.Service.AOP.Interceptor.Mock.MOCK_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.Mock.MOCK_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 呼び出されていないメソッドを調査するInterceptorサービス -->
+        <service name="NoCalledMethodMetricsInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.NoCalledMethodMetricsInterceptorService"
+                 instance="template"/>
+        
+        <!-- nullを返すInterceptorサービス -->
+        <service name="NullReturnInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.NullReturnInterceptorService"
+                 instance="template"/>
+        
+        <!-- 処理性能を記録するInterceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.PerformanceRecord.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</manager-property>
+        <service name="PerformanceRecordInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.PerformanceRecordInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.PerformanceRecord.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.AOP.Interceptor.PerformanceRecord.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.PerformanceRecord.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
         
         <!-- 処理時間をチェックするInterceptorサービス -->
         <service name="RequestProcessCheckInterceptor"
@@ -110,6 +256,52 @@
                 300000=ERROR,-1
             </attribute>
         </service>
+        
+        <!-- 例外発生時にリトライ処理を行うInterceptorサービス -->
+        <service name="RetryInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.RetryInterceptorService"
+                 instance="template">
+            <attribute name="ExceptionConditions">java.lang.Throwable</attribute>
+        </service>
+        
+        <!-- 指定した戻り値を返すInterceptorサービス -->
+        <service name="ReturnInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ReturnInterceptorService"
+                 instance="template"/>
+        
+        <!-- 一定時間sleepを挟むInterceptorサービス -->
+        <service name="SleepInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.SleepInterceptorService"
+                 instance="template"/>
+        
+        <!-- ThreadContext初期化Interceptorサービス -->
+        <manager-property name="Template.Service.AOP.Interceptor.ThreadContextInitialize.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME">#Sequence</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME">#CodeMasterFinder</manager-property>
+        <service name="ThreadContextInitializeInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.ThreadContextInitializeInterceptorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.AOP.Interceptor.ThreadContextInitialize.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.ThreadContextInitialize.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.ThreadContextInitialize.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME">
+            <attribute name="SequenceServiceName">${Template.Service.AOP.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME">
+            <attribute name="CodeMasterFinderServiceName">${Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- トレースログ出力Interceptorサービス -->
+        <service name="TraceLoggingInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.TraceLoggingInterceptorService"
+                 instance="template"/>
     </manager>
     
 </server>

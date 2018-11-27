@@ -88,7 +88,9 @@ BeanFlowサービス
         </service>
 
         
+        <manager-property name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">#RequestProcessCheckInterceptor</manager-property>
         <manager-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</manager-property>
+        <manager-property name="Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowJournalMetricsInterceptor</manager-property>
         <manager-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</manager-property>
         <manager-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#BeanFlowExceptionHandlingInterceptor</manager-property>
         <service name="BeanFlowInterceptorChainList"
@@ -97,8 +99,14 @@ BeanFlowサービス
             <attribute name="InterceptorServiceNames">
                 <object code="jp.ossc.nimbus.core.ServiceName[]">
                     <constructor>
+<ifdef name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME}</argument>
 </ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME}</argument>
@@ -109,8 +117,14 @@ BeanFlowサービス
                     </constructor>
                 </object>
             </attribute>
+<ifdef name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
             <depends>${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">
             <depends>${Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME}</depends>
