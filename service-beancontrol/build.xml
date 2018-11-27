@@ -4,7 +4,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-beancontrol"/>
-    <property name="project.dependencies" value="service-context,service-journal,service-interpreter,service-aop"/>
+    <property name="project.dependencies" value="service-context,service-journal,service-interpreter,service-aop,service-template"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
     <property name="sample.service.definitions" value="service-definition.xml,../service-journal/businessjournal/service-definition.xml,../service-context/thread/service-definition.xml"/>
     

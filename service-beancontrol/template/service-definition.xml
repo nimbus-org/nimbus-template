@@ -80,14 +80,6 @@ BeanFlowサービス
 </ifdef>
         </service>
 
-        <service name="TemplateEngine"
-                 code="jp.ossc.nimbus.service.template.VelocityTemplateEngineService"
-                 instance="template">
-            <attribute name="Properties">
-                runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
-            </attribute>
-        </service>
-
         <service name="BeanFlowInterceptorChainFactory"
                  code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainFactoryService"
                  instance="template">

@@ -25,7 +25,7 @@ BeanFlowサービス
         <service name="JavaScriptInterpreter"
                  template="Template.Service.Interpreter#ScriptEngineInterpreter"/>
         
-        <service template="Template.Service.BeanControl#TemplateEngine"/>
+        <service template="Template.Service.Template#TemplateEngine"/>
         
         <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"/>
         
