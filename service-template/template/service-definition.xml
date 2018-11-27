@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Template">
+        
+        <!-- テンプレートエンジンとして動作するTemplateEngineサービス -->
+        <service name="TemplateEngine"
+                 code="jp.ossc.nimbus.service.template.VelocityTemplateEngineService"
+                 instance="template">
+            <attribute name="Properties">
+                runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
+            </attribute>
+        </service>
+        
+    </manager>
+</server>

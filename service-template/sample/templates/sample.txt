@@ -1,0 +1,10 @@
+$name 様
+
+お買い上げ商品
+#set($totalPrice = 0)
+#foreach( $product in $list)
+	$velocityCount ： $product.name	$product.price 円
+#set($totalPrice = $totalPrice + $product.price)
+#end
+
+合計金額 : $totalPrice 円

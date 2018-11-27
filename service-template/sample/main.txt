@@ -1,0 +1,28 @@
+import java.util.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.beans.dataset.*;
+import jp.ossc.nimbus.service.template.*;
+
+TemplateEngine templateEngine = ServiceManagerFactory.getServiceObject("Sample.Service.Template", "TemplateEngine");
+
+Map dataMap = new HashMap();
+dataMap.put("name", "山田　太郎");
+RecordList list = new RecordList(
+    "list",
+    ":name,java.lang.String\n"
+    + ":price,int\n"
+);
+Record rec = list.createRecord();
+rec.setProperty("name", "商品1");
+rec.setProperty("price", 500);
+list.add(rec);
+rec = list.createRecord();
+rec.setProperty("name", "商品2");
+rec.setProperty("price", 1000);
+list.add(rec);
+dataMap.put(list.getName(), list);
+
+print(templateEngine.transform("sample", dataMap));
+
+return "終了";
