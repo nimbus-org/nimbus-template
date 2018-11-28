@@ -4,7 +4,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-scheduler2"/>
-    <property name="project.dependencies" value="service-connection,service-context,service-sequence,service-keepalive,service-beancontrol,service-journal,service-proxy"/>
+    <property name="project.dependencies" value="service-connection,service-context,service-sequence,service-keepalive,service-beancontrol,service-journal,service-proxy,service-interpreter,service-template,service-aop"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
     <property name="sample.service.definitions" value="../../service-journal/businessjournal/service-definition.xml,../../service-context/thread/service-definition.xml,../../service-beancontrol/service-definition.xml,../../service-sequence/string/service-definition.xml,service-definition.xml"/>
     
