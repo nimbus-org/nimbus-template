@@ -1,0 +1,26 @@
+import java.text.DecimalFormat;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.system.*;
+
+OperationSystem os = ServiceManagerFactory.getServiceObject("Sample.Service.System", "OperationSystem");
+
+print("OS Name : " + os.getName());
+print("CPU Num : " + os.getCpuNumbers());
+print("CPU Frequency : " + os.getCpuFrequency());
+
+DecimalFormat format = new DecimalFormat("0.0");
+
+os.getCpuTimesDelta();
+print("user,system,idle");
+for(int i = 0; i < 10; i++){
+    Thread.sleep(1000);
+    CpuTimes cpuTimes = os.getCpuTimesDelta();
+    print(
+        format.format(((double)cpuTimes.getUserTimeMillis()/(double)cpuTimes.getTotalTimeMillis()) * 100.0d) + ','
+        + format.format(((double)cpuTimes.getSystemTimeMillis()/(double)cpuTimes.getTotalTimeMillis()) * 100.0d) + ','
+        + format.format(((double)cpuTimes.getIdleTimeMillis()/(double)cpuTimes.getTotalTimeMillis()) * 100.0d)
+    );
+}
+
+return "終了";

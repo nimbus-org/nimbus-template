@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.System.OperationSystem">
+        
+        <service name="OperationSystem"
+                 code="jp.ossc.nimbus.service.system.javasysmon.OperationSystemService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.System.Time">
+        
+        <service name="Time"
+                 code="jp.ossc.nimbus.service.system.DefaultTimeService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.System.HostResolver.Default">
+        
+        <service name="HostResolver"
+                 code="jp.ossc.nimbus.service.system.DefaultHostResolverService"
+                 instance="template"/>
+    </manager>
+        
+    <manager name="Template.Service.System.HostResolver.Database">
+        
+        <manager-property name="Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
+        <service name="HostResolver"
+                 code="jp.ossc.nimbus.service.system.DatabaseHostResolverService"
+                 instance="template">
+            
+<ifdef name="Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME">
+            <attribute name="PersistentManagerServiceName">${Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+</server>
