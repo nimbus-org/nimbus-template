@@ -13,9 +13,9 @@
         <fatal output="true"/>
     </default-log>
     
-    <manager name="Template.Service.Performance">
+    <manager name="Template.Service.Performance.PerformanceRecorder">
         
-        <manager-property name="Template.Service.Performance.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</manager-property>
         
         <service name="PerformanceRecorder"
                  code="jp.ossc.nimbus.service.performance.DefaultPerformanceRecorderService"
@@ -37,7 +37,7 @@
         <service name="PerformanceJournalWriter"
                  code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
                  instance="template">
-            <attribute name="File">${Template.Service.Performance.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
             <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median"${line.separator}"</attribute>
             <attribute name="Append">true</attribute>
         </service>
@@ -56,6 +56,20 @@
                  code="jp.ossc.nimbus.service.writer.DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss</attribute>
+        </service>
+    </manager>
+    
+    <manager name="Template.Service.Performance.ResourceUsage">
+        
+        <manager-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">#OperationSystem</manager-property>
+        <service name="CPUResourceUsage"
+                 code="jp.ossc.nimbus.service.performance.CPUResourceUsageService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">
+            <attribute name="OperationSystemServiceName">${Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME}</depends>
+</ifdef>
         </service>
     </manager>
     

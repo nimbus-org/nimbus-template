@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Performance">
+        
+        <manager-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</manager-property>
+        
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceRecorder"/>
+        
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalCategory"/>
+        
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWriter"/>
+        
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWritableRecordFactory"/>
+        
+        <service template="Template.Service.Performance.PerformanceRecorder#DateElement"
+                 instance="factory"/>
+        
+    </manager>
+</server>

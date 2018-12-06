@@ -4,9 +4,9 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-performance"/>
-    <property name="project.dependencies" value=""/>
+    <property name="project.dependencies" value="service-system"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
-    <property name="sample.service.definitions" value="service-definition.xml"/>
+    <property name="sample.service.definitions" value="../../service-system/os/service-definition.xml,service-definition.xml"/>
     
     <!-- target処理は../build.xmlに記載 -->
     
