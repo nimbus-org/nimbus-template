@@ -1,0 +1,16 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.queue.*;
+
+Queue serverQueue = ServiceManagerFactory.getServiceObject("Sample.Service.Queue.Server", "SharedQueue");
+for(int i = 0; i < 5; i++){
+    serverQueue.push(new Integer(i));
+}
+
+Queue clientQueue = ServiceManagerFactory.getServiceObject("Sample.Service.Queue.Client", "SharedQueue");
+for(int i = 0; i < 5; i++){
+try{
+    print(clientQueue.get());
+}catch(Exception e){e.printStackTrace();throw e;}
+}
+
+return "終了";

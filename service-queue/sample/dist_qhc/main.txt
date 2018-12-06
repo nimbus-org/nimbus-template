@@ -1,0 +1,32 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.queue.*;
+
+QueueHandlerContainer qhc = ServiceManagerFactory.getServiceObject("Sample.Service.Queue", "QueueHandlerContainer");
+
+class MyQueueHandler implements QueueHandler{
+    public void handleDequeuedObject(Object obj) throws Throwable{
+        print(Thread.currentThread().getName() + " : " + obj);
+    }
+    public boolean handleError(Object obj, Throwable th) throws Throwable{
+        return true;
+    }
+    public void handleRetryOver(Object obj, Throwable th) throws Throwable{
+        th.printStackTrace();
+    }
+}
+
+qhc.setQueueHandler(new MyQueueHandler());
+
+for(int i = 0; i < 5; i++){
+    Map data = new LinkedHashMap();
+    data.put("key", "hoge");
+    data.put("value", new Integer(i));
+    qhc.push(data);
+    
+    data = new LinkedHashMap();
+    data.put("key", "fuga");
+    data.put("value", new Integer(i));
+    qhc.push(data);
+}
+
+return "終了";

@@ -1,0 +1,13 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.queue.*;
+
+Queue queue = ServiceManagerFactory.getServiceObject("Sample.Service.Queue", "Queue");
+
+for(int i = 0; i < 5; i++){
+    queue.push(new Integer(i));
+}
+for(int i = 0; i < 5; i++){
+    print(queue.get());
+}
+
+return "終了";

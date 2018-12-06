@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Queue">
+        
+        <manager-property name="Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</manager-property>
+        <service name="QueueHandlerContainer"
+                 template="Template.Service.Queue.QueueHandlerContainer#DistributedQueueHandlerContainer">
+            <attribute name="IgnoreNullElement">true</attribute>
+        </service>
+        
+        <service name="DistributedQueueSelector"
+                 template="Template.Service.Queue.DistributedQueueSelector#InputPropertyDistributedQueueSelector">
+            <attribute name="InputProperty">key</attribute>
+        </service>
+        
+    </manager>
+</server>
