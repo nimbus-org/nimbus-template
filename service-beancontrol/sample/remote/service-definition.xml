@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.BeanControl.Client" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster">
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+        
+        <manager-property name="Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <service name="BeanFlowInvokerFactory"
+                 template="Template.Service.BeanControl.Dist.Client#ServerBeanFlowInvokerFactory"/>
+    </manager>
+    
+    <manager name="Sample.Service.BeanControl.Server" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
+        
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+        
+        <manager-property name="Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME">Sample.Service.Performance#ResourceUsage</manager-property>
+        <service template="Template.Service.BeanControl.Dist.Server#BeanFlowInvokerServer"/>
+        
+<!--=======================================================================
+BeanFlowサービス
+========================================================================-->
+        
+        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
+        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
+        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        
+        <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
+        <service name="JavaScriptInterpreter"
+                 template="Template.Service.Interpreter#ScriptEngineInterpreter"/>
+        
+        <service template="Template.Service.Template#TemplateEngine"/>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"/>
+        
+        <manager-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</manager-property>
+        <manager-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</manager-property>
+        <manager-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#BeanFlowExceptionHandlingInterceptor</manager-property>
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList"/>
+        
+        <service name="JournalInterceptor"
+                 template="Template.Service.AOP.Interceptor#MethodJournalInterceptor">
+            <attribute name="BushingCallBlock">true</attribute>
+        </service>
+        
+        <service template="Template.Service.AOP.Interceptor#BeanFlowMetricsInterceptor"/>
+        
+        <service name="BeanFlowExceptionHandlingInterceptor"
+                 template="Template.Service.AOP.Interceptor#ExceptionHandlingInterceptor">
+            <attribute name="DefaultExceptionHandlerServiceName">#BeanFlowDefaultExceptionHandler</attribute>
+            <depends>BeanFlowDefaultExceptionHandler</depends>
+        </service>
+        
+        <manager-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</manager-property>
+        <service name="BeanFlowDefaultExceptionHandler"
+                 template="Template.Service.AOP.Interceptor#DefaultExceptionHandler">
+            <attribute name="LogMessageCode">ERROR</attribute>
+        </service>
+        
+        <service template="Template.Service.BeanControl#BeanFlowSelector"/>
+        
+        <service name="AsynchInvokeQueueHandlerContainer"
+                 template="Template.Service.Queue.QueueHandlerContainer#QueueHandlerContainer">
+            <attribute name="IgnoreNullElement">true</attribute>
+            <attribute name="QueueHandlerSize">10</attribute>
+        </service>
+        
+    </manager>
+
+</server>

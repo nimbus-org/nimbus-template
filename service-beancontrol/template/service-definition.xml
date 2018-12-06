@@ -27,9 +27,7 @@ BeanFlowサービス
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
         <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
         <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
-        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
-        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_SIZE">10</manager-property>
-        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_WAIT_TIMEOUT">30000</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
         <service name="BeanFlowInvokerFactory"
                  code="jp.ossc.nimbus.service.beancontrol.DefaultBeanFlowInvokerFactoryService"
                  instance="template">
@@ -71,9 +69,9 @@ BeanFlowサービス
             <attribute name="TemplateEngineServiceName">${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME}</depends>   
 </ifdef>
-<ifdef name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME">
-            <attribute name="AsynchInvokeQueueHandlerContainerServiceName">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER＿CONTAINER_SERVICE_NAME}</depends>   
+<ifdef name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">
+            <attribute name="AsynchInvokeQueueHandlerContainerServiceName">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</depends>   
 </ifdef>
         </service>
 
@@ -137,17 +135,72 @@ BeanFlowサービス
             <attribute name="BeanFlowPathPostfix">${Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX}</attribute>
         </service>
         
-        <service name="AsynchInvokeQueueHandlerContainer"
-                 code="jp.ossc.nimbus.service.queue.QueueHandlerContainerService"
-                 instance="template">
-            <attribute name="QueueServiceName">#AsynchInvokeQueue</attribute>
-            <attribute name="IgnoreNullElement">true</attribute>
-            <attribute name="QueueHandlerSize">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_SIZE}</attribute>
-            <attribute name="WaitTimeout">${Template.Service.BeanControl.ASYNCH_INVOKE_WAIT_TIMEOUT}</attribute>
-            <depends>AsynchInvokeQueue</depends>
-        </service>
-        
-        <service name="AsynchInvokeQueue" code="jp.ossc.nimbus.service.queue.DefaultQueueService" instance="template"/>
-        
     </manager>
+    
+    <manager name="Template.Service.BeanControl.Dist.Server">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        
+        <manager-property name="Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME">#ResourceUsage</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Server.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#InterceptorChainFactory</manager-property>
+        <service name="BeanFlowInvokerServer"
+                 code="jp.ossc.nimbus.service.beancontrol.BeanFlowInvokerServerService"
+                 instance="template">
+            
+<ifdef name="Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME">
+            <attribute name="ClusterServiceName">${Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME">
+            <attribute name="ResourceUsageServiceName">${Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.Dist.Server.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">
+            <attribute name="InterceptorChainFactoryServiceName">${Template.Service.BeanControl.Dist.Server.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Server.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+    </manager>
+    
+    <manager name="Template.Service.BeanControl.Dist.Client">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        
+        <manager-property name="Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.BeanControl.Dist.Client.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
+        <service name="ServerBeanFlowInvokerFactory"
+                 code="jp.ossc.nimbus.service.beancontrol.ClientBeanFlowInvokerFactoryService"
+                 instance="template">
+            
+<ifdef name="Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME">
+            <attribute name="ClusterServiceName">${Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.BeanControl.Dist.Client.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">
+            <attribute name="AsynchInvokeQueueHandlerContainerServiceName">${Template.Service.BeanControl.Dist.Client.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.Dist.Client.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+    </manager>
+    
 </server>

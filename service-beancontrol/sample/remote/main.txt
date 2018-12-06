@@ -1,0 +1,6 @@
+import jp.ossc.nimbus.core.ServiceManagerFactory;
+import jp.ossc.nimbus.service.beancontrol.interfaces.*;
+
+BeanFlowInvokerFactory factory = ServiceManagerFactory.getServiceObject("Sample.Service.BeanControl.Client", "BeanFlowInvokerFactory");
+BeanFlowInvoker invoker = factory.createFlow("sample");
+return invoker.invokeFlow(new java.util.HashMap());

@@ -20,6 +20,7 @@ BeanFlowサービス
         <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
         <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
         <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
+        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
         <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
         
         <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
@@ -55,6 +56,12 @@ BeanFlowサービス
         </service>
         
         <service template="Template.Service.BeanControl#BeanFlowSelector"/>
+        
+        <service name="AsynchInvokeQueueHandlerContainer"
+                 template="Template.Service.Queue.QueueHandlerContainer#QueueHandlerContainer">
+            <attribute name="IgnoreNullElement">true</attribute>
+            <attribute name="QueueHandlerSize">10</attribute>
+        </service>
         
     </manager>
 
