@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Performance">
+        
+        <manager-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">Sample.Service.System#OperationSystem</manager-property>
+        <service name="ResourceUsage"
+                 template="Template.Service.Performance.ResourceUsage#CPUResourceUsage"/>
+        
+    </manager>
+</server>

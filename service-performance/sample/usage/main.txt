@@ -1,0 +1,11 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.performance.*;
+
+ResourceUsage usage = ServiceManagerFactory.getServiceObject("Sample.Service.Performance", "ResourceUsage");
+
+for(int i = 0; i < 10; i++){
+    Thread.sleep(1000);
+    print(usage.getUsage());
+}
+
+return "終了";
