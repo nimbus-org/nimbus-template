@@ -1,0 +1,21 @@
+import java.util.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.writer.*;
+
+Category category = ServiceManagerFactory.getServiceObject("Sample.Service.Writer", "Category");
+
+Map output = new HashMap();
+output.put("Date", new Date());
+output.put("Message", "サンプルです");
+
+category.write(output);
+
+output = new HashMap();
+output.put("Date", new Date());
+output.put("Message", "エラーが発生しました");
+output.put("Exception", new Exception("サンプル"));
+
+category.write(output);
+
+return "終了";

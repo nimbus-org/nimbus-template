@@ -1,0 +1,30 @@
+import java.sql.*;
+import java.util.Date;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.writer.*;
+import jp.ossc.nimbus.service.connection.*;
+
+MessageWriter writer = ServiceManagerFactory.getServiceObject("Sample.Service.Writer", "MessageWriter");
+
+WritableRecord record = new WritableRecord();
+DateElement dateElement = new DateElement("Date", new Date());
+dateElement.setFormat("yyyyMMddHHmmssSSS");
+record.addElement(dateElement);
+record.addElement(new SimpleElement("Message", "こんにちは"));
+
+writer.write(record);
+
+ConnectionFactory connectionFactory = ServiceManagerFactory.getServiceObject("Sample.Service.Connection", "ConnectionFactory");
+Connection connection = connectionFactory.getConnection();
+try{
+    Statement statement = connection.createStatement();
+    ResultSet resultSet = statement.executeQuery("select * from LOG");
+    while(resultSet.next()){
+        print(resultSet.getString(1) + ", " + resultSet.getString(2));
+    }
+}finally{
+    connection.close();
+}
+
+return "終了";

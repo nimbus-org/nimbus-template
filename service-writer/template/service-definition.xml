@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Writer.Category">
+        
+        <!-- デフォルトのCategoryサービス -->
+        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
+        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
+        <service name="SimpleCategory"
+                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 instance="template">
+            
+            <!-- 出力するオブジェクトをWritableRecordに変換するWritableRecordFactoryサービス -->
+<ifdef name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">
+            <attribute name="WritableRecordFactoryServiceName">${Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- WritableRecordを出力するMessageWriterサービス -->
+<ifdef name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">
+            <attribute name="MessageWriterServiceName">${Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 出力オブジェクトを条件に、出力するかしないかを判断可能なCategoryサービス -->
+        <service name="EvaluateCategory"
+                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 template="#SimpleCategory"
+                 instance="template"/>
+        
+        <!-- 複数のCategoryをグルーピングするCategoryサービス -->
+        <service name="GroupCategory"
+                 code="jp.ossc.nimbus.service.writer.GroupCategoryService"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.Service.Writer.WritableRecordFactory">
+        
+        <!-- MapをWritableRecordに変換するWritableRecordFactoryサービス -->
+        <service name="WritableRecordFactory"
+                 code="jp.ossc.nimbus.service.writer.WritableRecordFactoryService"
+                 instance="template"/>
+        
+        <!-- プロパティアクセス可能な任意のオブジェクトをWritableRecordに変換するWritableRecordFactoryサービス -->
+        <service name="PropertyWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 instance="template"/>
+        
+        <!-- デフォルトのWritableElement実装クラス -->
+        <manager-property name="Template.Service.Writer.WritableRecordFactory.STRING_CONVERTER_SERVICE_NAME">#StringConverter</manager-property>
+        <manager-property name="Template.Service.Writer.WritableRecordFactory.FORMAT_CONVERTER_SERVICE_NAME">#FormatConverter</manager-property>
+        <service name="SimpleElement"
+                 code="jp.ossc.nimbus.service.writer.SimpleElement"
+                 instance="template">
+            
+            <!-- 文字列を変換するStringConverterサービス -->
+<ifdef name="Template.Service.Writer.WritableRecordFactory.STRING_CONVERTER_SERVICE_NAME">
+            <attribute name="StringConverter"><service-ref>${Template.Service.Writer.WritableRecordFactory.STRING_CONVERTER_SERVICE_NAME}</service-ref></attribute>
+            <depends>${Template.Service.Writer.WritableRecordFactory.STRING_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- オブジェクトを文字列に変換するFormatConverterサービス -->
+<ifdef name="Template.Service.Writer.WritableRecordFactory.FORMAT_CONVERTER_SERVICE_NAME">
+            <attribute name="FormatConverter"><service-ref>${Template.Service.Writer.WritableRecordFactory.FORMAT_CONVERTER_SERVICE_NAME}</service-ref></attribute>
+            <depends>${Template.Service.Writer.WritableRecordFactory.FORMAT_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- java.util.Dateを文字列にフォーマットするWritableElement実装クラス -->
+        <service name="DateElement"
+                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 instance="template"/>
+        
+        <!-- 文字列を暗号化文字列に変換するWritableElement実装クラス -->
+        <manager-property name="Template.Service.Writer.WritableRecordFactory.CRYPT_SERVICE_NAME">#Crypt</manager-property>
+        <service name="CryptElement"
+                 code="jp.ossc.nimbus.service.writer.CryptElement"
+                 instance="template">
+            
+            <!-- 文字列を暗号化するCryptサービス -->
+<ifdef name="Template.Service.Writer.WritableRecordFactory.CRYPT_SERVICE_NAME">
+            <attribute name="Crypt"><service-ref>${Template.Service.Writer.WritableRecordFactory.CRYPT_SERVICE_NAME}</service-ref></attribute>
+            <depends>${Template.Service.Writer.WritableRecordFactory.CRYPT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- 改行文字を削除するWritableElement実装クラス -->
+        <service name="LineElement"
+                 code="jp.ossc.nimbus.service.writer.LineSimpleElement"
+                 template="#SimpleElement"
+                 instance="template"/>
+        
+        <!-- 例外を文字列に変換するWritableElement実装クラス -->
+        <service name="ThrowableElement"
+                 code="jp.ossc.nimbus.service.writer.ThrowableSimpleElement"
+                 instance="template"/>
+        
+        <!-- 配列を文字列に変換するWritableElement実装クラス -->
+        <service name="ArrayElement"
+                 code="jp.ossc.nimbus.service.writer.ArraySimpleElement"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter">
+        
+        <!-- コンソールに出力するMessageWriterサービス -->
+        <service name="ConsoleWriter"
+                 code="jp.ossc.nimbus.service.writer.ConsoleWriterService"
+                 instance="template"/>
+        
+        <!-- ファイルに出力するMessageWriterサービス -->
+        <service name="FileWriter"
+                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.Log4J">
+        
+        <!-- コンソールに出力するMessageWriterサービス -->
+        <service name="ConsoleWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.ConsoleAppenderWriterService"
+                 instance="template">
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="OutTarget">System.out</attribute>
+        </service>
+        
+        <!-- ファイルに出力するMessageWriterサービス -->
+        <service name="FileWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.FileAppenderWriterService"
+                 instance="template">
+            <attribute name="ImmediateFlush">true</attribute>
+        </service>
+        
+        <!-- ファイルサイズでローリングしながら、ファイルに出力するMessageWriterサービス -->
+        <service name="RollingFileWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.RollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="ImmediateFlush">true</attribute>
+        </service>
+        
+        <!-- ファイルサイズでローリングしながら、ファイルに出力するMessageWriterサービス
+          ローリングする時に、ファイルを削除しないようにカスタマイズした版
+        -->
+        <service name="CustomizedRollingFileWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="ImmediateFlush">true</attribute>
+        </service>
+        
+        <!-- 日付でローリングしながら、ファイルに出力するMessageWriterサービス -->
+        <service name="DailyRollingFileWriter"
+                 code="jp.ossc.nimbus.service.writer.log4j.DailyRollingFileAppenderWriterService"
+                 instance="template">
+            <attribute name="ImmediateFlush">true</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.DB">
+        
+        <!-- データベースに出力するMessageWriterサービス -->
+        <manager-property name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <service name="DatabaseWriter"
+                 code="jp.ossc.nimbus.service.writer.db.DatabaseWriterService"
+                 instance="template">
+            
+            <!-- データベースとの接続を取得するConnectionFactoryサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.Mail">
+        
+        <!-- メールに出力するMessageWriterサービス -->
+        <manager-property name="Template.Service.Writer.MessageWriter.Mail.AUTHENTICAOTOR_SERVICE_NAME">#Authenticator</manager-property>
+        <manager-property name="Template.Service.Writer.MessageWriter.Mail.KEEPALIVE_CHECKER_SELECTOR_SERVICE_NAME">#KeepAliveCheckerSelector</manager-property>
+        <manager-property name="Template.Service.Writer.MessageWriter.Mail.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        <service name="MailWriter"
+                 code="jp.ossc.nimbus.service.writer.mail.MailWriterService"
+                 instance="template">
+            
+            <!-- SMTPサーバの認証を行うjavax.mail.Authenticatorサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Mail.AUTHENTICAOTOR_SERVICE_NAME">
+            <attribute name="AuthenticatorServiceName">${Template.Service.Writer.MessageWriter.Mail.AUTHENTICAOTOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Mail.AUTHENTICAOTOR_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- SMTPサーバの死活監視を行うKeepAliveCheckerSelectorサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Mail.KEEPALIVE_CHECKER_SELECTOR_SERVICE_NAME">
+            <attribute name="SmtpKeepAliveCheckerSelectorServiceName">${Template.Service.Writer.MessageWriter.Mail.KEEPALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Mail.KEEPALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- javax.mail.SessionをJNDIサーバから取得するためのJndiFinderサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Mail.JNDI_FINDER_SERVICE_NAME">
+            <attribute name="JndiFinderServiceName">${Template.Service.Writer.MessageWriter.Mail.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Mail.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- SMTPサーバのパスワード認証を行うjavax.mail.Authenticatorサービス -->
+        <service name="PasswordAuthenticator"
+                 code="jp.ossc.nimbus.service.writer.mail.PasswordAuthenticatorService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.Publish">
+        
+        <!-- Nimbus Publisherを使って他サーバに送信するMessageWriterサービス -->
+        <manager-property name="Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME">#ServerConnectionFactory</manager-property>
+        <service name="ServerConnectionWriter"
+                 code="jp.ossc.nimbus.service.writer.publish.ServerConnectionWriterService"
+                 instance="template">
+            
+            <!-- 送信するServerConnectionを取得するServerConnectionFactoryサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- Nimbus Publisherを使って他サーバから受信した内容をMessageWriterに伝搬するサービス -->
+        <manager-property name="Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME">#ClientConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
+        <manager-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
+        <manager-property name="Template.Service.Writer.MessageWriter.Publish.CONTEXT_SERVICE_NAME">#Context</manager-property>
+        <service name="ClientConnectionWriter"
+                 code="jp.ossc.nimbus.service.writer.publish.ClientConnectionWriterService"
+                 instance="template">
+            
+            <!-- 受信するClientConnectionを取得するClientConnectionFactoryサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ClientConnectionFactoryServiceName">${Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- 受信するMessageReceiverサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME">
+            <attribute name="MessageReceiverServiceName">${Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- 出力するMessageWriterサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME">
+            <attribute name="MessageWriterServiceName">${Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- 受信したメッセージのサブジェクトやキーを出力するContextサービス -->
+<ifdef name="Template.Service.Writer.MessageWriter.Publish.CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.Writer.MessageWriter.Publish.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.Publish.CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+</server>

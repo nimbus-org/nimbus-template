@@ -1,0 +1,18 @@
+import java.util.Date;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.writer.*;
+
+MessageWriter writer = ServiceManagerFactory.getServiceObject("Sample.Service.Writer", "MessageWriter");
+
+WritableRecord record = new WritableRecord();
+DateElement dateElement = new DateElement(new Date());
+dateElement.setFormat("yyyy/MM/dd HH:mm:ss");
+record.addElement(new SimpleElement("["));
+record.addElement(dateElement);
+record.addElement(new SimpleElement("] "));
+record.addElement(new SimpleElement("こんにちは"));
+
+writer.write(record);
+
+return "終了";

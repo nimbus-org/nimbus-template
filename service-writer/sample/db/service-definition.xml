@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Writer">
+        
+        <manager-property name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>
+        <service name="MessageWriter"
+                 template="Template.Service.Writer.MessageWriter.DB#DatabaseWriter">
+            <attribute name="InsertSQL">
+                insert into LOG values(?,?)=Date,Message
+            </attribute>
+            <depends>#TableCreator</depends>
+        </service>
+        
+        <manager-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">${Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME}</manager-property>
+        <service template="Template.Service.Connection.TableCreator#TableCreator">
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='LOG'</attribute>
+            <attribute name="CreateTableQuery">
+                create table LOG(
+                    DATE            CHAR(18) not null,
+                    MESSSAGE        VARCHAR(256)
+                )
+            </attribute>
+            <attribute name="DeleteQuery">delete from LOG</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+        </service>
+    </manager>
+</server>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.Writer">
+        
+        <service name="Category"
+                 template="Template.Service.Writer.Category#GroupCategory">
+            <attribute name="CategoryServiceNames">
+                Sample.Service.Writer.Normal#Category
+                Sample.Service.Writer.Error#Category
+            </attribute>
+            <depends>Sample.Service.Writer.Normal#Category</depends>
+            <depends>Sample.Service.Writer.Error#Category</depends>
+        </service>
+        
+    </manager>
+    
+    <manager name="Sample.Service.Writer.Normal">
+        
+        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
+        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
+        <service name="Category"
+                 template="Template.Service.Writer.Category#SimpleCategory"/>
+        
+        <service name="WritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory">
+            <attribute name="Format">[%Date%] %Message%</attribute>
+            <attribute name="ImplementServiceNames">
+                Date=#DateElement
+            </attribute>
+            <depends>DateElement</depends>
+        </service>
+        
+        <service template="Template.Service.Writer.WritableRecordFactory#DateElement"
+                 instance="factory">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+        </service>
+        
+        <service name="MessageWriter"
+                 template="Template.Service.Writer.MessageWriter#ConsoleWriter"/>
+    </manager>
+        
+    <manager name="Sample.Service.Writer.Error">
+        
+        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
+        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
+        <service name="Category"
+                 template="Template.Service.Writer.Category#EvaluateCategory">
+            <attribute name="WritableConditions">@Exception@ != null</attribute>
+        </service>
+        
+        <service name="WritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory">
+            <attribute name="Format">[%Date%] %Message%${line.separator}%Exception%</attribute>
+            <attribute name="ImplementServiceNames">
+                Date=#DateElement
+                Exception=#ThrowableElement
+            </attribute>
+            <depends>DateElement</depends>
+            <depends>ThrowableElement</depends>
+        </service>
+        
+        <service template="Template.Service.Writer.WritableRecordFactory#DateElement"
+                 instance="factory">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+        </service>
+        
+        <service template="Template.Service.Writer.WritableRecordFactory#ThrowableElement"
+                 instance="factory"/>
+        
+        <service name="MessageWriter"
+                 template="Template.Service.Writer.MessageWriter#FileWriter">
+            <attribute name="File">error.txt</attribute>
+        </service>
+        
+    </manager>
+</server>

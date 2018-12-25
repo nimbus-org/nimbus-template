@@ -153,4 +153,36 @@
                  instance="template"/>
     
     </manager>
+    
+    <manager name="Template.Service.Connection.TableCreator">
+        
+        <!-- データベースに出力するMessageWriterサービス -->
+        <manager-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#RecordListConverter</manager-property>
+        <service name="TableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+            
+            <!-- データベースとの接続を取得するConnectionFactoryサービス -->
+<ifdef name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <!-- RecordListにデータを読み込むConverterサービス -->
+<ifdef name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">
+            <attribute name="RecordListConverterServiceName">${Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
+        <service name="CSVRecordListConverter"
+                 code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
+                 instance="template">
+            <attribute name="IgnoreEmptyLine">true</attribute>
+            <attribute name="NullValue">null</attribute>
+        </service>
+        
+    </manager>
 </server>
