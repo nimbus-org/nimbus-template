@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Sample.Service.JMX">
+        <manager-property name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">1000</manager-property>
+        <manager-property name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">yyyy/MM/dd HH:mm:ss</manager-property>
+        <manager-property name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">#MBeanServerConnectionFactory</manager-property>
+        
+        <service template="Template.Service.JMX#MBeanServerConnectionFactory"/>
+        
+        <manager-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</manager-property>
+        <manager-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">5</manager-property>
+        <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueMBeanWatcher">
+            <attribute name="ObjectName">Sample.Service.Queue:class=jp.ossc.nimbus.service.queue.DefaultQueueService,name=Queue</attribute>
+            <depends>Sample.Service.Queue#Queue</depends>
+        </service>
+        
+        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
+        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
+        <service name="Category"
+                 template="Template.Service.Writer.Category#SimpleCategory"/>
+        
+        <service name="WritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueWritableRecordFactory"/>
+        
+        <service name="MessageWriter"
+                 template="Template.Service.Writer.MessageWriter#ConsoleWriter"/>
+    </manager>
+    
+    <manager name="Sample.Service.Queue">
+        
+        <repository>ServiceRepository</repository>
+        
+        <service name="ServiceRepository"
+                 code="jp.ossc.nimbus.service.repository.MBeanServerRepositoryService">
+            <attribute name="ObjectNameDomain">Sample.Service.Queue</attribute>
+        </service>
+        
+        <service name="Queue"
+                 template="Template.Service.Queue#DefaultQueue"/>
+    </manager>
+</server>
