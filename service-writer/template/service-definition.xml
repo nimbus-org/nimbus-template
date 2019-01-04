@@ -123,9 +123,14 @@
                  instance="template"/>
         
         <!-- ファイルに出力するMessageWriterサービス -->
+        <manager-property name="Template.Service.Writer.MessageWriter.SEPARATOR">${line.separator}</manager-property>
         <service name="FileWriter"
                  code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
-                 instance="template"/>
+                 instance="template">
+<ifdef name="Template.Service.Writer.MessageWriter.SEPARATOR">
+            <attribute name="Separator">${Template.Service.Writer.MessageWriter.SEPARATOR}</attribute>
+</ifdef>
+        </service>
     </manager>
     
     <manager name="Template.Service.Writer.MessageWriter.Log4J">
