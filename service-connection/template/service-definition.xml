@@ -74,7 +74,7 @@
                  code="jp.ossc.nimbus.service.connection.WrappedConnectionFactoryService"
                  instance="template">
 
-<ifdef name="Template.Service.Connection.DataSource.CONNECTION_FACTORY_SERVICE_NAME">
+<ifdef name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- ラップする元となるConnectionを生成するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</depends>
