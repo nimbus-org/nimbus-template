@@ -39,7 +39,7 @@
         </service>
 
         <service name="AccessJournalQueue"
-                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 template="Template.Service.Queue#DefaultQueue"
                  instance="template">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
@@ -49,7 +49,7 @@
 ========================================================================-->
 
         <service name="AccessNormalJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
             <attribute name="MessageWriterServiceName">#AccessNormalJournalWriter</attribute>
             <attribute name="WritableRecordFactoryServiceName">#AccessNormalJournalWritableRecordFactory</attribute>
@@ -59,7 +59,7 @@
 
         <!-- アクセスエラージャーナルカテゴリ -->
         <service name="AccessErrorJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
             <attribute name="WritableConditions">
                 @Access.JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Exception[0]@!=null
@@ -76,7 +76,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- アクセスジャーナルのフォーマッタ -->
         <service name="AccessNormalJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 DATE=Access.StartTime
@@ -100,13 +100,13 @@ WritableRecordFactoryサービス
         </service>
         
         <service name="AccessNormalDateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
         
         <service name="CSVElement"
-                 code="jp.ossc.nimbus.service.writer.LineSimpleElement" 
+                 template="Template.Service.Writer.WritableRecordFactory#LineElement"
                  instance="template">
             <attribute name="Trim">true</attribute>
             <attribute name="StringConverter"><service-ref>#CustomConverter</service-ref></attribute>
@@ -132,7 +132,7 @@ WritableRecordFactoryサービス
         
         <!-- アクセスエラージャーナルのフォーマッタ -->
         <service name="AccessErrorJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 DATE=Access.StartTime
@@ -157,13 +157,13 @@ WritableRecordFactoryサービス
         </service>
 
         <service name="AccessErrorDateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
         </service>
 
         <service name="ErrorSimpleElement"
-                 code="jp.ossc.nimbus.service.writer.SimpleElement"
+                 template="Template.Service.Writer.WritableRecordFactory#SimpleElement"
                  instance="template"/>
 
 <!--=======================================================================
@@ -171,7 +171,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- アクセスジャーナル書き込みサービス -->
         <service name="AccessNormalJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 template="Template.Service.Writer.MessageWriter.Log4J#CustomizedRollingFileWriter"
                  instance="template">
             <attribute name="Append">true</attribute>
             <attribute name="BufferedIO">false</attribute>
@@ -184,7 +184,7 @@ WritableRecordFactoryサービス
 
         <!-- アクセスエラージャーナル書き込みサービス -->
         <service name="AccessErrorJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 template="Template.Service.Writer.MessageWriter#FileWriter"
                  instance="template">
             <attribute name="File">${Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH}/error-journal/accessjournal-error</attribute>
             <attribute name="FilePostfix">_%DATE%_%REQUEST_ID%.log</attribute>
@@ -358,7 +358,7 @@ Editorサービス
         </service>
 
         <service name="BusinessJournalQueue"
-                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 template="Template.Service.Queue#DefaultQueue"
                  instance="template">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
@@ -368,7 +368,7 @@ Editorサービス
 ========================================================================-->
         <!-- Businessジャーナルカテゴリ -->
         <service name="BusinessJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
             <attribute name="Enabled">${Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED}</attribute>
             <attribute name="WritableConditions">
@@ -382,7 +382,7 @@ Editorサービス
 
         <!-- Businessエラージャーナルカテゴリ -->
         <service name="BusinessErrorJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
@@ -399,7 +399,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- Businessジャーナルのフォーマッタ -->
         <service name="BusinessJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 ACTION_FLOW=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Flow[0]}}
@@ -409,7 +409,7 @@ WritableRecordFactoryサービス
 
         <!-- Businessエラージャーナルのフォーマッタ -->
         <service name="BusinessErrorJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 DATE=Business.StartTime
@@ -429,13 +429,13 @@ WritableRecordFactoryサービス
         </service>
 
         <service name="ErrorDateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
         </service>
         
         <service name="ErrorThrowableElement"
-                 code="jp.ossc.nimbus.service.writer.ThrowableSimpleElement"
+                 template="Template.Service.Writer.WritableRecordFactory#ThrowableElement"
                  instance="template">
             <attribute name="OutputCause">true</attribute>
         </service>
@@ -445,7 +445,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- Businessジャーナル書き込みサービス -->
         <service name="BusinessJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 template="Template.Service.Writer.MessageWriter.Log4J#CustomizedRollingFileWriter"
                  instance="template">
             <attribute name="Append">true</attribute>
             <attribute name="BufferedIO">false</attribute>
@@ -458,7 +458,7 @@ WritableRecordFactoryサービス
 
         <!-- Businessエラージャーナル書き込みサービス -->
         <service name="BusinessErrorJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 template="Template.Service.Writer.MessageWriter#FileWriter"
                  instance="template">
             <attribute name="File">${Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH}/error-journal/businessjournal-error</attribute>
             <attribute name="FilePostfix">_%DATE%_%REQUEST_ID%.log</attribute>
@@ -689,7 +689,7 @@ Editorサービス
         </service>
         
         <service name="AccessJournalQueue"
-                 code="jp.ossc.nimbus.service.queue.DefaultQueueService"
+                 template="Template.Service.Queue#DefaultQueue"
                  instance="template">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
@@ -699,7 +699,7 @@ Editorサービス
 ========================================================================-->
         
         <service name="AccessJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
             <attribute name="MessageWriterServiceName">#AccessJournalWriter</attribute>
             <attribute name="WritableRecordFactoryServiceName">#AccessJournalWritableRecordFactory</attribute>
@@ -709,7 +709,7 @@ Editorサービス
         
         <!-- Accessエラージャーナルカテゴリ -->
         <service name="AccessErrorJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.EvaluateCategoryService"
+                 template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
@@ -726,7 +726,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- Accessジャーナルのフォーマッタ -->
         <service name="AccessJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 DATE=Access.StartTime
@@ -747,7 +747,7 @@ WritableRecordFactoryサービス
         
         <!-- Accessエラージャーナルのフォーマッタ -->
         <service name="AccessErrorJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
                 DATE=Access.StartTime
@@ -775,19 +775,19 @@ WritableRecordFactoryサービス
         </service>
         
         <service name="NormalDateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
         
         <service name="ErrorDateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
         </service>
         
         <service name="ParametersElement"
-                 code="jp.ossc.nimbus.service.writer.ArraySimpleElement"
+                 template="Template.Service.Writer.WritableRecordFactory#ArrayElement"
                  instance="template"/>
 
 <!--=======================================================================
@@ -795,7 +795,7 @@ WritableRecordFactoryサービス
 ========================================================================-->
         <!-- Accessジャーナル書き込みサービス -->
         <service name="AccessJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.log4j.CustomizedRollingFileAppenderWriterService"
+                 template="Template.Service.Writer.MessageWriter.Log4J#CustomizedRollingFileWriter"
                  instance="template">
             <attribute name="Append">true</attribute>
             <attribute name="BufferedIO">false</attribute>
@@ -808,7 +808,7 @@ WritableRecordFactoryサービス
         
         <!-- Accessエラージャーナル書き込みサービス -->
         <service name="AccessErrorJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 template="Template.Service.Writer.MessageWriter#FileWriter"
                  instance="template">
             <attribute name="File">${Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH}/error-journal/accessjournal-error</attribute>
             <attribute name="FilePostfix">_%DATE%.log</attribute>

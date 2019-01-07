@@ -42,7 +42,11 @@ WritableRecordFactoryサービス
         
         <service template="Template.Service.Journal.AccessJournal#AccessNormalDateElement" instance="factory"/>
         
-        <service template="Template.Service.Journal.AccessJournal#SimpleElement" instance="factory"/>
+        <service template="Template.Service.Journal.AccessJournal#CSVElement" instance="factory"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#CustomConverter"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#CSVEscapeConverter"/>
         
         <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
         
