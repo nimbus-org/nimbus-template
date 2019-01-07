@@ -4,184 +4,176 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.Scheduler2.Scheduler.Default">
-        
+
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
+
         <!-- スケジューラサービス -->
         <service name="Scheduler"
                  code="jp.ossc.nimbus.service.scheduler2.DefaultSchedulerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             <service-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">#ScheduleManager</attribute>
             <depends>ScheduleManager</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">
             <!-- ScheduleExecuterサービスのサービス名を設定する -->
             <attribute name="ScheduleExecutorServiceName">${Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">
             <!-- スケジュール実行時のリクエストIDを発番するSequenceサービスのサービス名を設定する -->
             <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
             <!-- スケジュール実行時のリクエストIDを設定するContextサービスのサービス名を設定する -->
             <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">
             <!-- トランザクション制御を行うTransactionManagerFactoryサービスのサービス名を設定する -->
             <attribute name="TransactionManagerFactoryServiceName">${Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
             <!-- スケジューラをクラスタ化するクラスタサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
             <!-- スケジュール実行スレッド数を設定する -->
             <attribute name="ScheduleDispatcherSize">5</attribute>
-            
+
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleExecutor">
-        
+
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
-        
+
         <!-- 業務フローでスケジュールを処理するScheduleExecuterサービス -->
         <service name="BeanFlowScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowScheduleExecutorService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
             <!-- BeanFlowInvokerFactoryサービスのサービス名を設定する -->
             <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
         <!-- コマンドでスケジュールを処理するScheduleExecuterサービス -->
         <service name="CommandScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.CommandScheduleExecutorService"
                  instance="template">
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
         <!-- 集配信スケジュールを処理するScheduleExecuterサービス -->
         <service name="ConcentrateScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.ConcentrateScheduleExecutorService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">
             <!-- 集配信したファイルをバックアップ管理するConcentrateBackupManagerサービスのサービス名を設定する -->
             <attribute name="ConcentrateBackupManagerServiceName">${Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
         <!-- 集配信したファイルをファイルシステムにバックアップ管理するConcentrateBackupManagerサービス -->
         <service name="FileConcentrateBackupManager"
                  code="jp.ossc.nimbus.service.scheduler2.FileConcentrateBackupManagerService"
                  instance="template"/>
-        
+
         <!-- クラスタ化されたScheduleExecuterサービス -->
         <service name="ClusterScheduleExecutor"
                  template="Template.Service.Proxy.Client#RemoteClient"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
-            
+
             <attribute name="RemoteInterfaceClassName">jp.ossc.nimbus.service.scheduler2.ScheduleExecutor</attribute>
             <attribute name="RemoteServiceName">${Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME}</attribute>
         </service>
-        
+
         <!-- ScheduleExecuterをクラスタ化して呼び出すInvokerサービス -->
         <service name="ScheduleExecutorInvoker"
                  code="jp.ossc.nimbus.service.scheduler2.ScheduleExecutorClusterInvokerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">
             <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleMaker">
-        
+
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- 日付キーでスケジュール生成を判断するScheduleMakerサービス -->
         <service name="DateKeyConditionScheduleMaker"
                  code="jp.ossc.nimbus.service.scheduler2.DateKeyConditionScheduleMakerService"
                  instance="template"/>
-        
+
         <!-- 業務フローでスケジュール生成を判断するScheduleMakerサービス -->
         <service name="BeanFlowConditionScheduleMaker"
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowConditionScheduleMakerService"
                  instance="template">
-            
+
 <ifdef name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
             <!-- BeanFlowInvokerFactoryサービスのサービス名を設定する -->
             <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
         <!-- SQLでスケジュール生成を判断するScheduleMakerサービス -->
         <service name="DatabaseConditionScheduleMaker"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseConditionScheduleMakerService"
@@ -191,36 +183,36 @@
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleManager.Default">
-        
+
         <!-- スケジュールをメモリ中で管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DefaultScheduleManagerService"
                  instance="template"/>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB">
-        
+
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
             <attribute name="NextScheduleIdSelectQuery">select next value for SEQUENCE_SCHEDULE_ID from SCHEDULE_ID_SEQUENCE</attribute>
@@ -230,35 +222,35 @@
             <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
             <!-- スケジュール監視機能をクラスタ化するクラスタサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.JavaDB">
-        
+
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
             <attribute name="NextScheduleIdSelectQuery">VALUES (NEXT VALUE FOR SEQUENCE_SCHEDULE_ID)</attribute>
@@ -268,42 +260,42 @@
             <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
             <!-- スケジュール監視機能をクラスタ化するクラスタサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
             <attribute name="ScheduleMasterTableSchema">
                 <object code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService$ScheduleMasterTableSchema">
                     <field name="input">INPUT_DATA</field>
                 </object>
             </attribute>
-            
+
             <attribute name="ScheduleTableSchema">
                 <object code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService$ScheduleTableSchema">
                     <field name="input">INPUT_DATA</field>
                     <field name="output">OUTPUT_DATA</field>
                 </object>
             </attribute>
-            
+
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.PostgreSQL">
-        
+
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
-            
+
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
@@ -318,22 +310,22 @@
             <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
             <!-- スケジュール監視機能をクラスタ化するクラスタサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.TableCreator.JavaDB">
-        
+
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME">APP</manager-property>
-        
+
         <!-- スケジュールテーブルのSEQUENCEの準備をするTableCreatorサービス -->
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -348,7 +340,7 @@
             <attribute name="CreateTableOnStart">true</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -408,7 +400,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -445,7 +437,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -475,7 +467,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -503,7 +495,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -576,7 +568,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -609,7 +601,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -649,7 +641,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -682,7 +674,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
         <service name="RecordListConverter"
                  code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
@@ -690,13 +682,13 @@
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.TableCreator.HSQLDB">
-        
+
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- スケジュールテーブルのSEQUENCEの準備をするTableCreatorサービス -->
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -712,7 +704,7 @@
             <attribute name="CreateTableOnStart">true</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールテーブルのスケジュールID用のSEQUENCEテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleSequenceTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -737,7 +729,7 @@
             <depends>ScheduleSequenceCreator</depends>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -797,7 +789,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -834,7 +826,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -864,7 +856,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -892,7 +884,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -965,7 +957,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -998,7 +990,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1038,7 +1030,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1071,7 +1063,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">-104</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
         <service name="RecordListConverter"
                  code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
@@ -1080,11 +1072,11 @@
             <attribute name="NullValue">null</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.Scheduler2.TableCreator.PostgreSQL">
-        
+
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
+
         <!-- スケジュールテーブルのSEQUENCEの準備をするTableCreatorサービス -->
         <service name="ScheduleSequenceCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1111,7 +1103,7 @@
             <attribute name="CreateTableOnStart">true</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールテーブルのスケジュールID用のSEQUENCEテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleSequenceTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1122,7 +1114,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1130,7 +1122,7 @@
                     RELNAME = 'schedule_id_sequence'
             </attribute>
             <attribute name="CreateTableQuery">
-                create table 
+                create table
                 SCHEDULE_ID_SEQUENCE(
                     SEQUENCE_SCHEDULE_ID BIGINT not null,
                     PRIMARY KEY(SEQUENCE_SCHEDULE_ID)
@@ -1148,7 +1140,7 @@
             <depends>ScheduleSequenceCreator</depends>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1159,7 +1151,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1215,7 +1207,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1226,7 +1218,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1259,7 +1251,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1270,7 +1262,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1296,7 +1288,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupMasterTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1307,7 +1299,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1331,7 +1323,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1342,7 +1334,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1411,7 +1403,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1422,7 +1414,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1451,7 +1443,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1462,7 +1454,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1498,7 +1490,7 @@
             </invoke>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
         <service name="ScheduleGroupDependsTableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
@@ -1509,7 +1501,7 @@
 </ifdef>
             <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
             <attribute name="ExistsTableQuery">
-                SELECT 
+                SELECT
                     COUNT(1)
                 FROM
                     PG_STAT_USER_TABLES
@@ -1538,7 +1530,7 @@
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
             <depends>RecordListConverter</depends>
         </service>
-        
+
         <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
         <service name="RecordListConverter"
                  code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
@@ -1547,5 +1539,5 @@
             <attribute name="NullValue">null</attribute>
         </service>
     </manager>
-    
+
 </server>

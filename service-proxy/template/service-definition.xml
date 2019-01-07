@@ -5,23 +5,15 @@
 
 <server>
 
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Template.Service.Proxy.Client">
-        
+
         <service name="RemoteClient"
                  code="jp.ossc.nimbus.service.proxy.RemoteClientService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">#InterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</service-property>
-            
+
 <ifdef name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">
             <attribute name="InterceptorChainListServiceName">${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</depends>
@@ -31,53 +23,53 @@
             <depends>${Template.Service.Proxy.INVOKER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Proxy.Client.Invoker.Local">
-        
+
         <service name="Invoker"
                  code="jp.ossc.nimbus.service.proxy.invoker.LocalClientMethodCallInvokerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.Client.Invoker.Local.RESOURCE_USAGE_SERVICE_NAME">#ResourceUsage</service-property>
-            
+
 <ifdef name="Template.Service.Proxy.Client.Invoker.Local.RESOURCE_USAGE_SERVICE_NAME">
             <attribute name="ResourceUsageServiceName">${Template.Service.Proxy.Client.Invoker.Local.RESOURCE_USAGE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Client.Invoker.Local.RESOURCE_USAGE_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Proxy.Client.Invoker.RMI">
-        
+
         <service name="Invoker"
                  code="jp.ossc.nimbus.service.proxy.invoker.RemoteClientMethodCallInvokerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.Client.Invoker.RMI.REPOSITORY_SERVICE_NAME">#Repository</service-property>
             <service-property name="Template.Service.Proxy.Client.Invoker.RMI.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
-            
+
 <ifdef name="Template.Service.Proxy.Client.Invoker.RMI.REPOSITORY_SERVICE_NAME">
             <attribute name="JndiRepositoryServiceName">${Template.Service.Proxy.Client.Invoker.RMI.REPOSITORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Client.Invoker.RMI.REPOSITORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Proxy.Client.Invoker.RMI.JNDI_FINDER_SERVICE_NAME">
             <attribute name="JndiFinderServiceName">${Template.Service.Proxy.Client.Invoker.RMI.JNDI_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Client.Invoker.RMI.JNDI_FINDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Proxy.Client.Invoker.Cluster">
-        
+
         <service name="Invoker"
                  code="jp.ossc.nimbus.service.proxy.invoker.ClusterInvokerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#KeepAliveCheckerSelector</service-property>
 
 <ifdef name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">
@@ -85,49 +77,49 @@
             <depends>${Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Proxy.Server.RMI">
-        
+
         <!-- リモートからサービスを呼べるようにするRemoteServerInvokerを提供するサービス -->
         <service name="RemoteServiceServer"
                  code="jp.ossc.nimbus.service.proxy.RemoteServiceServerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">#InterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.Server.RESOURCE_USAGE_SERVICE_NAME">#ResourceUsage</service-property>
             <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">#Cluster</service-property>
-            
+
 <ifdef name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">
             <attribute name="InterceptorChainListServiceName">${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Proxy.Server.RESOURCE_USAGE_SERVICE_NAME">
             <attribute name="ResourceUsageServiceName">${Template.Service.Proxy.Server.RESOURCE_USAGE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Server.RESOURCE_USAGE_SERVICE_NAME}</depends>
 </ifdef>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.Proxy.InterceptorChainList">
-        
+
         <service name="InterceptorChainList"
                  code="jp.ossc.nimbus.service.aop.DefaultInterceptorChainListService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Proxy.METRICS_INTERCEPTOR_SERVICE_NAME">#MetricsInterceptor</service-property>
             <service-property name="Template.Service.Proxy.CONTEXT_EXPORT_INTERCEPTOR_SERVICE_NAME">#ContextExportInterceptor</service-property>
             <service-property name="Template.Service.Proxy.CONTEXT_IMPORT_INTERCEPTOR_SERVICE_NAME">#ContextImportInterceptor</service-property>
             <service-property name="Template.Service.Proxy.JOURNAL_INTERCEPTOR_SERVICE_NAME">#AccessJournalInterceptor</service-property>
             <service-property name="Template.Service.Proxy.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
-            
+
             <attribute name="InterceptorServiceNames">
                 <object code="jp.ossc.nimbus.core.ServiceName[]">
                     <constructor>
@@ -162,6 +154,6 @@
             <depends>${Template.Service.Proxy.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
 </server>

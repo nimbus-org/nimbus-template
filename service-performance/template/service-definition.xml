@@ -4,17 +4,9 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.Performance.PerformanceRecorder">
-        
+
         <service name="PerformanceRecorder"
                  code="jp.ossc.nimbus.service.performance.DefaultPerformanceRecorderService"
                  instance="template">
@@ -22,7 +14,7 @@
             <attribute name="ResetInterval">1000</attribute>
             <depends>PerformanceJournalCategory</depends>
         </service>
-        
+
         <service name="PerformanceJournalCategory"
                  code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
                  instance="template">
@@ -31,18 +23,18 @@
             <depends>PerformanceJournalWriter</depends>
             <depends>PerformanceJournalWritableRecordFactory</depends>
         </service>
-        
+
         <service name="PerformanceJournalWriter"
                  code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</service-property>
-            
+
             <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
             <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median"${line.separator}"</attribute>
             <attribute name="Append">true</attribute>
         </service>
-        
+
         <service name="PerformanceJournalWritableRecordFactory"
                  code="jp.ossc.nimbus.service.writer.WritableRecordFactoryService"
                  instance="template">
@@ -52,27 +44,27 @@
             </attribute>
             <depends>DateElement</depends>
         </service>
-        
+
         <service name="DateElement"
                  code="jp.ossc.nimbus.service.writer.DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.Performance.ResourceUsage">
-        
+
         <service name="CPUResourceUsage"
                  code="jp.ossc.nimbus.service.performance.CPUResourceUsageService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">#OperationSystem</service-property>
-            
+
 <ifdef name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">
             <attribute name="OperationSystemServiceName">${Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME}</depends>
 </ifdef>
         </service>
     </manager>
-    
+
 </server>

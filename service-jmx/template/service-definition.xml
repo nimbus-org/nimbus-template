@@ -4,74 +4,66 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.JMX">
-        
+
         <!-- JMXサーバとの接続を生成するMBeanServerConnectionFactoryサービス -->
         <service name="MBeanServerConnectionFactory"
                  code="jp.ossc.nimbus.service.jmx.DefaultMBeanServerConnectionFactoryService"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
-            
+
 <ifdef name="Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME">
             <!-- MBeanServerConnectionをJNDIからlookupする場合に使用するJndiFinderサービスのサービス名を設定する -->
             <attribute name="JndiFinderServiceName">${Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
         <manager-property name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">1000</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">yyyy/MM/dd HH:mm:ss</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">#MBeanServerConnectionFactory</manager-property>
-        
+
         <!-- MBeanを監視するサービス -->
         <service name="MBeanWatcher"
                  code="jp.ossc.nimbus.service.jmx.MBeanWatcherService"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</service-property>
-            
+
             <!-- サービス開始時にJMXサーバへ接続するかどうかを設定する -->
             <attribute name="ConnectOnStart">false</attribute>
-            
+
             <!-- 監視間隔[ms]を設定する -->
 <ifdef name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">
             <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
 </ifdef>
-            
+
             <!-- JMXサーバへの接続に使用するMBeanServerConnectionFactoryサービスのサービス名を設定する -->
 <ifdef name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">
             <attribute name="MBeanServerConnectionFactoryServiceName">${Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME}</depends>
 </ifdef>
-            
+
             <!-- Categoryサービスのサービス名を設定する -->
 <ifdef name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">
             <attribute name="CategoryServiceName">${Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Queue">
-        
+
         <!-- jp.ossc.nimbus.service.queue.DefaultQueueServiceMBeanを監視するサービス -->
         <service name="QueueMBeanWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -169,14 +161,14 @@
             </invoke>
 </ifdef>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.queue.DefaultQueueServiceMBeanの集合を監視するサービス -->
         <service name="QueuesWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
-            
+
             <attribute name="MBeanSet">true</attribute>
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
@@ -308,20 +300,20 @@
             </invoke>
 </ifdef>
         </service>
-        
+
         <service name="QueueWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%Count%,%CountDelta%,%Depth%,%DepthDelta%,%MaxDepth%</attribute>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.queue.QueueHandlerContainerServiceMBeanを監視するサービス -->
         <service name="QueueHandlerContainerWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE">60</service-property>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -387,17 +379,17 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="QueueHandlerContainerWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ActiveQueueHandlerSize%,%MaxActiveQueueHandlerSize%,%StandbyQueueHandlerSize%</attribute>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Java">
-        
+
         <!-- Java6、7のCMS GCに設定されたJavaVMのヒープを監視するサービス -->
         <service name="CMSHeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -411,7 +403,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -586,7 +578,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -645,7 +637,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -704,7 +696,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -753,7 +745,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -803,13 +795,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="CMSHeapWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%CodeCacheUsed%,%CodeCacheMax%,%CodeCacheUsedRate%,%PermUsed%,%PermMax%,%PermUsedRate%,%EdenUsed%,%EdenMax%,%EdenUsedRate%,%SurvivorUsed%,%SurvivorMax%,%SurvivorUsedRate%,%OldUsed%,%OldMax%,%OldUsedRate%,%YoungGCCount%,%YoungGCCountDelta%,%YoungGCTime%,%YoungGCTimeDelta%,%FullGCCount%,%FullGCCountDelta%,%FullGCTime%,%FullGCTimeDelta%</attribute>
         </service>
-        
+
         <!-- Java8のCMS GCに設定されたJavaVMのヒープを監視するサービス -->
         <service name="Java8CMSHeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -823,7 +815,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -882,7 +874,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -941,7 +933,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1000,7 +992,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1059,7 +1051,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1118,7 +1110,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1177,7 +1169,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1225,7 +1217,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1275,20 +1267,20 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="Java8CMSHeapWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%CodeCacheUsed%,%CodeCacheMax%,%CodeCacheUsedRate%,%CompressedClassUsed%,%CompressedClassMax%,%CompressedClassUsedRate%,%MetaspaceUsed%,%MetaspaceMax%,%MetaspaceUsedRate%,%EdenUsed%,%EdenMax%,%EdenUsedRate%,%SurvivorUsed%,%SurvivorMax%,%SurvivorUsedRate%,%OldUsed%,%OldMax%,%OldUsedRate%,%YoungGCCount%,%YoungGCCountDelta%,%YoungGCTime%,%YoungGCTimeDelta%,%FullGCCount%,%FullGCCountDelta%,%FullGCTime%,%FullGCTimeDelta%</attribute>
         </service>
-        
+
         <!-- Java8のG1 GCに設定されたJavaVMのヒープを監視するサービス -->
         <service name="Java8G1HeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.Java.COMPRESSED_CLASS_SPACE">true</service-property>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -1298,7 +1290,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1357,7 +1349,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
 <ifdef name="Template.Service.JMX.MBeanWatcher.Java.COMPRESSED_CLASS_SPACE" value="true">
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
@@ -1418,7 +1410,7 @@
                 </argument>
             </invoke>
 </ifdef>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1477,7 +1469,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1536,7 +1528,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1595,7 +1587,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1654,7 +1646,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1702,7 +1694,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
@@ -1752,7 +1744,7 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="Java8G1HeapWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
@@ -1764,9 +1756,9 @@
 </ifdef>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.System">
-        
+
         <!-- jp.ossc.nimbus.service.system.OperationSystemを監視するサービス -->
         <service name="OperatingSystemWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -1780,7 +1772,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
@@ -1866,7 +1858,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -1875,7 +1867,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
@@ -1915,7 +1907,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -1924,7 +1916,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -1933,7 +1925,7 @@
                     </object>
                 </argument>
             </invoke>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
@@ -2025,23 +2017,23 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="OperatingSystemWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ProcessCpuTime%,%ProcessCpuTimeDelta%,%SystemLoadAverage%,%CPUUsageRate%,%UsedPhysicalMemorySize%,%TotalPhysicalMemorySize%,%UsedPhysicalMemorySizeRate%,%UsedSwapSpaceSize%,%TotalSwapSpaceSize%,%UsedSwapSpaceSizeRate%,%OpenFileDescriptorCount%,%MaxFileDescriptorCount%,%OpenFileDescriptorRate%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Cache">
-        
+
         <!-- jp.ossc.nimbus.service.cache.CacheMapを監視するサービス -->
         <service name="CacheMapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT">60</service-property>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -2094,16 +2086,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="CacheMapWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%Size%,%SizeDelta%,%MaxSize%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.KeepAlive">
-        
+
         <!-- jp.ossc.nimbus.service.keepalive.ClusterServiceMBeanを監視するサービス -->
         <service name="ClusterWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -2244,23 +2236,23 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="ClusterWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%Main%,%Join%,%Client%,%Members%,%MemberSize%,%MemberSizeDelta%,%ClientMembers%,%ClientMemberSize%,%ClientMemberSizeDelta%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Context">
-        
+
         <!-- jp.ossc.nimbus.service.context.SharedContextServiceMBeanを監視するサービス -->
         <service name="SharedContextWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
-            
+
             <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</service-property>
-            
+
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -2340,13 +2332,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="SharedContextWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%Main%</attribute>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.context.DistributedSharedContextServiceMBeanを監視するサービス -->
         <service name="DistributedSharedContextWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -2437,16 +2429,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="DistributedSharedContextWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%Main%,%MainNodeCount%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Publish">
-        
+
         <!-- jp.ossc.nimbus.service.publish.udp.ClientConnectionImpl.ClientConnectionServiceMBeanの集合を監視するサービス -->
         <service name="UDPClientConnectionsWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -2728,13 +2720,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="UDPClientConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ReceivePacketCount%,%ReceivePacketCountDelta%,%ReceivePacketQueueDepth%,%ReceivePacketQueueDepthDelta%,%ReceivePacketQueueMaxDepth%,%ReceiveCount%,%ReceiveCountDelta%,%LostCount%,%LostCountDelta%,%MissingWindowRequestCount%,%MissingWindowRequestCountDelta%,%NoContinuousMessageCount%,%NoContinuousMessageCountDelta%,%WasteWindowCount%,%WasteWindowCountDelta%</attribute>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.publish.tcp.ClientConnectionImpl.ClientConnectionServiceMBeanの集合を監視するサービス -->
         <service name="TCPClientConnectionsWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -2837,13 +2829,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="TCPClientConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ReceiveCount%,%ReceiveCountDelta%,%ServerSize%,%ServerSizeDelta%,"%RemoteSocketAddress%"</attribute>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.publish.udp.ConnectionFactoryServiceMBeanを監視するサービス -->
         <service name="UDPServerConnectionWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -2963,13 +2955,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="UDPServerConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%SendCount%,%SendCountDelta%,%SendPacketCount%,%SendPacketCountDelta%,%AverageWindowCount%,%MaxWindowCount%,%ClientSize%,"%Clients%","%DecreaseClient%"</attribute>
         </service>
-        
+
         <!-- jp.ossc.nimbus.service.publish.tcp.ConnectionFactoryServiceMBeanを監視するサービス -->
         <service name="TCPServerConnectionWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3048,16 +3040,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="TCPServerConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%SendCount%,%SendCountDelta%,%ClientSize%,"%Clients%","%DecreaseClient%"</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Connection">
-        
+
         <!-- jp.ossc.nimbus.service.connection.DefaultQuerySearchManagerServiceMBeanを監視するサービス -->
         <service name="QuerySearchWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3090,15 +3082,15 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="QuerySearchWritableRecordFactory"
                  code="jp.ossc.nimbus.service.writer.PropertyWritableRecordFactoryService">
             <attribute name="Format">%Timestamp%,%CacheHitRatio%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Semaphore">
-        
+
         <!-- jp.ossc.nimbus.service.semaphore.DefaultSemaphoreServiceMBeanを監視するサービス -->
         <service name="SemaphoreWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3158,16 +3150,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="SemaphoreWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ResourceRemain%,%WaitingCount%,%MaxUsedResource%,%MaxWaitedCount%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.AOP">
-        
+
         <!-- jp.ossc.nimbus.service.aop.interceptor.RequestProcessCheckInterceptorServiceMBeanを監視するサービス -->
         <service name="RequestProcessCheckInterceptorWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3218,16 +3210,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="RequestProcessCheckInterceptorWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%RequestCount%,%MaxRequestCount%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.Scheduler2">
-        
+
         <!-- jp.ossc.nimbus.service.scheduler2.DefaultSchedulerServiceMBeanを監視するサービス -->
         <service name="SchedulerWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3306,16 +3298,16 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="SchedulerWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ActiveScheduleDispatcherSize%,%RemainScheduleDispatcherSize%,%State%,%StartEntry%</attribute>
         </service>
     </manager>
-    
+
     <manager name="Template.Service.JMX.MBeanWatcher.JBoss5">
-        
+
         <!-- org.jboss.web.tomcat.service.management.ThreadPoolを監視するサービス -->
         <service name="ThreadPoolWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3366,13 +3358,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="ThreadPoolWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%CurrentThreadsBusy%,%CurrentThreadCount%,%MaxThreads%</attribute>
         </service>
-        
+
         <!-- org.apache.catalina.Managerを監視するサービス -->
         <service name="WebApplicationWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3441,13 +3433,13 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="WebApplicationWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="Format">%Timestamp%,%ActiveSessions%,%ExpiredSessions%,%MaxActive%,%SessionAverageAliveTime%,%SessionMaxAliveTime%</attribute>
         </service>
-        
+
         <!-- org.jboss.resource.connectionmanager.JBossManagedConnectionPoolMBeanを監視するサービス -->
         <service name="ConnectionPoolWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
@@ -3507,7 +3499,7 @@
                 </argument>
             </invoke>
         </service>
-        
+
         <service name="ConnectionPoolWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">

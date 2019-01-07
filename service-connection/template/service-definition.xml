@@ -5,14 +5,6 @@
 
 <server>
 
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-
     <manager name="Template.Service.Connection.JDBC">
 
         <!-- JDBCドライバ経由でConnectionを取得するConnectionFactoryサービス -->
@@ -30,17 +22,17 @@
     </manager>
 
     <manager name="Template.Service.Connection.DataSource">
-        
+
         <!-- データソースからConnectionを取得するConnectionFactoryサービス -->
         <service name="ConnectionFactory"
                  code="jp.ossc.nimbus.service.connection.DataSourceConnectionFactoryService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
             <service-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</service-property>
             <service-property name="Template.Service.Connection.DataSource.DATA_SOURCE_SERVICE_NAME">#DataSource</service-property>
             <service-property name="Template.Service.Connection.DataSource.CONTEXT_SERVICE_NAME">#Context</service-property>
-            
+
 <ifdef name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">
             <attribute name="Name">${Template.Service.Connection.DataSource.JNDI_NAME}</attribute>
             <attribute name="JndiFinderServiceName">${Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME}</attribute>
@@ -58,17 +50,17 @@
     </manager>
 
     <manager name="Template.Service.Connection.Wrapper">
-        
+
         <!-- ラップしたConnectionを取得するConnectionFactoryサービス -->
         <service name="WrappedConnectionFactory"
                  code="jp.ossc.nimbus.service.connection.WrappedConnectionFactoryService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">#Journal</service-property>
             <service-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
             <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</service-property>
-            
+
 <ifdef name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- ラップする元となるConnectionを生成するConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
@@ -142,36 +134,36 @@
     </manager>
 
     <manager name="Template.Service.Connection.PersistentManager">
-        
+
         <service name="PersistentManager"
                  code="jp.ossc.nimbus.service.connection.DefaultPersistentManagerService"
                  instance="template"/>
-    
+
     </manager>
-    
+
     <manager name="Template.Service.Connection.TableCreator">
-        
+
         <!-- データベースに出力するMessageWriterサービス -->
         <service name="TableCreator"
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#RecordListConverter</service-property>
-            
+
             <!-- データベースとの接続を取得するConnectionFactoryサービス -->
 <ifdef name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
-            
+
             <!-- RecordListにデータを読み込むConverterサービス -->
 <ifdef name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">
             <attribute name="RecordListConverterServiceName">${Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
         <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
         <service name="CSVRecordListConverter"
                  code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
@@ -179,6 +171,6 @@
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
         </service>
-        
+
     </manager>
 </server>

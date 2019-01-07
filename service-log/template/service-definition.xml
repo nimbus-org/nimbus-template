@@ -4,17 +4,9 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.Log">
-        
+
         <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
@@ -108,7 +100,7 @@
                 DATE=jp.ossc.nimbus.service.writer.DateElement
             </attribute>
         </service>
-        
+
         <!-- コンソール出力用レコード生成 -->
         <service name="LogConsoleWritableRecordFactory"
                  code="jp.ossc.nimbus.service.log.LogWritableRecordFactoryService"

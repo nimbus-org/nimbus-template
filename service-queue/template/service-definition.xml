@@ -4,139 +4,131 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.Queue">
-        
+
         <!-- デフォルト実装のQueueサービス -->
         <service name="DefaultQueue"
                  code="jp.ossc.nimbus.service.queue.DefaultQueueService"
                  instance="template"/>
-        
+
         <!-- 遅延して取り出せるQueueサービス -->
         <service name="DelayQueue"
                  code="jp.ossc.nimbus.service.queue.DelayQueueService"
                  instance="template"/>
-        
+
         <!-- 複数のQueueに分散して振り分けるQueueサービス -->
         <service name="DistributedQueue"
                  code="jp.ossc.nimbus.service.queue.DistributedQueueService"
                  instance="template">
             <service-property name="Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</service-property>
-            
+
 <ifdef name="Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME">
             <attribute name="DistributedQueueSelectorServiceName">${Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
         <!-- サーバを跨ってデータを共有するQueueサービス -->
         <service name="SharedQueue"
                  code="jp.ossc.nimbus.service.queue.SharedQueueService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</service-property>
             <service-property name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">#Cluster</service-property>
             <service-property name="Template.Service.Queue.SharedQueue.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</service-property>
             <service-property name="Template.Service.Queue.SharedQueue.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
             <service-property name="Template.Service.Queue.SharedQueue.CONTEXT_STORE_SERVICE_NAME">#ContextStore</service-property>
-            
+
 <ifdef name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">
             <!-- コンテキスト情報の変更を送受信するRequestConnectionFactoryサービスのサービス名を設定する -->
             <attribute name="RequestConnectionFactoryServiceName">${Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">
             <!-- コンテキスト情報の共有を管理するClusterサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.SharedQueue.TRANSACTION_MANAGER_SERVICE_NAME">
             <!-- コンテキスト情報のトランザクションを管理するSharedContextTransactionManagerサービスのサービス名を設定する -->
             <attribute name="SharedContextTransactionManagerServiceName">${Template.Service.Queue.SharedQueue.TRANSACTION_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.SharedQueue.TRANSACTION_MANAGER_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.SharedQueue.SERVER_CACHE_MAP_SERVICE_NAME">
             <!-- サーバモードの時に、データをキャッシュするCacheMapサービスのサービス名を設定する -->
             <attribute name="ServerCacheMapServiceName">${Template.Service.Queue.SharedQueue.SERVER_CACHE_MAP_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.SharedQueue.SERVER_CACHE_MAP_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.SharedQueue.CONTEXT_STORE_SERVICE_NAME">
             <!-- 永続化を行うContextStoreサービスのサービス名を設定する -->
             <attribute name="ContextStoreServiceName">${Template.Service.Queue.SharedQueue.CONTEXT_STORE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.SharedQueue.CONTEXT_STORE_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Queue.DistributedQueueSelector">
-        
+
         <!-- 入力件数や深さで分流するDistributedQueueSelectorサービス -->
         <service name="SimpleDistributedQueueSelector"
                  code="jp.ossc.nimbus.service.queue.SimpleDistributedQueueSelectorService"
                  instance="template"/>
-        
+
         <!-- 入力のプロパティで分流するDistributedQueueSelectorサービス -->
         <service name="InputPropertyDistributedQueueSelector"
                  code="jp.ossc.nimbus.service.queue.InputPropertyDistributedQueueSelectorService"
                  instance="template"/>
     </manager>
-    
+
     <manager name="Template.Service.Queue.QueueHandlerContainer">
-        
+
         <!-- デフォルト実装のQueueHandlerContainerサービス -->
         <service name="QueueHandlerContainer"
                  code="jp.ossc.nimbus.service.queue.QueueHandlerContainerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">#Queue</service-property>
             <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">#QueueHandler</service-property>
-            
+
 <ifdef name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">
             <!-- Queueサービスのサービス名を設定する -->
             <attribute name="QueueServiceName">${Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">
             <!-- QueueHandlerサービスのサービス名を設定する -->
             <attribute name="QueueHandlerServiceName">${Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
         <!-- 分流して並列に処理するQueueHandlerContainerサービス -->
         <service name="DistributedQueueHandlerContainer"
                  code="jp.ossc.nimbus.service.queue.DistributedQueueHandlerContainerService"
                  instance="template">
-            
+
             <service-property name="Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</service-property>
             <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">#QueueHandler</service-property>
-            
+
 <ifdef name="Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME">
             <!-- Queueサービスのサービス名を設定する -->
             <attribute name="DistributedQueueSelectorServiceName">${Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
-            
+
 <ifdef name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">
             <!-- QueueHandlerサービスのサービス名を設定する -->
             <attribute name="QueueHandlerServiceName">${Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
-        
+
     </manager>
 </server>

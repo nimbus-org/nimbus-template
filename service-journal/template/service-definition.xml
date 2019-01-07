@@ -4,20 +4,12 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
+
     <manager name="Template.Service.Journal.AccessJournal">
-        
+
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
-        
+
 <!--=======================================================================
 ジャーナルサービス
 ========================================================================-->
@@ -43,7 +35,7 @@
                  instance="template">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
-        
+
 <!--=======================================================================
 カテゴリサービス
 ========================================================================-->
@@ -98,13 +90,13 @@ WritableRecordFactoryサービス
             <depends>AccessNormalDateElement</depends>
             <depends>CSVElement</depends>
         </service>
-        
+
         <service name="AccessNormalDateElement"
                  template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
-        
+
         <service name="CSVElement"
                  template="Template.Service.Writer.WritableRecordFactory#LineElement"
                  instance="template">
@@ -112,7 +104,7 @@ WritableRecordFactoryサービス
             <attribute name="StringConverter"><service-ref>#CustomConverter</service-ref></attribute>
             <depends>CustomConverter</depends>
         </service>
-        
+
         <service name="CustomConverter"
                  code="jp.ossc.nimbus.util.converter.CustomConverter"
                  instance="template">
@@ -129,7 +121,7 @@ WritableRecordFactoryサービス
                  instance="template">
             <attribute name="Enclose">true</attribute>
         </service>
-        
+
         <!-- アクセスエラージャーナルのフォーマッタ -->
         <service name="AccessErrorJournalWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
@@ -329,14 +321,14 @@ Editorサービス
                  instance="template"/>
 
     </manager>
-    
+
     <manager name="Template.Service.Journal.BusinessJournal">
-        
+
         <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
-        
+
 <!--=======================================================================
 ジャーナルサービス
 ========================================================================-->
@@ -433,7 +425,7 @@ WritableRecordFactoryサービス
                  instance="template">
             <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
         </service>
-        
+
         <service name="ErrorThrowableElement"
                  template="Template.Service.Writer.WritableRecordFactory#ThrowableElement"
                  instance="template">
@@ -661,14 +653,14 @@ Editorサービス
                 jp.ossc.nimbus.servlet.BeanFlowServletContext#Output
             </attribute>
         </service>
-        
+
     </manager>
-    
+
     <manager name="Template.Service.Journal.ProxyJournal">
-        
+
         <manager-property name="Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
-        
+
 <!--=======================================================================
 ジャーナルサービス
 ========================================================================-->
@@ -687,17 +679,17 @@ Editorサービス
             <depends>AccessErrorJournalCategory</depends>
             <depends>AccessJournalQueue</depends>
         </service>
-        
+
         <service name="AccessJournalQueue"
                  template="Template.Service.Queue#DefaultQueue"
                  instance="template">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
         </service>
-        
+
 <!--=======================================================================
 カテゴリサービス
 ========================================================================-->
-        
+
         <service name="AccessJournalCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
@@ -706,7 +698,7 @@ Editorサービス
             <depends>AccessJournalWriter</depends>
             <depends>AccessJournalWritableRecordFactory</depends>
         </service>
-        
+
         <!-- Accessエラージャーナルカテゴリ -->
         <service name="AccessErrorJournalCategory"
                  template="Template.Service.Writer.Category#EvaluateCategory"
@@ -720,7 +712,7 @@ Editorサービス
             <depends>AccessErrorJournalWriter</depends>
             <depends>AccessErrorJournalWritableRecordFactory</depends>
         </service>
-        
+
 <!--=======================================================================
 WritableRecordFactoryサービス
 ========================================================================-->
@@ -744,7 +736,7 @@ WritableRecordFactoryサービス
             <depends>NormalDateElement</depends>
             <depends>ParametersElement</depends>
         </service>
-        
+
         <!-- Accessエラージャーナルのフォーマッタ -->
         <service name="AccessErrorJournalWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
@@ -773,19 +765,19 @@ WritableRecordFactoryサービス
             <depends>ErrorDateElement</depends>
             <depends>ParametersElement</depends>
         </service>
-        
+
         <service name="NormalDateElement"
                  template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
-        
+
         <service name="ErrorDateElement"
                  template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
         </service>
-        
+
         <service name="ParametersElement"
                  template="Template.Service.Writer.WritableRecordFactory#ArrayElement"
                  instance="template"/>
@@ -805,7 +797,7 @@ WritableRecordFactoryサービス
             <attribute name="MaximumFileSize">10485760</attribute>
             <attribute name="MaxBackupIndex">100</attribute>
         </service>
-        
+
         <!-- Accessエラージャーナル書き込みサービス -->
         <service name="AccessErrorJournalWriter"
                  template="Template.Service.Writer.MessageWriter#FileWriter"
@@ -813,7 +805,7 @@ WritableRecordFactoryサービス
             <attribute name="File">${Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH}/error-journal/accessjournal-error</attribute>
             <attribute name="FilePostfix">_%DATE%.log</attribute>
         </service>
-        
+
 
 <!--=======================================================================
 EditorFinderサービス
@@ -838,7 +830,7 @@ EditorFinderサービス
             <depends>AccessRequestJournalEditor</depends>
             <depends>MethodJournalEditor</depends>
         </service>
-        
+
         <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
         <service name="AccessRequestJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
@@ -849,35 +841,35 @@ EditorFinderサービス
             <attribute name="OutputEndTime">false</attribute>
             <attribute name="OutputPerformance">true</attribute>
         </service>
-        
+
         <service name="MutableObjectJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
                  instance="template"/>
-        
+
         <service name="ObjectJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.ObjectJournalEditorService"
                  instance="template"/>
-        
+
         <service name="ClassJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.ClassJournalEditorService"
                  instance="template">
             <attribute name="ShortClassName">true</attribute>
         </service>
-        
+
         <service name="RequestJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
                  instance="template"/>
-        
+
         <service name="MethodJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.MethodJournalEditorService"
                  instance="template">
             <attribute name="OutputItemName">false</attribute>
         </service>
-        
+
         <service name="ThrowableJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
                  instance="template"/>
-        
+
     </manager>
-    
+
 </server>
