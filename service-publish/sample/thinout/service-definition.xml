@@ -15,12 +15,12 @@
     
     <manager name="Sample.Service.Publish.Server">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
         <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
         
-        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
@@ -28,22 +28,23 @@
     
     <manager name="Sample.Service.Publish.Server.ThinOut">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
-            #TimeIntervalThinOutFilter
-        </manager-property>
-        
         <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
         
-        <service template="Template.Service.Publish.ThinOut#ThinOutServerConnectionFactory"/>
+        <service template="Template.Service.Publish.ThinOut#ThinOutServerConnectionFactory">
+            <service-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+                #TimeIntervalThinOutFilter
+            </service-property>
+        </service>
         
         <service template="Template.Service.Publish.ThinOut#TimeIntervalThinOutFilter">
             <attribute name="ThinOutInterval">1000</attribute>
         </service>
         
-        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
@@ -54,9 +55,9 @@
     
     <manager name="Sample.Service.Publish.Client">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
-        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
@@ -67,15 +68,16 @@
     
     <manager name="Sample.Service.Publish.Client.ThinOut">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
-            #TimeIntervalThinOutFilter
-        </manager-property>
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
-        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
-        
-        <service template="Template.Service.Publish.ThinOut#ThinOutClientConnectionFactory"/>
+        <service template="Template.Service.Publish.ThinOut#ThinOutClientConnectionFactory">
+            <service-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+                #TimeIntervalThinOutFilter
+            </service-property>
+        </service>
         
         <service template="Template.Service.Publish.ThinOut#TimeIntervalThinOutFilter">
             <attribute name="ThinOutInterval">1000</attribute>

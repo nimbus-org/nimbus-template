@@ -7,17 +7,17 @@
     
     <manager name="Sample.Service.Queue.Server" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</manager-property>
-        <service template="Template.Service.Queue#SharedQueue"/>
-        
+        <service template="Template.Service.Queue#SharedQueue">
+            <service-property name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</service-property>
+        </service>
     </manager>
     
     <manager name="Sample.Service.Queue.Client" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</manager-property>
-        <service template="Template.Service.Queue#SharedQueue"/>
-        
+        <service template="Template.Service.Queue#SharedQueue">
+            <service-property name="Template.Service.Queue.SharedQueue.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Queue.SharedQueue.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</service-property>
+        </service>
     </manager>
 </server>

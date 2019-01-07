@@ -15,9 +15,10 @@
     
     <manager name="Sample.Service.Performance">
         
-        <manager-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">Sample.Service.System#OperationSystem</manager-property>
         <service name="ResourceUsage"
-                 template="Template.Service.Performance.ResourceUsage#CPUResourceUsage"/>
+                 template="Template.Service.Performance.ResourceUsage#CPUResourceUsage">
+            <service-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">Sample.Service.System#OperationSystem</service-property>
+        </service>
         
     </manager>
 </server>

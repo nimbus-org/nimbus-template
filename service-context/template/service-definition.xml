@@ -46,17 +46,18 @@
     <manager name="Template.Service.Context.SharedContext">
         
         <!-- サーバを跨ってデータを共有するSharedContextサービス -->
-        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">#Interpreter</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">#ExecuteQueue</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</manager-property>
         <service name="SharedContext"
                  code="jp.ossc.nimbus.service.context.SharedContextService"
                  instance="template">
+            
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            <service-property name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">#ExecuteQueue</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</service-property>
             
 <ifdef name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">
             <!-- コンテキスト情報の変更を送受信するRequestConnectionFactoryサービスのサービス名を設定する -->
@@ -108,11 +109,20 @@
         </service>
         
         <!-- サーバを跨ってデータを分散共有するSharedContextサービス -->
-        <manager-property name="Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME">#ParallelRequestQueue</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME">#KeyDistributor</manager-property>
         <service name="DistributedSharedContext"
                  code="jp.ossc.nimbus.service.context.DistributedSharedContextService"
                  instance="template">
+            
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            <service-property name="Template.Service.Context.SharedContext.EXECUTE_QUEUE_SERVICE_NAME">#ExecuteQueue</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</service-property>
+            <service-property name="Template.Service.Context.SharedContext.PARALLEL_REQ_QUEUE_SERVICE_NAME">#ParallelRequestQueue</service-property>
+            <service-property name="Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME">#KeyDistributor</service-property>
             
 <ifdef name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">
             <!-- コンテキスト情報の変更を送受信するRequestConnectionFactoryサービスのサービス名を設定する -->
@@ -181,11 +191,12 @@
     <manager name="Template.Service.Context.ContextStore">
         
         <!-- コンテキストをデータベースに永続化するContextStoreサービス -->
-        <manager-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
         <service name="ContextStore"
                  code="jp.ossc.nimbus.service.context.DatabaseContextStoreService"
                  instance="template">
+            
+            <service-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
             
 <ifdef name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">
             <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->
@@ -220,11 +231,12 @@
                  instance="template"/>
         
         <!-- データベースのマスタを元にキー分散を行うSharedContextKeyDistributorサービス -->
-        <manager-property name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
         <service name="DatabaseSharedContextKeyDistributor"
                  code="jp.ossc.nimbus.service.context.DatabaseSharedContextKeyDistributorService"
                  instance="template">
+            
+            <service-property name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
             
 <ifdef name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">
             <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->

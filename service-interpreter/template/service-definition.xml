@@ -21,12 +21,13 @@
                  instance="template"/>
         
         <!-- ScriptEngineでスクリプトを実行するInterpreterサービス -->
-        <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
-        <manager-property name="Template.Service.Interpreter.ScriptEngine.MIME_TYPE">text/javascript</manager-property>
-        <manager-property name="Template.Service.Interpreter.ScriptEngine.EXTENTION">js</manager-property>
         <service name="ScriptEngineInterpreter"
                  code="jp.ossc.nimbus.service.interpreter.ScriptEngineInterpreterService"
                  instance="template">
+            
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+            <service-property name="Template.Service.Interpreter.ScriptEngine.MIME_TYPE">text/javascript</service-property>
+            <service-property name="Template.Service.Interpreter.ScriptEngine.EXTENTION">js</service-property>
             
 <ifdef name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">
             <attribute name="EngineName">${Template.Service.Interpreter.ScriptEngine.ENGINE_NAME}</attribute>

@@ -15,15 +15,15 @@
     
     <manager name="Sample.Service.Publish.Server">
         
-        <manager-property name="Template.Service.Publish.Multicast.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
-        <service template="Template.Service.Publish.Multicast#ConnectionFactory"/>
+        <service template="Template.Service.Publish.Multicast#ConnectionFactory">
+            <service-property name="Template.Service.Publish.Multicast.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
         
         <service template="Template.Service.Publish.Multicast#AsynchSendQueue"/>
         
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
             <attribute name="SequenceServiceName">#Sequence</attribute>
             <depends>
                 <service name="Sequence"
@@ -37,9 +37,9 @@
     
     <manager name="Sample.Service.Publish.Client">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
-        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         

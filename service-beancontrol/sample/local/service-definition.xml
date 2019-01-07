@@ -14,27 +14,30 @@ BeanFlowサービス
         <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BusinessJournal</manager-property>
         <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
         
-        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
-        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
-        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
-        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
-        <manager-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</manager-property>
-        <manager-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</manager-property>
-        <manager-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</manager-property>
-        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"/>
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+            <service-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</service-property>
+            <service-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</service-property>
+            <service-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</service-property>
+            <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</service-property>
+            <service-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</service-property>
+        </service>
         
-        <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
         <service name="JavaScriptInterpreter"
-                 template="Template.Service.Interpreter#ScriptEngineInterpreter"/>
+                 template="Template.Service.Interpreter#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
         
         <service template="Template.Service.Template#TemplateEngine"/>
         
         <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"/>
         
-        <manager-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</manager-property>
-        <manager-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</manager-property>
-        <manager-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#BeanFlowExceptionHandlingInterceptor</manager-property>
-        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList"/>
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList">
+            <service-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#BeanFlowExceptionHandlingInterceptor</service-property>
+        </service>
         
         <service name="JournalInterceptor"
                  template="Template.Service.AOP.Interceptor#MethodJournalInterceptor">
@@ -49,9 +52,9 @@ BeanFlowサービス
             <depends>BeanFlowDefaultExceptionHandler</depends>
         </service>
         
-        <manager-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</manager-property>
         <service name="BeanFlowDefaultExceptionHandler"
                  template="Template.Service.AOP.Interceptor#DefaultExceptionHandler">
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
             <attribute name="LogMessageCode">ERROR</attribute>
         </service>
         

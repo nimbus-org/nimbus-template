@@ -15,8 +15,6 @@
     
     <manager name="Template.Service.Performance.PerformanceRecorder">
         
-        <manager-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</manager-property>
-        
         <service name="PerformanceRecorder"
                  code="jp.ossc.nimbus.service.performance.DefaultPerformanceRecorderService"
                  instance="template">
@@ -37,6 +35,9 @@
         <service name="PerformanceJournalWriter"
                  code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
                  instance="template">
+            
+            <service-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</service-property>
+            
             <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
             <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median"${line.separator}"</attribute>
             <attribute name="Append">true</attribute>
@@ -61,10 +62,11 @@
     
     <manager name="Template.Service.Performance.ResourceUsage">
         
-        <manager-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">#OperationSystem</manager-property>
         <service name="CPUResourceUsage"
                  code="jp.ossc.nimbus.service.performance.CPUResourceUsageService"
                  instance="template">
+            
+            <service-property name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">#OperationSystem</service-property>
             
 <ifdef name="Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME">
             <attribute name="OperationSystemServiceName">${Template.Service.Performance.ResourceUsage.OPERATION_SYSTEM_SERVICE_NAME}</attribute>

@@ -15,9 +15,9 @@
     
     <manager name="Sample.Service.Proxy.Client">
         
-        <manager-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</manager-property>
         <service name="Map"
                  template="Template.Service.Proxy.Client#RemoteClient">
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</service-property>
             <attribute name="RemoteInterfaceClassName">java.util.Map</attribute>
             <attribute name="RemoteServiceName">Sample.Service.Proxy.Server#Map</attribute>
         </service>

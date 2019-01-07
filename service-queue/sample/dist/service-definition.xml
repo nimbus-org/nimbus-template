@@ -15,9 +15,10 @@
     
     <manager name="Sample.Service.Queue">
         
-        <manager-property name="Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</manager-property>
         <service name="Queue"
-                 template="Template.Service.Queue#DistributedQueue"/>
+                 template="Template.Service.Queue#DistributedQueue">
+            <service-property name="Template.Service.Queue.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</service-property>
+        </service>
         
         <service name="DistributedQueueSelector"
                  template="Template.Service.Queue.DistributedQueueSelector#InputPropertyDistributedQueueSelector">

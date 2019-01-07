@@ -15,24 +15,27 @@
     
     <manager name="Sample.Service.Publish.Server">
         
-        <manager-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
-        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        <service template="Template.Service.Publish.TCP#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
+        
         <service template="Template.Service.Publish.TCP#AsynchSendQueue"/>
         
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
             <attribute name="Multiple">true</attribute>
         </service>
         
-        <manager-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</manager-property>
         <service template="Template.Service.Publish.Receiver#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</service-property>
             <attribute name="StartReceiveOnStart">true</attribute>
         </service>
         
-        <manager-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
-        <service template="Template.Service.Publish.Request#RequestConnectionFactory"/>
+        <service template="Template.Service.Publish.Request#RequestConnectionFactory">
+            <service-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
@@ -40,24 +43,27 @@
     
     <manager name="Sample.Service.Publish.Client">
         
-        <manager-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</manager-property>
-        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        <service template="Template.Service.Publish.TCP#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
+        
         <service template="Template.Service.Publish.TCP#AsynchSendQueue"/>
         
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
             <attribute name="Multiple">true</attribute>
         </service>
         
-        <manager-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</manager-property>
         <service template="Template.Service.Publish.Receiver#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterConnectionFactory</service-property>
             <attribute name="StartReceiveOnStart">true</attribute>
         </service>
         
-        <manager-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</manager-property>
-        <service template="Template.Service.Publish.Request#RequestConnectionFactory"/>
+        <service template="Template.Service.Publish.Request#RequestConnectionFactory">
+            <service-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         

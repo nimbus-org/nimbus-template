@@ -16,16 +16,17 @@
     <manager name="Template.Service.Scheduler2.Scheduler.Default">
         
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</manager-property>
-        <manager-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</manager-property>
-        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</manager-property>
         
         <!-- スケジューラサービス -->
         <service name="Scheduler"
                  code="jp.ossc.nimbus.service.scheduler2.DefaultSchedulerService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
+            <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            <service-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
             
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -75,10 +76,11 @@
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
         
         <!-- 業務フローでスケジュールを処理するScheduleExecuterサービス -->
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
         <service name="BeanFlowScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.BeanFlowScheduleExecutorService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
             
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -108,10 +110,11 @@
         </service>
         
         <!-- 集配信スケジュールを処理するScheduleExecuterサービス -->
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</manager-property>
         <service name="ConcentrateScheduleExecutor"
                  code="jp.ossc.nimbus.service.scheduler2.ConcentrateScheduleExecutorService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</service-property>
             
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -133,19 +136,22 @@
                  instance="template"/>
         
         <!-- クラスタ化されたScheduleExecuterサービス -->
-        <manager-property name="Template.Service.Scheduler2.LOCAL_SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</manager-property>
         <service name="ClusterScheduleExecutor"
                  template="Template.Service.Proxy.Client#RemoteClient"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
+            
             <attribute name="RemoteInterfaceClassName">jp.ossc.nimbus.service.scheduler2.ScheduleExecutor</attribute>
-            <attribute name="RemoteServiceName">${Template.Service.Scheduler2.LOCAL_SCHEDULE_EXECUTOR_SERVICE_NAME}</attribute>
+            <attribute name="RemoteServiceName">${Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME}</attribute>
         </service>
         
         <!-- ScheduleExecuterをクラスタ化して呼び出すInvokerサービス -->
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</manager-property>
         <service name="ScheduleExecutorInvoker"
                  code="jp.ossc.nimbus.service.scheduler2.ScheduleExecutorClusterInvokerService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</service-property>
             
 <ifdef name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">
             <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
@@ -155,6 +161,8 @@
     </manager>
     
     <manager name="Template.Service.Scheduler2.ScheduleMaker">
+        
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         
         <!-- 日付キーでスケジュール生成を判断するScheduleMakerサービス -->
         <service name="DateKeyConditionScheduleMaker"
@@ -197,14 +205,15 @@
     
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB">
         
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</manager-property>
-        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
             
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
@@ -234,14 +243,15 @@
     
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.JavaDB">
         
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</manager-property>
-        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
             
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
@@ -284,14 +294,15 @@
     
     <manager name="Template.Service.Scheduler2.ScheduleManager.DB.PostgreSQL">
         
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</manager-property>
-        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
         
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
         <service name="ScheduleManager"
                  code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
                  instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
             
 <ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->

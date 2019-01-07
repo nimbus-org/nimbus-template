@@ -15,12 +15,14 @@
     
     <manager name="Sample.Service.Cache">
         
-        <manager-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</manager-property>
-        <service template="Template.Service.Cache.CacheMap.Memory#CacheMap"/>
+        <service template="Template.Service.Cache.CacheMap.Memory#CacheMap">
+            <service-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</service-property>
+        </service>
         
-        <manager-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</manager-property>
-        <manager-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</manager-property>
-        <service template="Template.Service.Cache.OverflowController#OverflowController"/>
+        <service template="Template.Service.Cache.OverflowController#OverflowController">
+            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</service-property>
+            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</service-property>
+        </service>
         
         <service name="OverflowValidator" template="Template.Service.Cache.OverflowValidator#CacheSizeOverflowValidator">
             <attribute name="MaxSize">2</attribute>

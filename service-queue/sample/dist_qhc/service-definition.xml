@@ -15,9 +15,9 @@
     
     <manager name="Sample.Service.Queue">
         
-        <manager-property name="Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</manager-property>
         <service name="QueueHandlerContainer"
                  template="Template.Service.Queue.QueueHandlerContainer#DistributedQueueHandlerContainer">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.DIST_QUEUE_SELECTOR_SERVICE_NAME">#DistributedQueueSelector</service-property>
             <attribute name="IgnoreNullElement">true</attribute>
         </service>
         

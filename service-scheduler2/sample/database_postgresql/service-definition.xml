@@ -13,45 +13,50 @@
         <fatal output="true"/>
     </default-log>
     
-    <manager name="Sample.Service.Scheduler2">
+    <server-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</server-property>
+    
+    <manager name="Sample.Service.Scheduler2" shutdown-hook="true">
         
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</manager-property>
-        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
-        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         
         <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Sample.Service.Sequence#Sequence</service-property>
+            <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</service-property>
             <attribute name="TimeServiceName">#Time</attribute>
             <depends>Time</depends>
         </service>
         
-        <manager-property name="Template.Service.Scheduler2.LOCAL_SCHEDULE_EXECUTOR_SERVICE_NAME">#LocalBeanFlowScheduleExecutor</manager-property>
-        <manager-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#BeanFlowScheduleExecutorInvoker</manager-property>
         <service name="BeanFlowScheduleExecutor"
-                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"/>
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#LocalBeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#BeanFlowScheduleExecutorInvoker</service-property>
+        </service>
         
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</manager-property>
         <service name="BeanFlowScheduleExecutorInvoker"
                  template="Template.Service.Scheduler2.ScheduleExecutor#ScheduleExecutorInvoker">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#ScheduleExecutorSelector</service-property>
             <attribute name="Type">BEANFLOW</attribute>
         </service>
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <service name="ScheduleExecutorSelector"
-                 template="Template.Service.KeepAlive.KeepAliveCheckerSelector.RoundRobin#KeepAliveCheckerSelector"/>
-        
-        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+                 template="Template.Service.KeepAlive.KeepAliveCheckerSelector.RoundRobin#KeepAliveCheckerSelector">
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
+        </service>
          
-        <manager-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <service name="ScheduleExecutorServiceServer"
                  template="Template.Service.Proxy.Server.RMI#RemoteServiceServer">
+            <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
             <depends>LocalBeanFlowScheduleExecutor</depends>
         </service>
         
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</manager-property>
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+        
         <service name="LocalBeanFlowScheduleExecutor"
-                 template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
+                 template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</service-property>
+        </service>
         
         <service template="Template.Service.Scheduler2.ScheduleManager.DB.PostgreSQL#ScheduleManager">
             
@@ -101,7 +106,6 @@
     </manager>
     
     <manager name="Sample.Service.Scheduler2.TableCreator">
-        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</manager-property>
         
         <service template="Template.Service.Scheduler2.TableCreator.PostgreSQL#ScheduleSequenceCreator"/>
         

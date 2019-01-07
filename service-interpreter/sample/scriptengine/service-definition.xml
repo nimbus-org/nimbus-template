@@ -15,9 +15,10 @@
     
     <manager name="Sample.Service.Interpreter">
         
-        <manager-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</manager-property>
         <service name="Interpreter"
-                 template="Template.Service.Interpreter#ScriptEngineInterpreter"/>
+                 template="Template.Service.Interpreter#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
         
     </manager>
 </server>

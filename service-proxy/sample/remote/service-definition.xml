@@ -15,18 +15,20 @@
     
     <manager name="Sample.Service.Proxy.Client">
         
-        <manager-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</manager-property>
         <service name="Map"
                  template="Template.Service.Proxy.Client#RemoteClient">
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</service-property>
             <attribute name="RemoteInterfaceClassName">java.util.Map</attribute>
             <attribute name="RemoteServiceName">Sample.Service.Proxy.Server#Map</attribute>
         </service>
         
-        <manager-property name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#KeepAliveCheckerSelector</manager-property>
-        <service template="Template.Service.Proxy.Client.Invoker.Cluster#Invoker"/>
+        <service template="Template.Service.Proxy.Client.Invoker.Cluster#Invoker">
+            <service-property name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#KeepAliveCheckerSelector</service-property>
+        </service>
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <service template="Template.Service.KeepAlive.KeepAliveCheckerSelector.FirstAvailable#KeepAliveCheckerSelector"/>
+        <service template="Template.Service.KeepAlive.KeepAliveCheckerSelector.FirstAvailable#KeepAliveCheckerSelector">
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         
@@ -37,8 +39,9 @@
         <service name="Map"
                  code="java.util.HashMap"/>
         
-        <manager-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <service template="Template.Service.Proxy.Server.RMI#RemoteServiceServer"/>
+        <service template="Template.Service.Proxy.Server.RMI#RemoteServiceServer">
+            <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         

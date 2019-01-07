@@ -29,10 +29,11 @@
     
     <manager name="Sample.Service.Writer.Normal">
         
-        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
-        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
         <service name="Category"
-                 template="Template.Service.Writer.Category#SimpleCategory"/>
+                 template="Template.Service.Writer.Category#SimpleCategory">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
+        </service>
         
         <service name="WritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory">
@@ -54,10 +55,10 @@
         
     <manager name="Sample.Service.Writer.Error">
         
-        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
-        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
         <service name="Category"
                  template="Template.Service.Writer.Category#EvaluateCategory">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
             <attribute name="WritableConditions">@Exception@ != null</attribute>
         </service>
         

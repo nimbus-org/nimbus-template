@@ -15,11 +15,11 @@
     
     <manager name="Sample.Service.Connection">
         
-        <manager-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
-        <manager-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</manager-property>
-        
         <!-- データソースからConnectionを取得するConnectionFactoryサービス -->
-        <service template="Template.Service.Connection.DataSource#ConnectionFactory"/>
+        <service template="Template.Service.Connection.DataSource#ConnectionFactory">
+            <service-property name="Template.Service.Connection.DataSource.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
+            <service-property name="Template.Service.Connection.DataSource.JNDI_NAME">DataSource</service-property>
+        </service>
         
         <!-- データソースを取得するJndiFinderサービス -->
         <service template="Template.Service.JNDI#JndiFinder">

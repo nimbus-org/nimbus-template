@@ -15,9 +15,10 @@
     
     <manager name="Sample.Service.Sequence">
         
-        <manager-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</manager-property>
-        
         <service name="Sequence"
-                 template="Template.Service.Sequence#StringSequence"/>
+                 template="Template.Service.Sequence#StringSequence">
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#Context</service-property>
+        </service>
+        
     </manager>
 </server>

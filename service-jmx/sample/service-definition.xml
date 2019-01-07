@@ -20,17 +20,20 @@
         
         <service template="Template.Service.JMX#MBeanServerConnectionFactory"/>
         
-        <manager-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</manager-property>
-        <manager-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">5</manager-property>
         <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueMBeanWatcher">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">5</service-property>
+            
             <attribute name="ObjectName">Sample.Service.Queue:class=jp.ossc.nimbus.service.queue.DefaultQueueService,name=Queue</attribute>
             <depends>Sample.Service.Queue#Queue</depends>
         </service>
         
-        <manager-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</manager-property>
-        <manager-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</manager-property>
         <service name="Category"
-                 template="Template.Service.Writer.Category#SimpleCategory"/>
+                 template="Template.Service.Writer.Category#SimpleCategory">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
+        </service>
         
         <service name="WritableRecordFactory"
                  template="Template.Service.JMX.MBeanWatcher.Queue#QueueWritableRecordFactory"/>

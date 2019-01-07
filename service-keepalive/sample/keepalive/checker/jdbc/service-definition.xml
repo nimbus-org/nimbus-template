@@ -15,9 +15,9 @@
     
     <manager name="Sample.Service.KeepAlive.KeepAliveChecker">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveChecker.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>
-        
-        <service template="Template.Service.KeepAlive.KeepAliveChecker.JDBC#KeepAliveChecker"/>
+        <service template="Template.Service.KeepAlive.KeepAliveChecker.JDBC#KeepAliveChecker">
+            <service-property name="Template.Service.KeepAlive.KeepAliveChecker.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</service-property>
+        </service>
         
     </manager>
 </server>

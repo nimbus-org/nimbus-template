@@ -38,11 +38,12 @@
         
     <manager name="Template.Service.System.HostResolver.Database">
         
-        <manager-property name="Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
         <service name="HostResolver"
                  code="jp.ossc.nimbus.service.system.DatabaseHostResolverService"
                  instance="template">
+            
+            <service-property name="Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.System.HostResolver.Database.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
             
 <ifdef name="Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME">
             <attribute name="ConnectionFactoryServiceName">${Template.Service.System.HostResolver.Database.CONNECTION_FACTORY_SERVICE_NAME}</attribute>

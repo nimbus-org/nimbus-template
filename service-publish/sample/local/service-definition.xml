@@ -15,9 +15,9 @@
     
     <manager name="Sample.Service.Publish">
         
-        <manager-property name="Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME">#AsynchSendQueueFactory</manager-property>
-        
-        <service template="Template.Service.Publish.Local#ConnectionFactory"/>
+        <service template="Template.Service.Publish.Local#ConnectionFactory">
+            <service-property name="Template.Service.Publish.Local.ASYNCH_SEND_QUEUE_FAC_SERVICE_NAME">#AsynchSendQueueFactory</service-property>
+        </service>
         
         <service template="Template.Service.Publish.Local#AsynchSendQueueFactory"
                  instance="factory"/>

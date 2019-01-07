@@ -7,16 +7,16 @@
     
     <manager name="Sample.Service.Context.SharedContext.Server" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</manager-property>
         <service template="Template.Service.Context.SharedContext#SharedContext">
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Server#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Server#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME">#ContextStore</service-property>
             <attribute name="LoadOnStart">true</attribute>
         </service>
         
-        <manager-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</manager-property>
         <service template="Template.Service.Context.ContextStore#ContextStore">
+            <service-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
             
             <invoke name="addDatabaseMapping">
                 <argument>
@@ -99,9 +99,9 @@
     
     <manager name="Sample.Service.Context.SharedContext.Client" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</manager-property>
         <service template="Template.Service.Context.SharedContext#SharedContext">
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">Sample.Service.Publish.Client#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">Sample.Service.Publish.Client#Cluster</service-property>
             <attribute name="Client">true</attribute>
         </service>
         

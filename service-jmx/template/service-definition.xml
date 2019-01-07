@@ -16,10 +16,11 @@
     <manager name="Template.Service.JMX">
         
         <!-- JMXサーバとの接続を生成するMBeanServerConnectionFactoryサービス -->
-        <manager-property name="Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
         <service name="MBeanServerConnectionFactory"
                  code="jp.ossc.nimbus.service.jmx.DefaultMBeanServerConnectionFactoryService"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
             
 <ifdef name="Template.Service.JMX.MBeanServerConnectionFactory.JNDI_FINDER_SERVICE_NAME">
             <!-- MBeanServerConnectionをJNDIからlookupする場合に使用するJndiFinderサービスのサービス名を設定する -->
@@ -28,14 +29,16 @@
 </ifdef>
         </service>
         
-        <!-- MBeanを監視するサービス -->
         <manager-property name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">1000</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">yyyy/MM/dd HH:mm:ss</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">#MBeanServerConnectionFactory</manager-property>
-        <manager-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</manager-property>
+        
+        <!-- MBeanを監視するサービス -->
         <service name="MBeanWatcher"
                  code="jp.ossc.nimbus.service.jmx.MBeanWatcherService"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</service-property>
             
             <!-- サービス開始時にJMXサーバへ接続するかどうかを設定する -->
             <attribute name="ConnectOnStart">false</attribute>
@@ -63,10 +66,12 @@
     <manager name="Template.Service.JMX.MBeanWatcher.Queue">
         
         <!-- jp.ossc.nimbus.service.queue.DefaultQueueServiceMBeanを監視するサービス -->
-        <manager-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</manager-property>
         <service name="QueueMBeanWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -169,6 +174,9 @@
         <service name="QueuesWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
+            
             <attribute name="MBeanSet">true</attribute>
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
@@ -308,10 +316,12 @@
         </service>
         
         <!-- jp.ossc.nimbus.service.queue.QueueHandlerContainerServiceMBeanを監視するサービス -->
-        <manager-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE">60</manager-property>
         <service name="QueueHandlerContainerWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE">60</service-property>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -1273,10 +1283,12 @@
         </service>
         
         <!-- Java8のG1 GCに設定されたJavaVMのヒープを監視するサービス -->
-        <manager-property name="Template.Service.JMX.MBeanWatcher.Java.COMPRESSED_CLASS_SPACE">true</manager-property>
         <service name="Java8G1HeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.Java.COMPRESSED_CLASS_SPACE">true</service-property>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -2024,10 +2036,12 @@
     <manager name="Template.Service.JMX.MBeanWatcher.Cache">
         
         <!-- jp.ossc.nimbus.service.cache.CacheMapを監視するサービス -->
-        <manager-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT">60</manager-property>
         <service name="CacheMapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT">60</service-property>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
@@ -2241,10 +2255,12 @@
     <manager name="Template.Service.JMX.MBeanWatcher.Context">
         
         <!-- jp.ossc.nimbus.service.context.SharedContextServiceMBeanを監視するサービス -->
-        <manager-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</manager-property>
         <service name="SharedContextWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</service-property>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">

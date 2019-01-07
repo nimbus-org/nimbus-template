@@ -63,11 +63,11 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveCheckerSelector.FirstAvailable">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
         <service name="KeepAliveCheckerSelector"
                  code="jp.ossc.nimbus.service.keepalive.FirstAvailableKeepAliveCheckerSelectorService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</service-property>
             
 <ifdef name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">
             <!-- KeepAliveCheckerSelectorをクラスタ化するクラスタサービスのサービス名を設定する -->
@@ -80,11 +80,11 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveCheckerSelector.RoundRobin">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
         <service name="KeepAliveCheckerSelector"
                  code="jp.ossc.nimbus.service.keepalive.RoundRobinKeepAliveCheckerSelectorService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</service-property>
             
 <ifdef name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">
             <!-- KeepAliveCheckerSelectorをクラスタ化するクラスタサービスのサービス名を設定する -->
@@ -97,11 +97,11 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveCheckerSelector.ResourceAvailable">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
         <service name="KeepAliveCheckerSelector"
                  code="jp.ossc.nimbus.service.keepalive.ResourceAvailableKeepAliveCheckerSelectorService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">#Cluster</service-property>
             
 <ifdef name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">
             <!-- KeepAliveCheckerSelectorをクラスタ化するクラスタサービスのサービス名を設定する -->
@@ -114,11 +114,11 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveChecker.TCP">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</manager-property>
-        
         <service name="KeepAliveChecker"
                  code="jp.ossc.nimbus.service.keepalive.tcp.TcpKeepAliveCheckerService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</service-property>
             
             <!-- チェック対象のIPアドレスを設定する -->
             <attribute name="CheckTargetAddress">localhost</attribute>
@@ -137,11 +137,11 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveChecker.WS">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</manager-property>
-        
         <service name="KeepAliveChecker"
                  code="jp.ossc.nimbus.service.keepalive.websocket.WebSocketKeepAliveCheckerService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</service-property>
             
             <!-- チェック対象のIPアドレスを設定する -->
             <attribute name="CheckTargetAddress">localhost</attribute>
@@ -161,12 +161,12 @@
     
     <manager name="Template.Service.KeepAlive.KeepAliveChecker.JDBC">
         
-        <manager-property name="Template.Service.KeepAlive.KeepAliveChecker.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</manager-property>
-        
         <service name="KeepAliveChecker"
                  code="jp.ossc.nimbus.service.keepalive.jdbc.JDBCKeepAliveCheckerService"
                  instance="template">
+            
+            <service-property name="Template.Service.KeepAlive.KeepAliveChecker.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.KeepAlive.KeepAliveChecker.HOST_RESOLVER_SERVICE_NAME">#HostResolver</service-property>
             
             <!-- チェックに使用するSQLを設定する -->
             <attribute name="CheckQuery">select 1 from SYSIBM.SYSDUMMY1</attribute>

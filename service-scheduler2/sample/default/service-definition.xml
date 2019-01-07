@@ -16,17 +16,18 @@
     <manager name="Sample.Service.Scheduler2">
         
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
-        <manager-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</manager-property>
-        <manager-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Sample.Service.Sequence#Sequence</manager-property>
-        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</manager-property>
-        <manager-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</manager-property>
         
         <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Sample.Service.Sequence#Sequence</service-property>
+            <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Sample.Service.ThreadContext#ThreadContext</service-property>
             <attribute name="TimeServiceName">#Time</attribute>
             <depends>Time</depends>
         </service>
         
-        <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"/>
+        <service template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.BeanControl#BeanFlowInvokerFactory</service-property>
+        </service>
         
         <service template="Template.Service.Scheduler2.ScheduleManager.Default#ScheduleManager">
             

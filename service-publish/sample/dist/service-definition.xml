@@ -15,18 +15,19 @@
     
     <manager name="Sample.Service.Publish.Server">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        <manager-property name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">#ConnectionFactoryFactory</manager-property>
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</manager-property>
-        
         <service name="ConnectionFactoryFactory"
                  template="Template.Service.Publish.TCP#ConnectionFactory"
                  instance="factory"/>
         
         <service name="ConnectionFactory"
-                 template="Template.Service.Publish.Dist#DistributedConnectionFactory"/>
+                 template="Template.Service.Publish.Dist#DistributedConnectionFactory">
+            <service-property name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">#ConnectionFactoryFactory</service-property>
+        </service>
         
-        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
@@ -34,9 +35,9 @@
     
     <manager name="Sample.Service.Publish.Client">
         
-        <manager-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</manager-property>
-        
-        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory">
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
+        </service>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         

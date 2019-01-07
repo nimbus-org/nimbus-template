@@ -15,8 +15,6 @@
     
     <manager name="Template.Service.Sequence">
         
-        <manager-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">#Context</manager-property>
-        
         <service name="NumberSequence"
                  code="jp.ossc.nimbus.service.sequence.NumberSequenceService"
                  instance="template"/>
@@ -24,6 +22,8 @@
         <service name="StringSequence"
                  code="jp.ossc.nimbus.service.sequence.StringSequenceService"
                  instance="template">
+            
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">#Context</service-property>
             
             <attribute name="Format">%HOST_NAME%;_;TIME_SEQ(yyyyMMddHHmmssSSS,3)</attribute>
             

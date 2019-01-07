@@ -15,13 +15,13 @@
     
     <manager name="Sample.Service.Performance">
         
-        <manager-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</manager-property>
-        
         <service template="Template.Service.Performance.PerformanceRecorder#PerformanceRecorder"/>
         
         <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalCategory"/>
         
-        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWriter"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWriter">
+            <service-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</service-property>
+        </service>
         
         <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWritableRecordFactory"/>
         

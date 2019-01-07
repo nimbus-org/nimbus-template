@@ -24,8 +24,8 @@
             <depends>#TableCreator</depends>
         </service>
         
-        <manager-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">${Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME}</manager-property>
         <service template="Template.Service.Connection.TableCreator#TableCreator">
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">${Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME}</service-property>
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='LOG'</attribute>
             <attribute name="CreateTableQuery">
                 create table LOG(
