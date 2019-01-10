@@ -43,23 +43,19 @@
         <service name="AccessNormalJournalCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
-            <attribute name="MessageWriterServiceName">#AccessNormalJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#AccessNormalJournalWritableRecordFactory</attribute>
-            <depends>AccessNormalJournalWriter</depends>
-            <depends>AccessNormalJournalWritableRecordFactory</depends>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessNormalJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessNormalJournalWriter</service-property>
         </service>
 
         <!-- アクセスエラージャーナルカテゴリ -->
         <service name="AccessErrorJournalCategory"
                  template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessErrorJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessErrorJournalWriter</service-property>
             <attribute name="WritableConditions">
                 @Access.JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Exception[0]@!=null
             </attribute>
-            <attribute name="MessageWriterServiceName">#AccessErrorJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#AccessErrorJournalWritableRecordFactory</attribute>
-            <depends>AccessErrorJournalWriter</depends>
-            <depends>AccessErrorJournalWritableRecordFactory</depends>
         </service>
 
 
@@ -362,28 +358,24 @@ Editorサービス
         <service name="BusinessJournalCategory"
                  template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#BusinessJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessJournalWriter</service-property>
             <attribute name="Enabled">${Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED}</attribute>
             <attribute name="WritableConditions">
                 @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]@!=null or @Business.JournalRecords.Flow[0]@!=null
             </attribute>
-            <attribute name="MessageWriterServiceName">#BusinessJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#BusinessJournalWritableRecordFactory</attribute>
-            <depends>BusinessJournalWriter</depends>
-            <depends>BusinessJournalWritableRecordFactory</depends>
         </service>
 
         <!-- Businessエラージャーナルカテゴリ -->
         <service name="BusinessErrorJournalCategory"
                  template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#BusinessErrorJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessErrorJournalWriter</service-property>
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
                 @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Business.JournalRecords.Exception[0]@!=null
             </attribute>
-            <attribute name="MessageWriterServiceName">#BusinessErrorJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#BusinessErrorJournalWritableRecordFactory</attribute>
-            <depends>BusinessErrorJournalWriter</depends>
-            <depends>BusinessErrorJournalWritableRecordFactory</depends>
         </service>
 
 <!--=======================================================================
@@ -693,24 +685,20 @@ Editorサービス
         <service name="AccessJournalCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
-            <attribute name="MessageWriterServiceName">#AccessJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#AccessJournalWritableRecordFactory</attribute>
-            <depends>AccessJournalWriter</depends>
-            <depends>AccessJournalWritableRecordFactory</depends>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessJournalWriter</service-property>
         </service>
 
         <!-- Accessエラージャーナルカテゴリ -->
         <service name="AccessErrorJournalCategory"
                  template="Template.Service.Writer.Category#EvaluateCategory"
                  instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessErrorJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessErrorJournalWriter</service-property>
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
                 @Access.JournalRecords.Exception[0]@!=null
             </attribute>
-            <attribute name="MessageWriterServiceName">#AccessErrorJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#AccessErrorJournalWritableRecordFactory</attribute>
-            <depends>AccessErrorJournalWriter</depends>
-            <depends>AccessErrorJournalWritableRecordFactory</depends>
         </service>
 
 <!--=======================================================================

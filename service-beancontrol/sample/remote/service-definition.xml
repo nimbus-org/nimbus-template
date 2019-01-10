@@ -15,7 +15,6 @@
         
         <service name="BeanFlowInvokerFactory"
                  template="Template.Service.BeanControl.Dist.Client#ServerBeanFlowInvokerFactory">
-            <service-property name="Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME">#Cluster</service-property>
         </service>
         
     </manager>
@@ -28,8 +27,6 @@
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
         <service template="Template.Service.BeanControl.Dist.Server#BeanFlowInvokerServer">
-            <service-property name="Template.Service.BeanControl.Dist.Server.CLUSTER_SERVICE_NAME">#Cluster</service-property>
-            <service-property name="Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
             <service-property name="Template.Service.BeanControl.Dist.Server.RESOURCE_USAGE_SERVICE_NAME">Sample.Service.Performance#ResourceUsage</service-property>
         </service>
         
@@ -39,7 +36,6 @@ BeanFlowサービス
         
         <service template="Template.Service.BeanControl#BeanFlowInvokerFactory">
             <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
-            <service-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</service-property>
             <service-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">Sample.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder</service-property>
             <service-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</service-property>
             <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
@@ -77,7 +73,6 @@ BeanFlowサービス
         
         <service name="BeanFlowDefaultExceptionHandler"
                  template="Template.Service.AOP.Interceptor#DefaultExceptionHandler">
-            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
             <attribute name="LogMessageCode">ERROR</attribute>
         </service>
         

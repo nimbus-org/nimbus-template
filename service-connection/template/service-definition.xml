@@ -56,10 +56,13 @@
                  code="jp.ossc.nimbus.service.connection.WrappedConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">#Journal</service-property>
             <service-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
             <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
 
 <ifdef name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">
             <!-- ラップする元となるConnectionを生成するConnectionFactoryサービスのサービス名を設定する -->
@@ -100,6 +103,21 @@
 <ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">
                             <!-- StatementラッパーにPerformanceRecorderサービスを設定する -->
                             <attribute name="PerformanceRecorder"><service-ref>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.FETCH_SIZE">
+                            <!-- Statementラッパーにフェッチサイズを設定する -->
+                            <attribute name="FetchSize">${Template.Service.Connection.Wrapper.FETCH_SIZE}</attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">
+                            <!-- Statementラッパーにフェッチ方向を設定する -->
+                            <attribute name="FetchDirection">${Template.Service.Connection.Wrapper.FETCH_DIRECTION}</attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">
+                            <!-- Statementラッパーにクエリタイムアウトを設定する -->
+                            <attribute name="QueryTimeout">${Template.Service.Connection.Wrapper.QUERY_TIMEOUT}</attribute>
 </ifdef>
 
                         </object>
@@ -148,7 +166,7 @@
                  code="jp.ossc.nimbus.service.connection.TableCreatorService"
                  instance="template">
 
-            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#RecordListConverter</service-property>
 
             <!-- データベースとの接続を取得するConnectionFactoryサービス -->

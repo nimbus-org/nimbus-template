@@ -42,8 +42,8 @@
                  code="jp.ossc.nimbus.service.context.SharedContextService"
                  instance="template">
 
-            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</service-property>
-            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME" extends="true">#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
             <service-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</service-property>
             <service-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
             <service-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
@@ -105,8 +105,8 @@
                  code="jp.ossc.nimbus.service.context.DistributedSharedContextService"
                  instance="template">
 
-            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">#RequestConnectionFactory</service-property>
-            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME" extends="true">#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
             <service-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">#TransactionManager</service-property>
             <service-property name="Template.Service.Context.SharedContext.CLIENT_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
             <service-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
@@ -187,8 +187,8 @@
                  code="jp.ossc.nimbus.service.context.DatabaseContextStoreService"
                  instance="template">
 
-            <service-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
-            <service-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
+            <service-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.ContextStore.PERSISTENT_MANAGER_SERVICE_NAME" extends="true">#PersistentManager</service-property>
 
 <ifdef name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">
             <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->
@@ -227,8 +227,8 @@
                  code="jp.ossc.nimbus.service.context.DatabaseSharedContextKeyDistributorService"
                  instance="template">
 
-            <service-property name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
-            <service-property name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
+            <service-property name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.KeyDistributor.PERSISTENT_MANAGER_SERVICE_NAME" extends="true">#PersistentManager</service-property>
 
 <ifdef name="Template.Service.Context.KeyDistributor.CONNECTION_FAC_SERVICE_NAME">
             <!-- JDBC接続を取得するConnectionFactoryサービスのサービス名を設定する -->

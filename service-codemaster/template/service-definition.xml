@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.CodeMaster">
+        
+        <!-- マスタをメモリ中に管理し、読み取り一貫性を担保するCodeMasterFinderサービス -->
+        <service name="CodeMasterFinder"
+                 code="jp.ossc.nimbus.service.codemaster.CodeMasterService"
+                 instance="template">
+            
+            <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+            <service-property name="Template.Service.CodeMaster.SUBJECTS" extends="true">CodeMaster</service-property>
+            <service-property name="Template.Service.CodeMaster.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
+            
+<ifdef name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.CodeMaster.SEQUENCE_SERVICE_NAME">
+            <attribute name="SequenceServiceName">${Template.Service.CodeMaster.SEQUENCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.CodeMaster.SEQUENCE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">
+            <attribute name="MessageReceiverServiceName">${Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
+            <attribute name="Subjects">${Template.Service.CodeMaster.SUBJECTS}</attribute>
+            <depends>${Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+</server>

@@ -6,39 +6,43 @@
 <server>
 
     <manager name="Template.Service.Performance.PerformanceRecorder">
-
+        
         <service name="PerformanceRecorder"
                  code="jp.ossc.nimbus.service.performance.DefaultPerformanceRecorderService"
                  instance="template">
+            
+            <service-property name="Template.Service.Performance.PerformanceRecorder.CATEGORY_SERVICE_NAME" extends="true">#PerformanceJournalCategory</service-property>
+            
+<ifdef name="Template.Service.Performance.PerformanceRecorder.CATEGORY_SERVICE_NAME">
             <attribute name="CategoryServiceName">#PerformanceJournalCategory</attribute>
-            <attribute name="ResetInterval">1000</attribute>
             <depends>PerformanceJournalCategory</depends>
+</ifdef>
+            <attribute name="ResetInterval">1000</attribute>
         </service>
-
+        
         <service name="PerformanceJournalCategory"
-                 code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
+                 template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
-            <attribute name="MessageWriterServiceName">#PerformanceJournalWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#PerformanceJournalWritableRecordFactory</attribute>
-            <depends>PerformanceJournalWriter</depends>
-            <depends>PerformanceJournalWritableRecordFactory</depends>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#PerformanceJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#PerformanceJournalWriter</service-property>
         </service>
 
         <service name="PerformanceJournalWriter"
-                 code="jp.ossc.nimbus.service.writer.OneWriteFileMessageWriterService"
+                 template="Template.Service.Writer.MessageWriter#FileWriter"
                  instance="template">
 
+            <service-property name="Template.Service.Writer.MessageWriter.SEPARATOR" extends="true">${line.separator}</service-property>
             <service-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</service-property>
 
             <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/performancejournal.log</attribute>
-            <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median"${line.separator}"</attribute>
+            <attribute name="Header">""Timestamp","Count","Best","Worst","Average","Median""</attribute>
             <attribute name="Append">true</attribute>
         </service>
 
         <service name="PerformanceJournalWritableRecordFactory"
-                 code="jp.ossc.nimbus.service.writer.WritableRecordFactoryService"
+                 template="Template.Service.Writer.WritableRecordFactory#WritableRecordFactory"
                  instance="template">
-            <attribute name="Format">""%Timestamp%","%Count%","%Best%","%Worst%","%Average%","%Median%"${line.separator}"</attribute>
+            <attribute name="Format">""%Timestamp%","%Count%","%Best%","%Worst%","%Average%","%Median%""</attribute>
             <attribute name="ImplementServiceNames">
                 Timestamp=#DateElement
             </attribute>
@@ -46,7 +50,7 @@
         </service>
 
         <service name="DateElement"
-                 code="jp.ossc.nimbus.service.writer.DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss</attribute>
         </service>

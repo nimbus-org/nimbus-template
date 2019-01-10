@@ -30,6 +30,8 @@
                  code="jp.ossc.nimbus.service.jmx.MBeanWatcherService"
                  instance="template">
 
+            <service-property name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">1000</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">#MBeanServerConnectionFactory</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#Category</service-property>
 
             <!-- サービス開始時にJMXサーバへ接続するかどうかを設定する -->

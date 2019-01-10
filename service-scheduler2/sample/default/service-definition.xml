@@ -5,14 +5,6 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="true"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Sample.Service.Scheduler2">
         
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>

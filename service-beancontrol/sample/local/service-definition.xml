@@ -54,7 +54,6 @@ BeanFlowサービス
         
         <service name="BeanFlowDefaultExceptionHandler"
                  template="Template.Service.AOP.Interceptor#DefaultExceptionHandler">
-            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
             <attribute name="LogMessageCode">ERROR</attribute>
         </service>
         

@@ -5,14 +5,6 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Sample.Service.Writer">
         
         <manager-property name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</manager-property>

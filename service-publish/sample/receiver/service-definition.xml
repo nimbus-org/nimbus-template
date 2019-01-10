@@ -5,22 +5,11 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Sample.Service.Publish.Server">
         
         <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
         
-        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory">
-            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
-            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
-        </service>
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
         
@@ -28,15 +17,11 @@
     
     <manager name="Sample.Service.Publish.Client">
         
-        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory">
-            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
-        </service>
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
         
         <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
         
-        <service template="Template.Service.Publish.Receiver#MessageReceiver">
-            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</service-property>
-        </service>
+        <service template="Template.Service.Publish.Receiver#MessageReceiver"/>
         
     </manager>
 </server>

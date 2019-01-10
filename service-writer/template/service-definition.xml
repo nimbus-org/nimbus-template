@@ -5,14 +5,6 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Template.Service.Writer.Category">
         
         <!-- デフォルトのCategoryサービス -->
@@ -20,8 +12,8 @@
                  code="jp.ossc.nimbus.service.writer.SimpleCategoryService"
                  instance="template">
             
-            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
-            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#WritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#MessageWriter</service-property>
             
             <!-- 出力するオブジェクトをWritableRecordに変換するWritableRecordFactoryサービス -->
 <ifdef name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">
@@ -187,7 +179,7 @@
                  code="jp.ossc.nimbus.service.writer.db.DatabaseWriterService"
                  instance="template">
             
-            <service-property name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
             
             <!-- データベースとの接続を取得するConnectionFactoryサービス -->
 <ifdef name="Template.Service.Writer.MessageWriter.DB.CONNECTION_FACTORY_SERVICE_NAME">
@@ -242,7 +234,7 @@
                  code="jp.ossc.nimbus.service.writer.publish.ServerConnectionWriterService"
                  instance="template">
             
-            <service-property name="Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME">#ServerConnectionFactory</service-property>
+            <service-property name="Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ServerConnectionFactory</service-property>
             
             <!-- 送信するServerConnectionを取得するServerConnectionFactoryサービス -->
 <ifdef name="Template.Service.Writer.MessageWriter.Publish.SERVER_CONNECTION_FACTORY_SERVICE_NAME">
@@ -256,9 +248,9 @@
                  code="jp.ossc.nimbus.service.writer.publish.ClientConnectionWriterService"
                  instance="template">
             
-            <service-property name="Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME">#ClientConnectionFactory</service-property>
-            <service-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
-            <service-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
+            <service-property name="Template.Service.Writer.MessageWriter.Publish.CLIENT_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ClientConnectionFactory</service-property>
+            <service-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_RECEIVER_SERVICE_NAME" extends="true">#MessageReceiver</service-property>
+            <service-property name="Template.Service.Writer.MessageWriter.Publish.MESSAGE_WRITER_SERVICE_NAME" extends="true">#MessageWriter</service-property>
             <service-property name="Template.Service.Writer.MessageWriter.Publish.CONTEXT_SERVICE_NAME">#Context</service-property>
             
             <!-- 受信するClientConnectionを取得するClientConnectionFactoryサービス -->

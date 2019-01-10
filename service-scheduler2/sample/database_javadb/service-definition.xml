@@ -5,14 +5,6 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="true"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <server-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Sample.Service.Scheduler2.Connection#ConnectionFactory</server-property>
     
     <manager name="Sample.Service.Scheduler2" shutdown-hook="true">

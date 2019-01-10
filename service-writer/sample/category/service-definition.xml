@@ -5,14 +5,6 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Sample.Service.Writer">
         
         <service name="Category"
@@ -30,10 +22,7 @@
     <manager name="Sample.Service.Writer.Normal">
         
         <service name="Category"
-                 template="Template.Service.Writer.Category#SimpleCategory">
-            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
-            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
-        </service>
+                 template="Template.Service.Writer.Category#SimpleCategory"/>
         
         <service name="WritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory">
@@ -57,8 +46,6 @@
         
         <service name="Category"
                  template="Template.Service.Writer.Category#EvaluateCategory">
-            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#WritableRecordFactory</service-property>
-            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#MessageWriter</service-property>
             <attribute name="WritableConditions">@Exception@ != null</attribute>
         </service>
         

@@ -5,24 +5,13 @@
 
 <server>
     
-    <default-log>
-        <debug output="false"/>
-        <information output="false"/>
-        <warning output="true"/>
-        <error output="true"/>
-        <fatal output="true"/>
-    </default-log>
-    
     <manager name="Sample.Service.Cache">
         
         <service template="Template.Service.Cache.CacheMap.Memory#CacheMap">
             <service-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME">#OverflowController</service-property>
         </service>
         
-        <service template="Template.Service.Cache.OverflowController#OverflowController">
-            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</service-property>
-            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</service-property>
-        </service>
+        <service template="Template.Service.Cache.OverflowController#OverflowController"/>
         
         <service name="OverflowValidator" template="Template.Service.Cache.OverflowValidator#CacheSizeOverflowValidator">
             <attribute name="MaxSize">2</attribute>

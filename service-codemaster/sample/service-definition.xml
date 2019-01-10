@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.CodeMaster" shutdown-hook="true">
+        
+        <service template="Template.Service.CodeMaster#CodeMasterFinder">
+            <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+            <attribute name="MasterNames">
+                sample
+            </attribute>
+        </service>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+            
+            <depends>Sample.Service.CodeMaster.Resource#PersistentManager</depends>
+            <depends>Sample.Service.CodeMaster.Resource#UserMasterTableCreator</depends>
+            <depends>Sample.Service.CodeMaster.Resource#ConnectionResourceFactory</depends>
+        </service>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"/>
+        
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"/>
+        
+        <service template="Template.Service.Publish.Receiver#MessageReceiver">
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+    </manager>
+            
+    <manager name="Sample.Service.CodeMaster.Resource" shutdown-hook="true">
+        
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager"/>
+        
+        <service name="ConnectionResourceFactory"
+                 code="jp.ossc.nimbus.service.resource.datasource.JdbcConnectionFactoryService">
+            <attribute name="ConnectionFactoryServiceName">Sample.Service.Connection#ConnectionFactory</attribute>
+            <depends>Sample.Service.Connection#ConnectionFactory</depends>
+        </service>
+        
+        <service name="UserMasterTableCreator"
+                 template="Template.Service.Connection.TableCreator#TableCreator">
+            
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME" extends="true">Sample.Service.Connection#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#CSVRecordListConverter</service-property>
+            
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='USER_MST'</attribute>
+            <attribute name="CreateTableQuery">
+                create table USER_MST(
+                    ID              CHAR(5) not null,
+                    NAME            VARCHAR(256),
+                    AGE             NUMERIC(3,0),
+                    SEX             CHAR(1),
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into USER_MST values(?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :NAME,java.lang.String
+                :AGE,short
+                :SEX,java.lang.String
+            </attribute>
+            <attribute name="InsertRecords">
+                00001,山田太郎,25,M
+                00002,山田花子,20,F
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+        </service>
+        
+        <service template="Template.Service.Connection.TableCreator#CSVRecordListConverter"/>
+        
+    </manager>
+    
+    <manager name="Sample.Service.CodeMaster.Updater" shutdown-hook="true">
+        
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"/>
+        
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"/>
+        
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"/>
+    </manager>
+
+</server>

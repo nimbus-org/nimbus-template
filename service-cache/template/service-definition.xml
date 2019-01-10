@@ -162,8 +162,8 @@
                  code="jp.ossc.nimbus.service.cache.DefaultOverflowControllerService"
                  instance="template">
 
-            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">#OverflowValidator</service-property>
-            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME">#OverflowAlgorithm</service-property>
+            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME" extends="true">#OverflowValidator</service-property>
+            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME" extends="true">#OverflowAlgorithm</service-property>
             <service-property name="Template.Service.Cache.OVERFLOW_ACTION_SERVICE_NAME">#OverflowAction</service-property>
 
 <ifdef name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME">
@@ -257,7 +257,7 @@
                  code="jp.ossc.nimbus.service.cache.ContextSaveOverflowActionService"
                  instance="template">
 
-            <service-property name="Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME">#Context</service-property>
+            <service-property name="Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME" extends="true">#Context</service-property>
 
 <ifdef name="Template.Service.Cache.OverflowAction.ContextSave.CONTEXT_SERVICE_NAME">
             <!-- あふれ先のContextサービスのサービス名を設定する -->

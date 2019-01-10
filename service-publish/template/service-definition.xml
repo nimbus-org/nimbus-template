@@ -99,7 +99,7 @@
                  code="jp.ossc.nimbus.service.publish.DistributedConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">#ConnectionFactoryFactory</service-property>
+            <service-property name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME" extends="true">#ConnectionFactoryFactory</service-property>
 
             <attribute name="DistributedSize">2</attribute>
 <ifdef name="Template.Service.Publish.Dist.CONNECTION_FAC_FAC_SERVICE_NAME">
@@ -116,8 +116,8 @@
                  code="jp.ossc.nimbus.service.publish.ClusterConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">#Cluster</service-property>
-            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
 
 <ifdef name="Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLUSTER_SERVICE_NAME}</attribute>
@@ -134,7 +134,7 @@
                  code="jp.ossc.nimbus.service.publish.ClusterClientConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
 
 <ifdef name="Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Publish.Cluster.CLIENT_CLUSTER_SERVICE_NAME}</attribute>
@@ -151,8 +151,8 @@
                  code="jp.ossc.nimbus.service.publish.ThinOutServerConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
-            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+            <service-property name="Template.Service.Publish.ThinOut.SERVER_CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES" extends="true">
                 #TimeIntervalThinOutFilter
             </service-property>
 
@@ -172,8 +172,8 @@
                  code="jp.ossc.nimbus.service.publish.ThinOutClientConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</service-property>
-            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES">
+            <service-property name="Template.Service.Publish.ThinOut.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterClientConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.ThinOut.THIN_OUT_FILTER_SERVICE_NAMES" extends="true">
                 #TimeIntervalThinOutFilter
             </service-property>
 
@@ -201,7 +201,7 @@
                  code="jp.ossc.nimbus.service.publish.MessageReceiverService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterClientConnectionFactory</service-property>
             <service-property name="Template.Service.Publish.Receiver.MESSAGE_QUEUE_FAC_SERVICE_NAME">#MessageQueueFactory</service-property>
             <service-property name="Template.Service.Publish.Receiver.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME">#MessageListenerQueueFactory</service-property>
 
@@ -238,8 +238,8 @@
                  code="jp.ossc.nimbus.service.publish.MessageForwardingService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME">#ClusterClientConnectionFactory</service-property>
-            <service-property name="Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Forward.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterClientConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Forward.SERVER_CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Publish.Forward.MESSAGE_QUEUE_FAC_SERVICE_NAME">#MessageQueueFactory</service-property>
             <service-property name="Template.Service.Publish.Forward.MESSAGE_LISTENER_QUEUE_FAC_SERVICE_NAME">#MessageListenerQueueFactory</service-property>
 
@@ -279,8 +279,8 @@
                  code="jp.ossc.nimbus.service.publish.RequestConnectionFactoryService"
                  instance="template">
 
-            <service-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">#ConnectionFactory</service-property>
-            <service-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+            <service-property name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Publish.Request.MESSAGE_RECEIVER_SERVICE_NAME" extends="true">#MessageReceiver</service-property>
 
 <ifdef name="Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME">
             <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Publish.Request.SERVER_CONNECTION_FAC_SERVICE_NAME}</attribute>

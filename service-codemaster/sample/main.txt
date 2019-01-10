@@ -1,0 +1,48 @@
+import java.util.*;
+import java.sql.*;
+
+import jp.ossc.nimbus.core.ServiceManagerFactory;
+import jp.ossc.nimbus.beans.dataset.*;
+import jp.ossc.nimbus.service.connection.*;
+import jp.ossc.nimbus.service.publish.*;
+import jp.ossc.nimbus.service.codemaster.*;
+
+CodeMasterFinder finder = ServiceManagerFactory.getServiceObject("Sample.Service.CodeMaster", "CodeMasterFinder");
+
+print("コードマスタを取得");
+Map masters = finder.getCodeMasters();
+RecordList userMaster = masters.get("sample");
+for(int i = 0; i < userMaster.size(); i++){
+    print(userMaster.get(i));
+}
+
+ConnectionFactory cf = ServiceManagerFactory.getServiceObject("Sample.Service.Connection", "ConnectionFactory");
+Connection con = cf.getConnection();
+try{
+    Statement st = con.createStatement();
+    st.executeUpdate("delete from USER_MST where ID='00001'");
+    con.commit();
+    print("ID='00001'のユーザを削除");
+}finally{
+    con.close();
+}
+
+ServerConnectionFactory scf = ServiceManagerFactory.getServiceObject("Sample.Service.CodeMaster.Updater", "ConnectionFactory");
+while(scf.getServerConnection().getClientCount() == 0){
+    Thread.sleep(1000);
+}
+CodeMasterNotifyBean cnb = new CodeMasterNotifyBean();
+cnb.setServerConnection(scf.getServerConnection());
+cnb.setSubject("CodeMaster");
+cnb.setMasterFlowKey("sample");
+cnb.addMessageAndSend();
+print("コードマスタを更新");
+
+Thread.sleep(1000);
+
+print("コードマスタを再取得");
+masters = finder.getCodeMasters();
+userMaster = masters.get("sample");
+for(int i = 0; i < userMaster.size(); i++){
+    print(userMaster.get(i));
+}
