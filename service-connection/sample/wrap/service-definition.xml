@@ -17,23 +17,23 @@
         <service name="ConnectionFactory"
                  template="Template.Service.Connection.Wrapper#WrappedConnectionFactory">
             <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
-            <service-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
             <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</service-property>
         </service>
         
         <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"/>
         
-        <service template="Template.Service.Performance#PerformanceRecorder"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceRecorder"/>
         
-        <service template="Template.Service.Performance#PerformanceJournalCategory"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalCategory"/>
         
-        <service template="Template.Service.Performance#PerformanceJournalWriter">
-            <service-property name="Template.Service.Performance.LOG_OUTPUT_PATH">.</service-property>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWriter">
+            <service-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">.</service-property>
         </service>
         
-        <service template="Template.Service.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWritableRecordFactory"/>
         
-        <service template="Template.Service.Performance#DateElement"
+        <service template="Template.Service.Performance.PerformanceRecorder#DateElement"
                  instance="factory"/>
         
     </manager>

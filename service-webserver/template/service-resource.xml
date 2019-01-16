@@ -5,19 +5,199 @@
 
 <server>
     
+    <!-- 汎用のリソースサービス群 -->
     <manager name="Template.WebServer.Resource">
         
-        <service name="JDBCConnectionFactory"
-                 template="Template.Service.Connection.JDBC#ConnectionFactory">
-            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
-        </service>
+        <!-- Java言語互換のスクリプト実行環境を提供するInterpreterサービス -->
+        <service template="Template.Service.Interpreter#BeanShellInterpreter"
+                 instance="template"/>
         
-        <service name="ConnectionFactory" template="Template.Service.Connection.Wrapper#WrappedConnectionFactory" instance="template"/>
+        <!-- javax.script.ScriptEngineでスクリプト実行環境を提供するInterpreterサービス -->
+        <service template="Template.Service.Interpreter#ScriptEngineInterpreter"
+                 instance="template"/>
         
-        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector" instance="template"/>
+        <!-- リソースを制約するSemaphoreサービス -->
+        <service template="Template.Service.Semaphore#Semaphore"
+                 instance="template"/>
         
-        <service template="Template.Service.Connection.PersistentManager#PersistentManager" instance="template"/>
+        <!-- 通番を発行するSequenceサービス -->
+        <service name="Sequence"
+                 template="Template.Service.Sequence#StringSequence"
+                 instance="template"/>
+        
+        <!-- テンプレートエンジンを提供するTemplateEngineサービス -->
+        <service template="Template.Service.Template#TemplateEngine"
+                 instance="template"/>
+        
+        <!-- マスタをメモリ中に管理し、読み取り一貫性を担保するCodeMasterFinderサービス -->
+        <service template="Template.Service.CodeMaster#CodeMasterFinder"
+                 instance="template"/>
         
     </manager>
     
+    <!-- クラスタ（マルチキャスト）のリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.Cluster.Multicast">
+        
+        <!-- マルチキャストでクラスタに参加するクラスタサービス -->
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"
+                 instance="template"/>
+        
+        <!-- マルチキャストでクラスタに参加するメンバを共有するクラスタサービス-->
+        <service name="ClinetCluster"
+                 template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"
+                 instance="template"/>
+    </manager>
+    
+    <!-- クラスタ（ユニキャスト）のリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.Cluster.Unicast">
+        
+        <!-- ユニキャストでクラスタに参加するクラスタサービス -->
+        <service template="Template.Service.KeepAlive.Cluster.Unicast.Server#Cluster"
+                 instance="template"/>
+        
+        <!-- ユニキャストでクラスタに参加するメンバを共有するクラスタサービス-->
+        <service name="ClinetCluster"
+                 template="Template.Service.KeepAlive.Cluster.Unicast.Client#Cluster"
+                 instance="template"/>
+    </manager>
+    
+    <!-- JNDI関連のリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.JNDI">
+        
+        <!-- JNDIサーバに接続するJndiFinderサービス -->
+        <service template="Template.Service.JNDI#JndiFinder"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!-- JDBC接続関連のリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.JDBC">
+        
+        <!-- JDBCドライバからJDBC接続を取得するConnectionFactoryサービス -->
+        <service name="JDBCConnectionFactory"
+                 template="Template.Service.Connection.JDBC#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- データソースからJDBC接続を取得するConnectionFactoryサービス -->
+        <service name="DataSourceConnectionFactory"
+                 template="Template.Service.Connection.DataSource#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 実体となるJDBC接続を取得するConnectionFactoryサービスから取得したJDBC接続をラップして機能を付加するConnectionFactoryサービス -->
+        <service name="ConnectionFactory"
+                 template="Template.Service.Connection.Wrapper#WrappedConnectionFactory"
+                 instance="template">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#DataSourceConnectionFactory</service-property>
+        </service>
+        
+        <!-- 実体となるJDBC接続を取得するConnectionFactoryサービスから取得したJDBC接続を、業務フローからリソースとして利用できるようにするResourceFactoryサービス -->
+        <service name="ConnectionResourceFactory"
+                 code="jp.ossc.nimbus.service.resource.datasource.JdbcConnectionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.WebServer.Resource.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            
+<ifdef name="Template.WebServer.Resource.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.WebServer.Resource.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.WebServer.Resource.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- JDBC接続を使ったデータベースとのO/R Mappingを支援するPersistentManagerサービス -->
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager"
+                 instance="template"/>
+        
+        <!-- SQLの性能統計を集計するサービス -->
+        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!-- サーバ間メッセージングのリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.Publish">
+        
+        <!-- 他サーバにメッセージを送信する接続を生成するServerConnectionFactoryサービス -->
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 他サーバにClientConnectionFactoryをクラスタサービスで提供するサービス -->
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"
+                 instance="template">
+            
+            <attribute name="Multiple">true</attribute>
+        </service>
+        
+        <!-- 他サーバからメッセージを受信する接続を生成するClientConnectionFactoryサービス -->
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 他サーバからメッセージを受信してハンドリングするMessageListenerを管理するサービス -->
+        <service template="Template.Service.Publish.Receiver#MessageReceiver"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!--業務フローのリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.BeanControl">
+        
+        <!-- 業務フローを提供するBeanFlowInvokerFactoryサービス -->
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory"
+                 instance="template">
+            <service-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME" extends="true">#BeanFlowInterceptorChainFactory</service-property>
+        </service>
+        
+        <!-- 業務フローに差し込むインターセプタのチェインを生成するInterceptorChainFactoryサービス -->
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"
+                 instance="template"/>
+        
+        <!-- 業務フローに差し込むインターセプタのリストとなるInterceptorChainListサービス -->
+        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList"
+                 instance="template">
+            <service-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME" extends="true">#JournalInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME" extends="true">#BeanFlowMetricsInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME" extends="true">#BeanFlowExceptionHandlingInterceptor</service-property>
+        </service>
+        
+        <!-- 業務フローのジャーナルのエントリポイントとなるInterceptorサービス -->
+        <service name="JournalInterceptor"
+                 template="Template.Service.AOP.Interceptor#MethodJournalInterceptor"
+                 instance="template"/>
+        
+        <!-- 業務フロー処理時間統計を記録するInterceptorサービス -->
+        <service template="Template.Service.AOP.Interceptor#BeanFlowMetricsInterceptor"
+                 instance="template"/>
+        
+        <!-- 業務フローの例外処理マッピングを行うInterceptorサービス -->
+        <service name="BeanFlowExceptionHandlingInterceptor"
+                 template="Template.Service.AOP.Interceptor#ExceptionHandlingInterceptor"
+                 instance="template"/>
+        
+        <!-- 業務フローの例外処理を行うExceptionHandlerサービス -->
+        <service name="ExceptionHandler"
+                 template="Template.Service.AOP.Interceptor#DefaultExceptionHandler"
+                 instance="template"/>
+        
+        <!-- 業務フローの非同期処理を行うQueueHandlerContainerサービス -->
+        <service name="AsynchInvokeQueueHandlerContainer"
+                 template="Template.Service.Queue.QueueHandlerContainer#QueueHandlerContainer"
+                 instance="template">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">#AsynchInvokeQueue</service-property>
+            <attribute name="IgnoreNullElement">true</attribute>
+        </service>
+        
+        <!-- 業務フローの非同期処理を受け付けるQueueサービス -->
+        <service name="AsynchInvokeQueue"
+                 template="Template.Service.Queue#DefaultQueue"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!--業務フローのリソースサービス群 -->
+    <manager name="Template.WebServer.Resource.BeanControl.Remote">
+        
+        <!-- リモートの業務フローを呼び出すBeanFlowInvokerFactoryサービス -->
+        <service template="Template.Service.BeanControl.Dist.Client#ServerBeanFlowInvokerFactory"
+                 instance="template"/>
+        
+    </manager>
 </server>

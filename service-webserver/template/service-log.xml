@@ -15,7 +15,9 @@
         
         <service template="Template.Service.ThreadContext#ServerInfo" instance="template"/>
         
-        <service template="Template.Service.Log#Logger" instance="template"/>
+        <service template="Template.Service.Log#Logger" instance="template">
+            <service-property name="Template.Service.Log.CONTEXT_SERVICE_NAME" extends="true">#Context</service-property>
+        </service>
         
         <service template="Template.Service.Log#LogMessageRecordFactory" instance="template"/>
         <service template="Template.Service.Log#MessageRecordFactory" instance="template"/>

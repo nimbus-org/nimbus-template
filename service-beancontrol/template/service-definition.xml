@@ -134,6 +134,11 @@ BeanFlowサービス
             <attribute name="BeanFlowPathPostfix">${Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX}</attribute>
         </service>
 
+        <service name="MappingBeanFlowSelector"
+                 code="jp.ossc.nimbus.servlet.MappingBeanFlowSelectorService"
+                 template="#BeanFlowSelector"
+                 instance="template"/>
+
     </manager>
 
     <manager name="Template.Service.BeanControl.Dist.Server">

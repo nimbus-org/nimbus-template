@@ -6,158 +6,266 @@
 <server>
     
     <manager name="Template.WebServer.Servlet" shutdown-hook="true">
-    
-        <manager-property name="Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME">#LogMessageRecordFactory</manager-property>
         
-        <service template="Template.Service.Filter#FilterInterceptorChainFactory" instance="template"/>
+        <!-- リクエストパスに応じたInterceptorChainを生成するInterceptorChainFactoryサービス -->
+        <service template="Template.Service.AOP#InterceptorChainFactory"
+                 instance="template">
+            
+            <service-property name="Template.WebServer.Servlet.DEFAULT_INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#InterceptorChainList</service-property>
+            
+            <attribute name="UseThreadLocalInterceptorChain">false</attribute>
+            
+            <attribute name="DefaultInterceptorChainListServiceName">${Template.WebServer.Servlet.DEFAULT_INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</attribute>
+            <depends>${Template.WebServer.Servlet.DEFAULT_INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</depends>
+            
+        </service>
         
-        <service template="Template.Service.Filter#FilterInterceptorChainList" instance="template">
+        <!-- 連鎖させるInterceptorのリストを構成するInterceptorChainListサービス -->
+        <service template="Template.Service.AOP#InterceptorChainList"
+                 instance="template">
+            
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME">#RequestProcessCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.ALL_REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestMetricsInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME">#SetCharacterEncodingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">#ThreadContextInitializeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME">#ServletRequestInitializeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME">#AccessJournalInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME">#HttpServletResponseSetInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_CACHE_INTERCEPTOR_SERVICE_NAME">#HttpResponseCacheInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME">#HttpServletResponseDeflateInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME">#BeanFlowSelectCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestMetricsInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.URL_CONVERT_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestURLConvertInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_TRANSFER_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestTransferInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_EXCHANGE_INTERCEPTOR_SERVICE_NAME">#ServletRequestExchangeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME">#StreamExchangeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME">#BlockadeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">#AuthenticateInterceptor</service-property>
+            
             <attribute name="InterceptorServiceNames">
-                #HttpServletRequestMetricsInterceptor
-                #ThreadContextInitializeInterceptor
-                #RequestProcessCheckInterceptor
-                #AccessJournalInterceptor
-                #BeanFlowSelectCheckInterceptor
-                #HttpServletResponseDeflateInterceptor
-                #HttpExceptionHandlerInterceptor
-                #HttpCheckInterceptor
-                #ExchangeInterceptor
-                #ExceptionHandlerInterceptor
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.ALL_REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.ALL_REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_CACHE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_CACHE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.URL_CONVERT_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.URL_CONVERT_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_TRANSFER_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.REQUEST_TRANSFER_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_EXCHANGE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.REQUEST_EXCHANGE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+                    </constructor>
+                </object>
             </attribute>
-            <depends>HttpServletRequestMetricsInterceptor</depends>
-            <depends>ThreadContextInitializeInterceptor</depends>
-            <depends>RequestProcessCheckInterceptor</depends>
-            <depends>AccessJournalInterceptor</depends>
-            <depends>BeanFlowSelectCheckInterceptor</depends>
-            <depends>HttpServletResponseDeflateInterceptor</depends>
-            <depends>HttpExceptionHandlerInterceptor</depends>
-            <depends>HttpCheckInterceptor</depends>
-            <depends>ExchangeInterceptor</depends>
-            <depends>ExceptionHandlerInterceptor</depends>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.ALL_REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.ALL_REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_CACHE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_CACHE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.URL_CONVERT_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.URL_CONVERT_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_TRANSFER_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.REQUEST_TRANSFER_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_EXCHANGE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.REQUEST_EXCHANGE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+            
         </service>
         
-        <service template="Template.Service.Filter#HttpServletRequestMetricsInterceptor" instance="template"/>
+        <!-- リクエストの処理時間をチェックして、長すぎる場合にログを出力するInterceptorサービス -->
+        <service template="Template.Service.AOP.Interceptor#RequestProcessCheckInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#AccessPerformance" instance="template"/>
+        <!-- リクエストの処理時間統計を取得するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletRequestMetricsInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#PerformanceJournalCategory" instance="template"/>
+        <!-- リクエストの文字コードを設定するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#SetCharacterEncodingInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#PerformanceJournalWriter" instance="template"/>
+        <!-- スレッドコンテキストを初期化するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#ThreadContextInitializeInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#PerformanceJournalWritableRecordFactory" instance="template"/>
+        <!-- リクエストを初期化するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#ServletRequestInitializeInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#NormalDateElement" instance="template"/>
+        <!-- アクセスジャーナルを記録するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#AccessJournalInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#ThreadContextInitializeInterceptor" instance="template"/>
+        <!-- レスポンスをキャッシュするInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpResponseCacheInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#Sequence" instance="template"/>
+        <!-- レスポンスヘッダ等を設定するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletResponseSetInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#RequestProcessCheckInterceptor" instance="template">
-            <attribute name="Threshold">
-                60000=REQUEST_PROCESS_CHECK_THRESHOLD_OVER,10000
-            </attribute>
-        </service>
+        <!-- レスポンスを圧縮するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletResponseDeflateInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#AccessJournalInterceptor" instance="template"/>
+        <!-- 例外処理を振り分けるInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#ExceptionHandlingInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#BeanFlowSelectCheckInterceptor" instance="template"/>
+        <!-- 例外処理を行うExceptionHandlerサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#ExceptionHandler"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#HttpServletResponseDeflateInterceptor" instance="template"/>
+        <!-- HTTPリクエストをチェックするInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletRequestCheckInterceptor"
+                 instance="template"/>
         
-        <service name="HttpExceptionHandlerInterceptor" template="Template.Service.Filter#ExceptionHandlerInterceptor" instance="template">
-            <attribute name="ExceptionAndHandlerMapping">
-                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
-                jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletRequestCheckException=#HttpServletRequestCheckExceptionHandler
-                jp.ossc.nimbus.service.aop.interceptor.servlet.InputExchangeException=#InputExchangeExceptionHandler
-                jp.ossc.nimbus.service.aop.interceptor.servlet.OutputExchangeException=#HttpDefaultExceptionHandler
-            </attribute>
-            <attribute name="DefaultExceptionHandlerServiceName">#HttpDefaultExceptionHandler</attribute>
-            <depends>IgnoreExchangeExceptionHandler</depends>
-            <depends>HttpServletRequestCheckExceptionHandler</depends>
-            <depends>InputExchangeExceptionHandler</depends>
-            <depends>HttpDefaultExceptionHandler</depends>
-        </service>
+        <!-- リクエストパスに該当する業務フローが存在するかチェックするInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#BeanFlowSelectCheckInterceptor"
+                 instance="template"/>
         
-        <service name="IgnoreExchangeExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
-            <attribute name="ThrowException">true</attribute>
-        </service>
+        <!-- パスを業務フロー名とみなすBeanFlowSelectorサービス -->
+        <service template="Template.Service.BeanControl#BeanFlowSelector"
+                 instance="template"/>
         
-        <service name="InputExchangeExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
-            <attribute name="OutputStackTraceLog">true</attribute>
-            <attribute name="LogMessageCode">REQUEST_INPUT_EXCHANGE_CHECK_ERROR</attribute>
-            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
-            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
-        </service>
+        <!-- パスと業務フロー名のマッピングを定義するBeanFlowSelectorサービス -->
+        <service template="Template.Service.BeanControl#MappingBeanFlowSelector"
+                 instance="template"/>
         
-        <service name="HttpServletRequestCheckExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
-            <attribute name="OutputStackTraceLog">false</attribute>
-            <attribute name="LogMessageCode">HTTP_REQUEST_CHECK_ERROR</attribute>
-            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
-            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
-        </service>
+        <!-- リクエストURLを編集するInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletRequestURLConvertInterceptor"
+                 instance="template"/>
         
-        <service name="HttpDefaultExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
-            <attribute name="OutputStackTraceLog">true</attribute>
-            <attribute name="LogMessageCode">HTTP_DEFAULT_EXCEPTION_ERROR</attribute>
-            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
-            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
-        </service>
+        <!-- リクエストのプロパティをスレッドコンテキストに移すInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#HttpServletRequestTransferInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#HttpCheckInterceptor" instance="template"/>
+        <!-- リクエストと入力DTOの交換を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#ServletRequestExchangeInterceptor"
+                 instance="template"/>
         
-        <service template="Template.Service.Filter#ExchangeInterceptor" instance="template">
-            <attribute name="ResponseContentType">application/json;charset=utf-8</attribute>
-            <attribute name="RequestStreamConverterServiceName">#DataSetJSONConverter</attribute>
-            <attribute name="ResponseStreamConverterServiceName">#DataSetJSONConverter</attribute>
-            <depends>DataSetJSONConverter</depends>
-        </service>
+        <!-- リクエスト/レスポンスのストリームと入力DTO/出力DTOの交換を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#StreamExchangeInterceptor"
+                 instance="template"/>
         
-        <service name="DataSetJSONConverter" code="jp.ossc.nimbus.util.converter.DataSetJSONConverter" instance="template">
-            <attribute name="IgnoreUnknownElement">true</attribute>
-            <attribute name="OutputPropertyNameOfHeader">true</attribute>
-            <attribute name="OutputPropertyNameOfRecordList">true</attribute>
-            <attribute name="OutputSchema">false</attribute>
-            <attribute name="OutputNullProperty">false</attribute>
-            <attribute name="CloneBindingObject">false</attribute>
-        </service>
+        <!-- 閉塞制御を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#BlockadeInterceptor"
+                 instance="template"/>
         
-        <service name="ExceptionHandlerInterceptor" template="Template.Service.Filter#ExceptionHandlerInterceptor" instance="template">
-            <attribute name="ExceptionAndHandlerMapping">
-                org.apache.catalina.connector.ClientAbortException=#IgnoreExchangeExceptionHandler
-            </attribute>
-            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
-            <depends>IgnoreExchangeExceptionHandler</depends>
-            <depends>DefaultExceptionHandler</depends>
-        </service>
+        <!-- 認証/承認を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#AuthenticateInterceptor"
+                 instance="template"/>
         
-        <service name="DefaultExceptionHandler" template="Template.Service.Filter#ExceptionHandler" instance="template">
-            <attribute name="OutputStackTraceLog">true</attribute>
-            <attribute name="LogMessageCode">DEFAULT_EXCEPTION_ERROR</attribute>
-            <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_INTERNAL_SERVER_ERROR"/></attribute>
-            <depends>${Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME}</depends>
-        </service>
+        <!-- 認証情報をデータベースに永続化するAuthenticateStoreサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#DatabaseAuthenticateStore"
+                 instance="template"/>
         
-        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory" instance="template"/>
+        <!-- 認証情報を共有コンテキストに永続化するAuthenticateStoreサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#SharedContextAuthenticateStore"
+                 instance="template"/>
         
-        <service template="Template.Service.BeanControl#JavaScriptInterpreter" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanShellInterpreter" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#TemplateEngine" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#JournalInterceptor" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowMetricsInterceptor" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowExceptionHandlingInterceptor" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowDefaultExceptionHandler" instance="template"/>
-        
-        <service template="Template.Service.BeanControl#BeanFlowSelector" instance="template"/>
     </manager>
-    
+
 </server>

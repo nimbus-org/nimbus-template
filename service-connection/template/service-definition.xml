@@ -58,7 +58,7 @@
 
             <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
             <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">#Journal</service-property>
-            <service-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
             <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</service-property>
             <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
             <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
@@ -95,9 +95,9 @@
                             <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
 
-<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">
+<ifdef name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">
                             <!-- StatementラッパーにSQLMetricsCollectorサービスを設定する -->
-                            <attribute name="SQLMetricsCollector"><service-ref>${Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME}</service-ref></attribute>
+                            <attribute name="SQLMetricsCollector"><service-ref>${Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME}</service-ref></attribute>
 </ifdef>
 
 <ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">
@@ -107,17 +107,56 @@
 
 <ifdef name="Template.Service.Connection.Wrapper.FETCH_SIZE">
                             <!-- Statementラッパーにフェッチサイズを設定する -->
-                            <attribute name="FetchSize">${Template.Service.Connection.Wrapper.FETCH_SIZE}</attribute>
+                            <attribute name="FetchSize" type="int">${Template.Service.Connection.Wrapper.FETCH_SIZE}</attribute>
 </ifdef>
 
 <ifdef name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">
                             <!-- Statementラッパーにフェッチ方向を設定する -->
-                            <attribute name="FetchDirection">${Template.Service.Connection.Wrapper.FETCH_DIRECTION}</attribute>
+                            <attribute name="FetchDirection" type="int">${Template.Service.Connection.Wrapper.FETCH_DIRECTION}</attribute>
 </ifdef>
 
 <ifdef name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">
                             <!-- Statementラッパーにクエリタイムアウトを設定する -->
-                            <attribute name="QueryTimeout">${Template.Service.Connection.Wrapper.QUERY_TIMEOUT}</attribute>
+                            <attribute name="QueryTimeout" type="int">${Template.Service.Connection.Wrapper.QUERY_TIMEOUT}</attribute>
+</ifdef>
+
+                        </object>
+
+                    </attribute>
+
+                    <!-- PreparedStatementラッパーに設定するプロパティを設定する -->
+                    <attribute name="PreparedStatementProperties">
+
+                        <object code="java.util.HashMap">
+
+                            <!-- StatementラッパーにJournalサービスを設定する -->
+<ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
+                            <attribute name="Journal"><service-ref>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">
+                            <!-- StatementラッパーにSQLMetricsCollectorサービスを設定する -->
+                            <attribute name="SQLMetricsCollector"><service-ref>${Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">
+                            <!-- StatementラッパーにPerformanceRecorderサービスを設定する -->
+                            <attribute name="PerformanceRecorder"><service-ref>${Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME}</service-ref></attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.FETCH_SIZE">
+                            <!-- Statementラッパーにフェッチサイズを設定する -->
+                            <attribute name="FetchSize" type="int">${Template.Service.Connection.Wrapper.FETCH_SIZE}</attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">
+                            <!-- Statementラッパーにフェッチ方向を設定する -->
+                            <attribute name="FetchDirection" type="int">${Template.Service.Connection.Wrapper.FETCH_DIRECTION}</attribute>
+</ifdef>
+
+<ifdef name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">
+                            <!-- Statementラッパーにクエリタイムアウトを設定する -->
+                            <attribute name="QueryTimeout" type="int">${Template.Service.Connection.Wrapper.QUERY_TIMEOUT}</attribute>
 </ifdef>
 
                         </object>
@@ -132,8 +171,8 @@
                 </object>
             </attribute>
 
-<ifdef name="Template.Service.Connection.Wrapper.SQL_EMTRICS_SERVICE_NAME">
-            <depends>SQLMetricsCollector</depends>
+<ifdef name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">
+            <depends>${Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">
             <depends>${Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME}</depends>

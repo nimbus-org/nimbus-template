@@ -7,96 +7,172 @@
     
     <manager name="WebServer.Servlet" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Filter.LOG_OUTPUT_PATH">./target/</manager-property>
-        <manager-property name="Template.Service.Filter.REQUEST_PROCESS_CHECK_INTERCEPTOR_CHECK_INTERVAL">1000</manager-property>
+        <manager-property name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">WebServer.AccessJournal#AccessJournal</manager-property>
+        <manager-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME">#BeanFlowSelector</manager-property>
+        <manager-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME">WebServer.Resource.BeanControl#BeanFlowInvokerFactory</manager-property>
+        <manager-property name="Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME">WebServer.Resource#CodeMasterFinder</manager-property>
         
-        <manager-property name="Template.Service.Filter.THREAD_CONTEXT_SERVICE_NAME">WebServer.Log#ThreadContext</manager-property>
-        <manager-property name="Template.Service.Filter.CONTEXT_SERVICE_NAME">WebServer.Log#Context</manager-property>
-        <manager-property name="Template.Service.Filter.ACCESS_JOURNAL_SERVICE_NAME">WebServer.AccessJournal#AccessJournal</manager-property>
-        <manager-property name="Template.Service.Filter.BEAN_FLOW_SELECTOR_SERVICE_NAME">#BeanFlowSelector</manager-property>
-        <manager-property name="Template.Service.Filter.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
-        <manager-property name="Template.Service.Filter.CONNECTION_FACTORY_SERVICE_NAME">WebServer.Resource#ConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Filter.PERSISTENT_MANAGER_SERVICE_NAME">v#PersistentManager</manager-property>
+        <service template="Template.WebServer.Servlet#InterceptorChainFactory"/>
         
-        <manager-property name="Template.Service.BeanControl.DIR_PATHS">flows</manager-property>
-        <manager-property name="Template.Service.BeanControl.METRICS_ENABLED">true</manager-property>
-        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_PATH_POSTFIX">.bf</manager-property>
-        <manager-property name="Template.Service.BeanControl.THREAD_CONTEXT_SERVICE_NAME">WebServer.Log#Context</manager-property>
-        <manager-property name="Template.Service.BeanControl.BUSINESS_JOURNAL_SERVICE_NAME">WebServer.BusinessJournal#BusinessJournal</manager-property>
-        <manager-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">WebServer.BusinessJournal#BeanFlowJournalEditorFinder</manager-property>
-        <manager-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">#JavaScriptInterpreter</manager-property>
+        <service template="Template.WebServer.Servlet#InterceptorChainList">
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.PROCESS_CHECK_INTERCEPTOR_SERVICE_NAME">#RequestProcessCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.SET_CHARACTER_ENC_INTERCEPTOR_SERVICE_NAME">#SetCharacterEncodingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">#ThreadContextInitializeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_INIT_INTERCEPTOR_SERVICE_NAME">#ServletRequestInitializeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME">#AccessJournalInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_SET_INTERCEPTOR_SERVICE_NAME">#HttpServletResponseSetInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.RESPONSE_DEFLATE_INTERCEPTOR_SERVICE_NAME">#HttpServletResponseDeflateInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.PRE_EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#PreExceptionHandlingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_CHECK_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.BEANFLOW_SELECT_CHECK_INTERCEPTOR_SERVICE_NAME">#BeanFlowSelectCheckInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.REQUEST_METRICS_INTERCEPTOR_SERVICE_NAME">#HttpServletRequestMetricsInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.STREAM_EXCHANGE_INTERCEPTOR_SERVICE_NAME">#StreamExchangeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME">#BlockadeInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">#AuthenticateInterceptor</service-property>
+        </service>
         
-        <manager-property name="Template.WebServer.Servlet.LOG_MESSAGE_RECORD_FACTORY_SERVICE_NAME">WebServer.Log#LogMessageRecordFactory</manager-property>
+        <service template="Template.WebServer.Servlet#RequestProcessCheckInterceptor">
+            <attribute name="Threshold">
+                60000=RPC__00003,10000
+                300000=RPC__00004,-1
+            </attribute>
+        </service>
         
-        <service template="Template.WebServer.Servlet#FilterInterceptorChainFactory"/>
+        <service template="Template.WebServer.Servlet#SetCharacterEncodingInterceptor">
+            <attribute name="CharacterEncoding">${WebServer.Servlet.CHARACTER_ENCODING}</attribute>
+        </service>
         
-        <service template="Template.WebServer.Servlet#FilterInterceptorChainList"/>
+        <service template="Template.WebServer.Servlet#ThreadContextInitializeInterceptor">
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME">WebServer.Resource#Sequence</service-property>
+        </service>
         
-        <service template="Template.WebServer.Servlet#HttpServletRequestMetricsInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#AccessPerformance"/>
-        
-        <service template="Template.WebServer.Servlet#PerformanceJournalCategory"/>
-        
-        <service template="Template.WebServer.Servlet#PerformanceJournalWriter"/>
-        
-        <service template="Template.WebServer.Servlet#PerformanceJournalWritableRecordFactory"/>
-        
-        <service template="Template.WebServer.Servlet#NormalDateElement" instance="factory"/>
-        
-        <service template="Template.WebServer.Servlet#ThreadContextInitializeInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#Sequence"/>
-        
-        <service template="Template.WebServer.Servlet#RequestProcessCheckInterceptor"/>
+        <service template="Template.WebServer.Servlet#ServletRequestInitializeInterceptor">
+            <attribute name="RequestAttributeServiceNames">
+                MessageRecordFactory=WebServer.Log#MessageRecordFactory
+                Logger=WebServer.Log#Logger
+                Context=WebServer.Log#Context
+            </attribute>
+        </service>
         
         <service template="Template.WebServer.Servlet#AccessJournalInterceptor"/>
         
-        <service template="Template.WebServer.Servlet#BeanFlowSelectCheckInterceptor"/>
+        <service template="Template.WebServer.Servlet#HttpServletResponseSetInterceptor"/>
         
         <service template="Template.WebServer.Servlet#HttpServletResponseDeflateInterceptor"/>
         
-        <service template="Template.WebServer.Servlet#HttpExceptionHandlerInterceptor"/>
+        <service name="PreExceptionHandlingInterceptor"
+                 template="Template.WebServer.Servlet#ExceptionHandlingInterceptor">
+            <attribute name="ExceptionAndHandlerMapping">
+                jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletRequestCheckException=#HttpServletRequestCheckExceptionHandler
+            </attribute>
+            <attribute name="DefaultExceptionHandlerServiceName">#PreUnexpectedExceptionHandler</attribute>
+            <depends>
+                <service name="HttpServletRequestCheckExceptionHandler"
+                         template="Template.WebServer.Servlet#ExceptionHandler">
+                    <attribute name="LogMessageCode">LOG_MSG_002</attribute>
+                    <attribute name="HttpResponseStatus"><static-field-ref code="javax.servlet.http.HttpServletResponse" name="SC_BAD_REQUEST"/></attribute>
+                </service>
+            </depends>
+            <depends>
+                <service name="PreUnexpectedExceptionHandler"
+                         template="Template.WebServer.Servlet#ExceptionHandler">
+                    <attribute name="LogMessageCode">LOG_MSG_003</attribute>
+                    <attribute name="ForwardPath">/WEB-INF/jsp/unexpected_error.jsp</attribute>
+                </service>
+            </depends>
+        </service>
         
-        <service template="Template.WebServer.Servlet#IgnoreExchangeExceptionHandler"/>
+        <service template="Template.WebServer.Servlet#HttpServletRequestCheckInterceptor">
+            <attribute name="MaxContentLength">1048576</attribute>
+            <attribute name="ValidContentTypes">application/json; charset=utf-8</attribute>
+            <attribute name="ValidMethods">POST</attribute>
+        </service>
         
-        <service template="Template.WebServer.Servlet#InputExchangeExceptionHandler"/>
-        
-        <service template="Template.WebServer.Servlet#HttpServletRequestCheckExceptionHandler"/>
-        
-        <service template="Template.WebServer.Servlet#HttpDefaultExceptionHandler"/>
-        
-        <service template="Template.WebServer.Servlet#HttpCheckInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#ExchangeInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#DataSetJSONConverter"/>
-        
-        <service template="Template.WebServer.Servlet#ExceptionHandlerInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#DefaultExceptionHandler"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowInvokerFactory"/>
-        
-        <service template="Template.WebServer.Servlet#JavaScriptInterpreter"/>
-        
-        <service template="Template.WebServer.Servlet#BeanShellInterpreter"/>
-        
-        <service template="Template.WebServer.Servlet#TemplateEngine"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowInterceptorChainFactory"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowInterceptorChainList"/>
-        
-        <service template="Template.WebServer.Servlet#JournalInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowMetricsInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowExceptionHandlingInterceptor"/>
-        
-        <service template="Template.WebServer.Servlet#BeanFlowDefaultExceptionHandler"/>
+        <service template="Template.WebServer.Servlet#BeanFlowSelectCheckInterceptor"/>
         
         <service template="Template.WebServer.Servlet#BeanFlowSelector"/>
+        
+        <service template="Template.WebServer.Servlet#HttpServletRequestMetricsInterceptor">
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.HttpServletRequestMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">WebServer.Performance.Action#PerformanceRecorder</service-property>
+        </service>
+        
+        <service template="Template.WebServer.Servlet#StreamExchangeInterceptor">
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.StreamExchange.REQ_CONVERTER_SERVICE_NAME">#DataSetJSONConverter</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.StreamExchange.RES_CONVERTER_SERVICE_NAME">#DataSetJSONConverter</service-property>
+        </service>
+        
+        <service name="DataSetJSONConverter"
+                 code="jp.ossc.nimbus.util.converter.DataSetJSONConverter">
+            <attribute name="OutputSchema">false</attribute>
+            <attribute name="IgnoreUnknownElement">true</attribute>
+        </service>
+        
+        <service name="ExceptionHandlingInterceptor"
+                 template="Template.WebServer.Servlet#ExceptionHandlingInterceptor">
+            <attribute name="ExceptionAndHandlerMapping">
+                jp.ossc.nimbus.service.aop.interceptor.servlet.BlockadeException=#BlockadeExceptionHandler
+            </attribute>
+            <attribute name="DefaultExceptionHandlerServiceName">#UnexpectedExceptionHandler</attribute>
+            <depends>
+                <service name="BlockadeExceptionHandler"
+                         template="Template.WebServer.Servlet#ExceptionHandler">
+                    <attribute name="ResponseObject">
+                        <object code="jp.ossc.nimbus.beans.dataset.DataSet">
+                            <attribute name="HeaderSchema(Common)">
+                                :resultCode,java.lang.String
+                                :message,java.lang.String
+                            </attribute>
+                            <attribute name="Header(Common).resultCode">3000</attribute>
+                        </object>
+                    </attribute>
+                    <attribute name="ExceptionAndResponseObjectPropertyMapping">message=Header(Common).message</attribute>
+                </service>
+            </depends>
+            <depends>
+                <service name="UnexpectedExceptionHandler"
+                         template="Template.WebServer.Servlet#ExceptionHandler">
+                    <attribute name="LogMessageCode">LOG_MSG_003</attribute>
+                    <attribute name="ResponseObject">
+                        <object code="jp.ossc.nimbus.beans.dataset.DataSet">
+                            <attribute name="HeaderSchema(Common)">
+                                :resultCode,java.lang.String
+                                :message,java.lang.String
+                            </attribute>
+                            <attribute name="Header(Common).resultCode">9999</attribute>
+                            <attribute name="Header(Common).message">
+                                <object code="java.lang.String">
+                                    <constructor>
+                                        <invoke name="findMessage">
+                                            <target><service-ref>WebServer.Log#MessageRecordFactory</service-ref></target>
+                                            <argument>9999</argument>
+                                        </invoke>
+                                    </constructor>
+                                </object>
+                            </attribute>
+                        </object>
+                    </attribute>
+                </service>
+            </depends>
+        </service>
+        
+        <service template="Template.WebServer.Servlet#BlockadeInterceptor">
+            <attribute name="BlockadeCodeMasterKey">codemaster/blockade</attribute>
+            <attribute name="SpecialUserCodeMasterKey">codemaster/specialUser</attribute>
+            <attribute name="SpecialUserMapping">Header(Login).id=id</attribute>
+            <attribute name="SessionObjectAttributeName">AuthenticatedInfo.authenticatedInfo</attribute>
+            <attribute name="SessionSpecialUserMapping">id=id</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Servlet#AuthenticateInterceptor">
+            <attribute name="LoginPath">/login.bf</attribute>
+            <attribute name="AuthenticatedInfoAttributeName">AuthenticatedInfo</attribute>
+            <attribute name="AuthenticatedInfoMapping">
+                Header(Common).id=id
+                Header(Common).sessionId=sessionId
+            </attribute>
+        </service>
+        
     </manager>
     
 </server>

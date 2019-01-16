@@ -1,5 +1,4 @@
-jp.ossc.nimbus.core.ServiceManagerFactory.getLogger().write("ERROR", "test");
 
-Thread.sleep(1000);
+Thread.sleep(2000);
 
 return "OK";

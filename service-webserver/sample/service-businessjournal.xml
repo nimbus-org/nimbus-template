@@ -7,10 +7,9 @@
     
     <manager name="WebServer.BusinessJournal" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">./target/</manager-property>
-        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">${WebServer.BusinessJournal.JOURNAL_ENABLED}</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
-        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
         
         <service template="Template.WebServer.BusinessJournal#BusinessJournal"/>
         

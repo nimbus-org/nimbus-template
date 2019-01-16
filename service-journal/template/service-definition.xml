@@ -8,7 +8,6 @@
     <manager name="Template.Service.Journal.AccessJournal">
 
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
-        <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
@@ -33,7 +32,12 @@
         <service name="AccessJournalQueue"
                  template="Template.Service.Queue#DefaultQueue"
                  instance="template">
+            
+            <service-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</service-property>
+            
+<ifdef name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
+</ifdef>
         </service>
 
 <!--=======================================================================
@@ -323,7 +327,6 @@ Editorサービス
         <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
-        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
@@ -348,7 +351,12 @@ Editorサービス
         <service name="BusinessJournalQueue"
                  template="Template.Service.Queue#DefaultQueue"
                  instance="template">
+            
+            <service-property name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</service-property>
+            
+<ifdef name="Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.BusinessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
+</ifdef>
         </service>
 
 <!--=======================================================================
@@ -651,7 +659,6 @@ Editorサービス
     <manager name="Template.Service.Journal.ProxyJournal">
 
         <manager-property name="Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH">.</manager-property>
-        <manager-property name="Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
@@ -675,7 +682,12 @@ Editorサービス
         <service name="AccessJournalQueue"
                  template="Template.Service.Queue#DefaultQueue"
                  instance="template">
+            
+            <service-property name="Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</service-property>
+            
+<ifdef name="Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">
             <attribute name="MaxThresholdSize">${Template.Service.Journal.ProxyJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
+</ifdef>
         </service>
 
 <!--=======================================================================

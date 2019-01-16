@@ -151,12 +151,12 @@
                  code="jp.ossc.nimbus.service.aop.interceptor.DefaultExceptionHandlerService"
                  instance="template">
 
-            <service-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">#BusinessJournal</service-property>
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">#BusinessJournal</service-property>
 
             <attribute name="ThrowException">true</attribute>
-<ifdef name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">
-            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -303,12 +303,7 @@
         <!-- 処理時間をチェックするInterceptorサービス -->
         <service name="RequestProcessCheckInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.RequestProcessCheckInterceptorService"
-                 instance="template">
-            <attribute name="CheckInterval">
-                60000=WARN,60000
-                300000=ERROR,-1
-            </attribute>
-        </service>
+                 instance="template"/>
 
         <!-- 例外発生時にリトライ処理を行うInterceptorサービス -->
         <service name="RetryInterceptor"
@@ -369,8 +364,8 @@
 
     <manager name="Template.Service.AOP.Servlet.Interceptor">
 
-        <manager-property name="Template.Service.AOP.Servlet.Interceptor.CONTEXT_SERVICE_NAME">#Context</manager-property>
-        <manager-property name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">#Context</manager-property>
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
         <manager-property name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">#AccessJournal</manager-property>
         <manager-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME">#BeanFlowSelector</manager-property>
         <manager-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME">#BeanFlowInvokerFactory</manager-property>
@@ -413,9 +408,9 @@
             <depends>${Template.Service.AOP.Servlet.Interceptor.AccessJournal.SEQUENCE_SERVICE_NAME}</depends>
 </ifdef>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.CONTEXT_SERVICE_NAME">
-            <attribute name="ContextServiceName">${Template.Service.AOP.Servlet.Interceptor.CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -425,11 +420,11 @@
                  instance="template">
 
             <service-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
-            <service-property name="Template.Service.AOP.Servlet.Interceptor.Authenticate.AUTHENTICATE_STORE_SERVICE_NAME" extends="true">#AuthenticateStore</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.Authenticate.AUTHENTICATE_STORE_SERVICE_NAME">#AuthenticateStore</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.Authenticate.AUTHENTICATE_STORE_SERVICE_NAME">
@@ -463,16 +458,16 @@
                  instance="template">
             
             <service-property name="Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME">#CodeMasterFinder</service-property>
-            <service-property name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            <service-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME">
             <attribute name="CodeMasterFinderServiceName">${Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME}</depends>
 </ifdef>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -513,12 +508,12 @@
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultExceptionHandlerService"
                  instance="template">
 
-            <service-property name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">#AccessJournal</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">#AccessJournal</service-property>
             <service-property name="Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.EXCEPTION_EDITOR_FINDER_SERVICE_NAME">#ExceptionEditorFinder</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">
-            <attribute name="JournalServiceName">${Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.ExceptionHandler.EXCEPTION_EDITOR_FINDER_SERVICE_NAME">
@@ -570,9 +565,9 @@
             
             <service-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -584,9 +579,9 @@
             <service-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             <service-property name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">#AccessJournal</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">
@@ -625,11 +620,11 @@
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.HttpServletResponseSetInterceptorService"
                  instance="template">
 
-            <service-property name="Template.Service.AOP.Servlet.Interceptor.HttpServletResponseSet.CONTEXT_SERVICE_NAME">#Context</service-property>
+            <service-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">#Context</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.HttpServletResponseSet.CONTEXT_SERVICE_NAME">
-            <attribute name="ContextServiceName">${Template.Service.AOP.Servlet.Interceptor.HttpServletResponseSet.CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.HttpServletResponseSet.CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -660,9 +655,9 @@
             <depends>${Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.CONVERTER_SERVICE_NAME}</depends>
 </ifdef>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">
@@ -691,11 +686,11 @@
                  code="jp.ossc.nimbus.service.aop.interceptor.servlet.ServletRequestInitializeInterceptorService"
                  instance="template">
 
-            <service-property name="Template.Service.AOP.Servlet.Interceptor.ServletRequestInitialize.CONTEXT_SERVICE_NAME">#Context</service-property>
+            <service-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">#Context</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.ServletRequestInitialize.CONTEXT_SERVICE_NAME">
-            <attribute name="ContextServiceName">${Template.Service.AOP.Servlet.Interceptor.ServletRequestInitialize.CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.ServletRequestInitialize.CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
@@ -739,9 +734,9 @@
             <depends>${Template.Service.AOP.Servlet.Interceptor.StreamExchange.RES_CONVERTER_SERVICE_NAME}</depends>
 </ifdef>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.JOURNAL_SERVICE_NAME">
@@ -809,9 +804,9 @@
             <service-property name="Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME">#CodeMasterFinder</service-property>
             <service-property name="Template.Service.AOP.Servlet.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
 
-<ifdef name="Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Servlet.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.ThreadContextInitialize.SEQUENCE_SERVICE_NAME">

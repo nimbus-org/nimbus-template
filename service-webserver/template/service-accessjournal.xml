@@ -19,7 +19,11 @@
         
         <service template="Template.Service.Journal.AccessJournal#AccessNormalDateElement" instance="template"/>
         
-        <service template="Template.Service.Journal.AccessJournal#SimpleElement" instance="template"/>
+        <service template="Template.Service.Journal.AccessJournal#CSVElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#CustomConverter" instance="template"/>
+        
+        <service template="Template.Service.Journal.AccessJournal#CSVEscapeConverter" instance="template"/>
         
         <service template="Template.Service.Journal.AccessJournal#AccessErrorJournalWritableRecordFactory" instance="template"/>
         

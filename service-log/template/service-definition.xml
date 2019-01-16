@@ -8,7 +8,6 @@
     <manager name="Template.Service.Log">
 
         <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">.</manager-property>
-        <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
 
 <!--=======================================================================
 ログサービス
@@ -18,6 +17,9 @@
         <service name="Logger"
                  code="jp.ossc.nimbus.service.log.DefaultCommonsLogFactoryService"
                  instance="template">
+            
+            <service-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</service-property>
+            
             <attribute name="CategoryServiceNames">
                 #SysDebugGroupCategory
                 #SysInfoGroupCategory

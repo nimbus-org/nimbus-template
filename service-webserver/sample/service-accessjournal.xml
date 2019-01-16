@@ -7,8 +7,7 @@
     
     <manager name="WebServer.AccessJournal" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">./target/</manager-property>
-        <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</manager-property>
         
         <service template="Template.WebServer.AccessJournal#AccessJournal"/>
         
@@ -22,7 +21,11 @@
         
         <service template="Template.WebServer.AccessJournal#AccessNormalDateElement" instance="factory"/>
         
-        <service template="Template.WebServer.AccessJournal#SimpleElement" instance="factory"/>
+        <service template="Template.WebServer.AccessJournal#CSVElement" instance="factory"/>
+        
+        <service template="Template.WebServer.AccessJournal#CustomConverter"/>
+        
+        <service template="Template.WebServer.AccessJournal#CSVEscapeConverter"/>
         
         <service template="Template.WebServer.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
         

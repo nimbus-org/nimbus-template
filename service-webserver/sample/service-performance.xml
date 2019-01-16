@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <server-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</server-property>
+    
+    <manager name="WebServer.Performance">
+        
+        <service template="Template.WebServer.Performance#OperationSystem"/>
+        
+    </manager>
+    
+    <manager name="WebServer.Performance.JDBC">
+        
+        <service template="Template.WebServer.Performance#PerformanceRecorder"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalCategory"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalWriter">
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/jdbc_performancejournal.log</attribute>
+        </service>
+        <service template="Template.WebServer.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.WebServer.Performance#DateElement"
+                 instance="factory"/>
+    </manager>
+    
+    <manager name="WebServer.Performance.Action">
+        
+        <service template="Template.WebServer.Performance#PerformanceRecorder"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalCategory"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalWriter">
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/action_performancejournal.log</attribute>
+        </service>
+        <service template="Template.WebServer.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.WebServer.Performance#DateElement"
+                 instance="factory"/>
+    </manager>
+    
+</server>

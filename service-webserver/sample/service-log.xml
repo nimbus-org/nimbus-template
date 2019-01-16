@@ -9,8 +9,7 @@
     
     <manager name="WebServer.Log" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">./target/</manager-property>
-        <manager-property name="Template.Service.Log.CONTEXT_SERVICE_NAME">#Context</manager-property>
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</manager-property>
         
         <service template="Template.WebServer.Log#Context"/>
         

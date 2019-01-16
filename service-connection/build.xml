@@ -4,7 +4,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <import file="../build.xml"/>
     <property name="project.name" value="service-connection"/>
-    <property name="project.dependencies" value="service-jndi,service-performance"/>
+    <property name="project.dependencies" value="service-jndi,service-performance,service-writer"/>
     <property name="template.service.definitions" value="service-definition.xml"/>
     <property name="sample.service.definitions" value="service-definition.xml"/>
     

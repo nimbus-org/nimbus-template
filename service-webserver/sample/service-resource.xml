@@ -5,18 +5,207 @@
 
 <server>
     
-    <manager name="WebServer.Resource">
+    <manager name="WebServer.Resource" shutdown-hook="true">
         
-        <manager-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</manager-property>
-        <manager-property name="Template.Service.Connection.Wrapper.SQL_EMTRICS_ENABLED">true</manager-property>
+        <service template="Template.WebServer.Resource#TemplateEngine"/>
         
-        <service template="Template.WebServer.Resource#JDBCConnectionFactory"/>
+        <service template="Template.WebServer.Resource#BeanShellInterpreter"/>
         
-        <service template="Template.WebServer.Resource#ConnectionFactory"/>
+        <service name="JavaScriptInterpreter"
+                 template="Template.WebServer.Resource#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
         
-        <service template="Template.WebServer.Resource#SQLMetricsCollector"/>
+        <service template="Template.WebServer.Resource#Sequence">
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">WebServer.Log#Context</service-property>
+        </service>
         
-        <service template="Template.WebServer.Resource#PersistentManager"/>
+        <service template="Template.Service.CodeMaster#CodeMasterFinder">
+            <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">WebServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">WebServer.Resource.Publish#MessageReceiver</service-property>
+            <attribute name="MasterNames">
+                codemaster/blockade,
+                codemaster/specialUser
+            </attribute>
+            <depends>WebServer.Resource.JDBC#UserMasterTableCreator</depends>
+            <depends>WebServer.Resource.JDBC#BlockadeMasterTableCreator</depends>
+        </service>
+        
+    </manager>
+    
+    <manager name="WebServer.Resource.JDBC" shutdown-hook="true">
+        
+        <service template="Template.WebServer.Resource.JDBC#JDBCConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+        <service name="InnerConnectionFactory"
+                 template="Template.WebServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.WebServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">WebServer.BusinessJournal#BusinessJournal</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">WebServer.Performance.JDBC#PerformanceRecorder</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.WebServer.Resource.JDBC#ConnectionResourceFactory"/>
+        
+        <service template="Template.WebServer.Resource.JDBC#PersistentManager"/>
+        
+        <service template="Template.WebServer.Resource.JDBC#SQLMetricsCollector"/>
+        
+        <service name="UserMasterTableCreator"
+                 template="Template.Service.Connection.TableCreator#TableCreator">
+            
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#CSVRecordListConverter</service-property>
+            
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='USER_MST'</attribute>
+            <attribute name="CreateTableQuery">
+                create table USER_MST(
+                    ID              CHAR(5) not null,
+                    NAME            VARCHAR(256),
+                    AGE             NUMERIC(3,0),
+                    SEX             CHAR(1),
+                    PASSWORD        VARCHAR(20),
+                    SPECIAL         CHAR(1),
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into USER_MST values(?,?,?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :NAME,java.lang.String
+                :AGE,short
+                :SEX,java.lang.String
+                :PASSWORD,java.lang.String
+                :SPECIAL,java.lang.String
+            </attribute>
+            <attribute name="InsertRecords">
+                00001,山田太郎,25,M,sample123,1
+                00002,山田花子,20,F,sample456,0
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+        </service>
+        
+        <service name="BlockadeMasterTableCreator"
+                 template="Template.Service.Connection.TableCreator#TableCreator">
+            
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#CSVRecordListConverter</service-property>
+            
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='BLOCKADE_MST'</attribute>
+            <attribute name="CreateTableQuery">
+                create table BLOCKADE_MST(
+                    PATH            VARCHAR(256),
+                    STATE           NUMERIC(1,0),
+                    MESSAGE         VARCHAR(256)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into BLOCKADE_MST values(?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :PATH,java.lang.String
+                :STATE,short
+                :MESSAGE,java.lang.String
+            </attribute>
+            <attribute name="InsertRecords">
+                .*,0,メンテナンス中のため、ご利用できません。
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+        </service>
+        
+        <service template="Template.Service.Connection.TableCreator#CSVRecordListConverter"/>
+        
+    </manager>
+    
+    <manager name="WebServer.Resource.Publish">
+        
+        <service template="Template.WebServer.Resource.Publish#ConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource.Publish#ClusterConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource.Publish#ClusterClientConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource.Publish#MessageReceiver"/>
+        
+        <service template="Template.WebServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
+            <attribute name="MulticastPort">20002</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="WebServer.Resource.BeanControl" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">WebServer.BusinessJournal#BusinessJournal</manager-property>
+        
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+            <service-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">WebServer.BusinessJournal#BeanFlowJournalEditorFinder</service-property>
+            <service-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">WebServer.Resource#JavaScriptInterpreter</service-property>
+            <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">WebServer.Resource#TemplateEngine</service-property>
+            <service-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</service-property>
+            
+            <depends>WebServer.Resource.JDBC#PersistentManager</depends>
+            <depends>WebServer.Resource.JDBC#ConnectionResourceFactory</depends>
+        </service>
+        
+        <service template="Template.WebServer.Resource.BeanControl#AsynchInvokeQueueHandlerContainer">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">#AsynchInvokeQueue</service-property>
+            <attribute name="QueueHandlerSize">100</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Resource.BeanControl#AsynchInvokeQueue"/>
+        
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowInterceptorChainFactory"/>
+        
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowInterceptorChainList"/>
+        
+        <service template="Template.WebServer.Resource.BeanControl#JournalInterceptor">
+            <attribute name="BushingCallBlock">true</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowMetricsInterceptor"/>
+        
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowExceptionHandlingInterceptor">
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>#DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 template="Template.WebServer.Resource.BeanControl#ExceptionHandler">
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
+            <attribute name="LogMessageCode">LOG_MSG_001</attribute>
+        </service>
         
     </manager>
     
