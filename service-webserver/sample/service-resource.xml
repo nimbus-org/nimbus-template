@@ -149,13 +149,18 @@
     
     <manager name="WebServer.Resource.Publish">
         
-        <service template="Template.WebServer.Resource.Publish#ConnectionFactory"/>
+        <service template="Template.WebServer.Resource.Publish#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
+        
+        <service template="Template.WebServer.Resource.Publish#AsynchSendQueue"/>
         
         <service template="Template.WebServer.Resource.Publish#ClusterConnectionFactory"/>
         
-        <service template="Template.WebServer.Resource.Publish#ClusterClientConnectionFactory"/>
-        
-        <service template="Template.WebServer.Resource.Publish#MessageReceiver"/>
+        <service template="Template.WebServer.Resource.Publish#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterConnectionFactory</service-property>
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
         
         <service template="Template.WebServer.Resource.Cluster.Multicast#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
@@ -194,7 +199,9 @@
             <attribute name="BushingCallBlock">true</attribute>
         </service>
         
-        <service template="Template.WebServer.Resource.BeanControl#BeanFlowMetricsInterceptor"/>
+        <service template="Template.WebServer.Resource.BeanControl#BeanFlowMetricsInterceptor">
+            <service-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">WebServer.Performance.BeanFlow#PerformanceRecorder</service-property>
+        </service>
         
         <service template="Template.WebServer.Resource.BeanControl#BeanFlowExceptionHandlingInterceptor">
             <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>

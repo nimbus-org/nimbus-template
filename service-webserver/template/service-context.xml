@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <!-- 共有コンテキストサービス群 -->
+    <manager name="Template.WebServer.SharedContext">
+        
+        <!-- データを複数のサーバで共有するSharedContextサービス -->
+        <service template="Template.Service.Context.SharedContext#SharedContext"
+                 instance="template">
+            <attribute name="WaitConnectAllOnStart">true</attribute>
+        </service>
+        
+        <!-- データを複数のサーバで分散共有するDistributedSharedContextサービス -->
+        <service template="Template.Service.Context.SharedContext#DistributedSharedContext"
+                 instance="template">
+            <attribute name="WaitConnectAllOnStart">true</attribute>
+        </service>
+        
+        <!-- データベース上のキー集合をソートして分割することで、キーの分散を決定するSharedContextKeyDistributorサービス -->
+        <service name="KeyDistributor"
+                 template="Template.Service.Context.KeyDistributor#DatabaseSharedContextKeyDistributor"
+                 instance="template"/>
+        
+        <!-- Contextをデータベースに永続化するContextStoreサービス -->
+        <service template="Template.Service.Context.ContextStore#ContextStore"
+                 instance="template"/>
+        
+        <!-- SharedContextのトランザクション管理を行うTransactionManagerサービス -->
+        <service template="Template.Service.Context.TransactionManager#TransactionManager"
+                 instance="template"/>
+        
+        
+    </manager>
+    
+</server>

@@ -37,4 +37,16 @@
                  instance="factory"/>
     </manager>
     
+    <manager name="WebServer.Performance.BeanFlow">
+        
+        <service template="Template.WebServer.Performance#PerformanceRecorder"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalCategory"/>
+        <service template="Template.WebServer.Performance#PerformanceJournalWriter">
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/flow_performancejournal.log</attribute>
+        </service>
+        <service template="Template.WebServer.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.WebServer.Performance#DateElement"
+                 instance="factory"/>
+    </manager>
+    
 </server>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="WebServer.SharedContext" shutdown-hook="true">
+        
+        <service name="UserProfileContext"
+                 template="Template.WebServer.SharedContext#SharedContext">
+            <attribute name="Subject">UserProfile</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Resource.Publish#RequestConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource.Publish#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+            <attribute name="Acknowledge">true</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Resource.Publish#AsynchSendQueue"/>
+        
+        <service template="Template.WebServer.Resource.Publish#ClusterConnectionFactory"/>
+        
+        <service template="Template.WebServer.Resource.Publish#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterConnectionFactory</service-property>
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.WebServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.3</attribute>
+            <attribute name="MulticastPort">20003</attribute>
+        </service>
+        
+    </manager>
+    
+</server>

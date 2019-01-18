@@ -160,17 +160,25 @@
             <attribute name="BlockadeCodeMasterKey">codemaster/blockade</attribute>
             <attribute name="SpecialUserCodeMasterKey">codemaster/specialUser</attribute>
             <attribute name="SpecialUserMapping">Header(Login).id=id</attribute>
-            <attribute name="SessionObjectAttributeName">AuthenticatedInfo.authenticatedInfo</attribute>
+            <attribute name="SessionObjectAttributeName">UserProfile.authenticatedInfo</attribute>
             <attribute name="SessionSpecialUserMapping">id=id</attribute>
         </service>
         
         <service template="Template.WebServer.Servlet#AuthenticateInterceptor">
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.Authenticate.AUTHENTICATE_STORE_SERVICE_NAME">#AuthenticateStore</service-property>
             <attribute name="LoginPath">/login.bf</attribute>
-            <attribute name="AuthenticatedInfoAttributeName">AuthenticatedInfo</attribute>
+            <attribute name="AuthenticatedInfoAttributeName">UserProfile</attribute>
             <attribute name="AuthenticatedInfoMapping">
                 Header(Common).id=id
                 Header(Common).sessionId=sessionId
             </attribute>
+        </service>
+        
+        <service name="AuthenticateStore"
+                 template="Template.WebServer.Servlet#SharedContextAuthenticateStore">
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.SharedContextAuthenticateStore.SHARED_CONTEXT_SERVICE_NAME">WebServer.SharedContext#UserProfileContext</service-property>
+            <attribute name="KeyPropertyOnCreate">id</attribute>
+            <attribute name="KeyPropertyOnActivate">Header(Common).id</attribute>
         </service>
         
     </manager>
