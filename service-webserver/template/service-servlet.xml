@@ -196,7 +196,12 @@
         
         <!-- アクセスジャーナルを記録するInterceptorサービス -->
         <service template="Template.Service.AOP.Servlet.Interceptor#AccessJournalInterceptor"
-                 instance="template"/>
+                 instance="template">
+            <attribute name="OutputResponseSession">true</attribute>
+            <attribute name="ResponseWrap">true</attribute>
+            <attribute name="ResponseBufferedOutput">true</attribute>
+            <attribute name="BushingRequestBlock">true</attribute>
+        </service>
         
         <!-- レスポンスをキャッシュするInterceptorサービス -->
         <service template="Template.Service.AOP.Servlet.Interceptor#HttpResponseCacheInterceptor"
