@@ -60,7 +60,7 @@
     <manager name="Template.Service.JMX.MBeanWatcher.Queue">
 
         <!-- jp.ossc.nimbus.service.queue.DefaultQueueServiceMBeanを監視するサービス -->
-        <service name="QueueMBeanWatcher"
+        <service name="QueueWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
@@ -3747,7 +3747,6 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
-                        <attribute name="Description">タイムスタンプ</attribute>
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             ConnectionCount,
