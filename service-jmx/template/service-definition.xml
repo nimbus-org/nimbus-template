@@ -65,10 +65,13 @@
                  instance="template">
 
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
+            
+            <attribute name="Description">Queueの監視</attribute>
 
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -90,6 +93,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">流入量</attribute>
                         <attribute name="Key">Count</attribute>
                         <attribute name="ContextKey">Attributes.Count</attribute>
                     </object>
@@ -98,6 +102,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">流入量の差分</attribute>
                         <attribute name="Key">CountDelta</attribute>
                         <attribute name="ContextKey">CountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -112,6 +117,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">滞留量</attribute>
                         <attribute name="Key">Depth</attribute>
                         <attribute name="ContextKey">Attributes.Depth</attribute>
                     </object>
@@ -120,6 +126,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">滞留量の差分</attribute>
                         <attribute name="Key">DepthDelta</attribute>
                         <attribute name="ContextKey">DepthDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -135,6 +142,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内の最大滞留量</attribute>
                         <attribute name="Key">MaxDepth</attribute>
                         <attribute name="ContextKey">MaxDepth</attribute>
                         <attribute name="Target">
@@ -156,6 +164,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">過去の最大滞留量</attribute>
                         <attribute name="Key">MaxDepth</attribute>
                         <attribute name="ContextKey">Attributes.MaxDepth</attribute>
                     </object>
@@ -171,10 +180,13 @@
 
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
 
+            <attribute name="Description">複数のQueueの監視</attribute>
+            
             <attribute name="MBeanSet">true</attribute>
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -196,6 +208,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">流入量</attribute>
                         <attribute name="Key">Count</attribute>
                         <attribute name="ContextKey">Count</attribute>
                         <attribute name="Target">
@@ -215,6 +228,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">流入量の差分</attribute>
                         <attribute name="Key">CountDelta</attribute>
                         <attribute name="ContextKey">CountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -229,6 +243,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">滞留量</attribute>
                         <attribute name="Key">Depth</attribute>
                         <attribute name="ContextKey">Depth</attribute>
                         <attribute name="Target">
@@ -248,6 +263,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">滞留量の差分</attribute>
                         <attribute name="Key">DepthDelta</attribute>
                         <attribute name="ContextKey">DepthDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -263,6 +279,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内の最大滞留量</attribute>
                         <attribute name="Key">MaxDepth</attribute>
                         <attribute name="ContextKey">MaxDepth</attribute>
                         <attribute name="Target">
@@ -284,6 +301,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">過去の最大滞留量</attribute>
                         <attribute name="Key">MaxDepth</attribute>
                         <attribute name="ContextKey">MaxDepth</attribute>
                         <attribute name="Target">
@@ -315,10 +333,13 @@
                  instance="template">
 
             <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE">60</service-property>
+            
+            <attribute name="Description">QueueHandlerContainerの監視</attribute>
 
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -340,6 +361,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ハンドラの数</attribute>
                         <attribute name="Key">QueueHandlerSize</attribute>
                         <attribute name="ContextKey">Attributes.QueueHandlerSize</attribute>
                     </object>
@@ -348,6 +370,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">処理中のハンドラの数</attribute>
                         <attribute name="Key">ActiveQueueHandlerSize</attribute>
                         <attribute name="ContextKey">Attributes.ActiveQueueHandlerSize</attribute>
                     </object>
@@ -356,6 +379,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内の処理中のハンドラの最大数</attribute>
                         <attribute name="Key">MaxActiveQueueHandlerSize</attribute>
                         <attribute name="ContextKey">MaxActiveQueueHandlerSize</attribute>
                         <attribute name="Target">
@@ -375,6 +399,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">待機中のハンドラの数</attribute>
                         <attribute name="Key">StandbyQueueHandlerSize</attribute>
                         <attribute name="ContextKey">Attributes.StandbyQueueHandlerSize</attribute>
                     </object>
@@ -396,9 +421,13 @@
         <service name="CMSHeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">CMS GCに設定されたJavaVMのヒープの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -418,6 +447,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の使用量</attribute>
                         <attribute name="Key">CodeCacheUsed</attribute>
                         <attribute name="ContextKey">CodeCacheUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -432,6 +462,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の最大量</attribute>
                         <attribute name="Key">CodeCacheMax</attribute>
                         <attribute name="ContextKey">CodeCacheMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -446,6 +477,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CodeCache領域の使用率[%]</attribute>
                         <attribute name="Key">CodeCacheUsedRate</attribute>
                         <attribute name="ContextKey">CodeCacheUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -476,6 +508,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Permanent領域の使用量</attribute>
                         <attribute name="Key">PermUsed</attribute>
                         <attribute name="ContextKey">PermUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -490,6 +523,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Permanent領域の最大量</attribute>
                         <attribute name="Key">PermMax</attribute>
                         <attribute name="ContextKey">PermMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -504,6 +538,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Permanent領域の使用率[%]</attribute>
                         <attribute name="Key">PermUsedRate</attribute>
                         <attribute name="ContextKey">PermUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -534,6 +569,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の使用量</attribute>
                         <attribute name="Key">EdenUsed</attribute>
                         <attribute name="ContextKey">EdenUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -548,6 +584,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の最大量</attribute>
                         <attribute name="Key">EdenMax</attribute>
                         <attribute name="ContextKey">EdenMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -562,6 +599,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Eden領域の使用率[%]</attribute>
                         <attribute name="Key">EdenUsedRate</attribute>
                         <attribute name="ContextKey">EdenUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -593,6 +631,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の使用量</attribute>
                         <attribute name="Key">SurvivorUsed</attribute>
                         <attribute name="ContextKey">SurvivorUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -607,6 +646,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の最大量</attribute>
                         <attribute name="Key">SurvivorMax</attribute>
                         <attribute name="ContextKey">SurvivorMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -621,6 +661,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Survivor領域の使用率[%]</attribute>
                         <attribute name="Key">SurvivorUsedRate</attribute>
                         <attribute name="ContextKey">SurvivorUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -652,6 +693,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の使用量</attribute>
                         <attribute name="Key">OldUsed</attribute>
                         <attribute name="ContextKey">OldUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -666,6 +708,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の最大量</attribute>
                         <attribute name="Key">OldMax</attribute>
                         <attribute name="ContextKey">OldMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -680,6 +723,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Old領域の使用率[%]</attribute>
                         <attribute name="Key">OldUsedRate</attribute>
                         <attribute name="ContextKey">OldUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -702,6 +746,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ParNew</attribute>
                         <attribute name="ContextKey">YoungGCCount</attribute>
                         <attribute name="Key">YoungGCCount</attribute>
@@ -712,6 +757,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの回数の差分</attribute>
                         <attribute name="Key">YoungGCCountDelta</attribute>
                         <attribute name="ContextKey">YoungGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -726,6 +772,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ParNew</attribute>
                         <attribute name="ContextKey">YoungGCTime</attribute>
                         <attribute name="Key">YoungGCTime</attribute>
@@ -736,6 +783,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの時間の差分</attribute>
                         <attribute name="Key">YoungGCTimeDelta</attribute>
                         <attribute name="ContextKey">YoungGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -751,6 +799,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ConcurrentMarkSweep</attribute>
                         <attribute name="ContextKey">FullGCCount</attribute>
                         <attribute name="Key">FullGCCount</attribute>
@@ -761,6 +810,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの回数の差分</attribute>
                         <attribute name="Key">FullGCCountDelta</attribute>
                         <attribute name="ContextKey">FullGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -775,6 +825,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ConcurrentMarkSweep</attribute>
                         <attribute name="ContextKey">FullGCTime</attribute>
                         <attribute name="Key">FullGCTime</attribute>
@@ -785,6 +836,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの時間の差分</attribute>
                         <attribute name="Key">FullGCTimeDelta</attribute>
                         <attribute name="ContextKey">FullGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -808,9 +860,13 @@
         <service name="Java8CMSHeapWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">CMS GCに設定されたJavaVMのヒープの監視（Java8以降）</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -830,6 +886,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の使用量</attribute>
                         <attribute name="Key">CodeCacheUsed</attribute>
                         <attribute name="ContextKey">CodeCacheUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -844,6 +901,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の最大量</attribute>
                         <attribute name="Key">CodeCacheMax</attribute>
                         <attribute name="ContextKey">CodeCacheMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -858,6 +916,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CodeCache領域の使用率[%]</attribute>
                         <attribute name="Key">CodeCacheUsedRate</attribute>
                         <attribute name="ContextKey">CodeCacheUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -889,6 +948,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CompressedClass領域の使用量</attribute>
                         <attribute name="Key">CompressedClassUsed</attribute>
                         <attribute name="ContextKey">CompressedClassUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -903,6 +963,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CompressedClass領域の最大量</attribute>
                         <attribute name="Key">CompressedClassMax</attribute>
                         <attribute name="ContextKey">CompressedClassMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -917,6 +978,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CompressedClass領域の使用率[%]</attribute>
                         <attribute name="Key">CompressedClassUsedRate</attribute>
                         <attribute name="ContextKey">CompressedClassUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -948,6 +1010,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Metaspace領域の使用量</attribute>
                         <attribute name="Key">MetaspaceUsed</attribute>
                         <attribute name="ContextKey">MetaspaceUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -962,6 +1025,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Metaspace領域の最大量</attribute>
                         <attribute name="Key">MetaspaceMax</attribute>
                         <attribute name="ContextKey">MetaspaceMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -976,6 +1040,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Metaspace領域の使用率[%]</attribute>
                         <attribute name="Key">MetaspaceUsedRate</attribute>
                         <attribute name="ContextKey">MetaspaceUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1007,6 +1072,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の使用量</attribute>
                         <attribute name="Key">EdenUsed</attribute>
                         <attribute name="ContextKey">EdenUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1021,6 +1087,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の最大量</attribute>
                         <attribute name="Key">EdenMax</attribute>
                         <attribute name="ContextKey">EdenMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1035,6 +1102,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Eden領域の使用率[%]</attribute>
                         <attribute name="Key">EdenUsedRate</attribute>
                         <attribute name="ContextKey">EdenUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1066,6 +1134,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の使用量</attribute>
                         <attribute name="Key">SurvivorUsed</attribute>
                         <attribute name="ContextKey">SurvivorUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1080,6 +1149,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の最大量</attribute>
                         <attribute name="Key">SurvivorMax</attribute>
                         <attribute name="ContextKey">SurvivorMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1094,6 +1164,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Survivor領域の使用率[%]</attribute>
                         <attribute name="Key">SurvivorUsedRate</attribute>
                         <attribute name="ContextKey">SurvivorUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1125,6 +1196,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の使用量</attribute>
                         <attribute name="Key">OldUsed</attribute>
                         <attribute name="ContextKey">OldUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1139,6 +1211,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の最大量</attribute>
                         <attribute name="Key">OldMax</attribute>
                         <attribute name="ContextKey">OldMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1153,6 +1226,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Old領域の使用率[%]</attribute>
                         <attribute name="Key">OldUsedRate</attribute>
                         <attribute name="ContextKey">OldUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1175,6 +1249,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ParNew</attribute>
                         <attribute name="ContextKey">YoungGCCount</attribute>
                         <attribute name="Key">YoungGCCount</attribute>
@@ -1185,6 +1260,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの回数の差分</attribute>
                         <attribute name="Key">YoungGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
                         <attribute name="Target">
@@ -1198,6 +1274,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ParNew</attribute>
                         <attribute name="ContextKey">YoungGCTime</attribute>
                         <attribute name="Key">YoungGCTime</attribute>
@@ -1208,6 +1285,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの時間の差分</attribute>
                         <attribute name="Key">YoungGCTimeDelta</attribute>
                         <attribute name="ContextKey">YoungGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1223,6 +1301,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ConcurrentMarkSweep</attribute>
                         <attribute name="ContextKey">FullGCCount</attribute>
                         <attribute name="Key">FullGCCount</attribute>
@@ -1233,6 +1312,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの回数の差分</attribute>
                         <attribute name="Key">FullGCCountDelta</attribute>
                         <attribute name="ContextKey">FullGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1247,6 +1327,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=ConcurrentMarkSweep</attribute>
                         <attribute name="ContextKey">FullGCTime</attribute>
                         <attribute name="Key">FullGCTime</attribute>
@@ -1257,6 +1338,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの時間の差分</attribute>
                         <attribute name="Key">FullGCTimeDelta</attribute>
                         <attribute name="ContextKey">FullGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1282,10 +1364,13 @@
                  instance="template">
 
             <service-property name="Template.Service.JMX.MBeanWatcher.Java.COMPRESSED_CLASS_SPACE">true</service-property>
+            
+            <attribute name="Description">G1GCに設定されたJavaVMのヒープの監視</attribute>
 
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -1305,6 +1390,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の使用量</attribute>
                         <attribute name="Key">CodeCacheUsed</attribute>
                         <attribute name="ContextKey">CodeCacheUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1319,6 +1405,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CodeCache領域の最大量</attribute>
                         <attribute name="Key">CodeCacheMax</attribute>
                         <attribute name="ContextKey">CodeCacheMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1333,6 +1420,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CodeCache領域の使用率[%]</attribute>
                         <attribute name="Key">CodeCacheUsedRate</attribute>
                         <attribute name="ContextKey">CodeCacheUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1365,6 +1453,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CompressedClass領域の使用量</attribute>
                         <attribute name="Key">CompressedClassUsed</attribute>
                         <attribute name="ContextKey">CompressedClassUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1379,6 +1468,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">CompressedClass領域の最大量</attribute>
                         <attribute name="Key">CompressedClassMax</attribute>
                         <attribute name="ContextKey">CompressedClassMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1393,6 +1483,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CompressedClass領域の使用率[%]</attribute>
                         <attribute name="Key">CompressedClassUsedRate</attribute>
                         <attribute name="ContextKey">CompressedClassUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1425,6 +1516,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Metaspace領域の使用量</attribute>
                         <attribute name="Key">MetaspaceUsed</attribute>
                         <attribute name="ContextKey">MetaspaceUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1439,6 +1531,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Metaspace領域の最大量</attribute>
                         <attribute name="Key">MetaspaceMax</attribute>
                         <attribute name="ContextKey">MetaspaceMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1453,6 +1546,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Metaspace領域の使用率[%]</attribute>
                         <attribute name="Key">MetaspaceUsedRate</attribute>
                         <attribute name="ContextKey">MetaspaceUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1484,6 +1578,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の使用量</attribute>
                         <attribute name="Key">EdenUsed</attribute>
                         <attribute name="ContextKey">EdenUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1498,6 +1593,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Eden領域の最大量</attribute>
                         <attribute name="Key">EdenCommitted</attribute>
                         <attribute name="ContextKey">EdenCommitted</attribute>
                         <attribute name="Property">(committed)</attribute>
@@ -1512,6 +1608,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Eden領域の使用率[%]</attribute>
                         <attribute name="Key">EdenUsedRate</attribute>
                         <attribute name="ContextKey">EdenUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1543,6 +1640,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の使用量</attribute>
                         <attribute name="Key">SurvivorUsed</attribute>
                         <attribute name="ContextKey">SurvivorUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1557,6 +1655,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Survivor領域の最大量</attribute>
                         <attribute name="Key">SurvivorCommitted</attribute>
                         <attribute name="ContextKey">SurvivorCommitted</attribute>
                         <attribute name="Property">(committed)</attribute>
@@ -1571,6 +1670,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Survivor領域の使用率[%]</attribute>
                         <attribute name="Key">SurvivorUsedRate</attribute>
                         <attribute name="ContextKey">SurvivorUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1602,6 +1702,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の使用量</attribute>
                         <attribute name="Key">OldUsed</attribute>
                         <attribute name="ContextKey">OldUsed</attribute>
                         <attribute name="Property">(used)</attribute>
@@ -1616,6 +1717,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">Old領域の最大量</attribute>
                         <attribute name="Key">OldMax</attribute>
                         <attribute name="ContextKey">OldMax</attribute>
                         <attribute name="Property">(max)</attribute>
@@ -1630,6 +1732,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">Old領域の使用率[%]</attribute>
                         <attribute name="Key">OldUsedRate</attribute>
                         <attribute name="ContextKey">OldUsedRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1652,6 +1755,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=G1 Young Generation</attribute>
                         <attribute name="ContextKey">YoungGCCount</attribute>
                         <attribute name="Key">YoungGCCount</attribute>
@@ -1662,6 +1766,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの回数の差分</attribute>
                         <attribute name="Key">YoungGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
                         <attribute name="Target">
@@ -1675,6 +1780,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">YoungGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=G1 Young Generation</attribute>
                         <attribute name="ContextKey">YoungGCTime</attribute>
                         <attribute name="Key">YoungGCTime</attribute>
@@ -1685,6 +1791,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">YoungGCの時間の差分</attribute>
                         <attribute name="Key">YoungGCTimeDelta</attribute>
                         <attribute name="ContextKey">YoungGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1700,6 +1807,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの回数</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=G1 Old Generation</attribute>
                         <attribute name="ContextKey">FullGCCount</attribute>
                         <attribute name="Key">FullGCCount</attribute>
@@ -1710,6 +1818,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの回数の差分</attribute>
                         <attribute name="Key">FullGCCountDelta</attribute>
                         <attribute name="ContextKey">FullGCCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1724,6 +1833,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attribute">
+                        <attribute name="Description">FullGCの時間</attribute>
                         <attribute name="ObjectName">java.lang:type=GarbageCollector,name=G1 Old Generation</attribute>
                         <attribute name="ContextKey">FullGCTime</attribute>
                         <attribute name="Key">FullGCTime</attribute>
@@ -1734,6 +1844,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">FullGCの時間の差分</attribute>
                         <attribute name="Key">FullGCTimeDelta</attribute>
                         <attribute name="ContextKey">FullGCTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1765,9 +1876,13 @@
         <service name="OperatingSystemWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">OSのリソース監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -1796,6 +1911,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">CPU時間</attribute>
                         <attribute name="Key">ProcessCpuTime</attribute>
                         <attribute name="ContextKey">Attributes.ProcessCpuTime</attribute>
                     </object>
@@ -1804,6 +1920,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">CPU時間の差分</attribute>
                         <attribute name="Key">ProcessCpuTimeDelta</attribute>
                         <attribute name="ContextKey">ProcessCpuTimeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1818,6 +1935,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">利用可能なプロセッサ数</attribute>
                         <attribute name="Key">AvailableProcessors</attribute>
                         <attribute name="ContextKey">Attributes.AvailableProcessors</attribute>
                     </object>
@@ -1826,6 +1944,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">実行待ちプロセス数の平均値</attribute>
                         <attribute name="Key">SystemLoadAverage</attribute>
                         <attribute name="ContextKey">Attributes.SystemLoadAverage</attribute>
                     </object>
@@ -1834,6 +1953,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">CPU使用率[%]</attribute>
                         <attribute name="Key">CPUUsageRate</attribute>
                         <attribute name="ContextKey">CPUUsageRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1855,6 +1975,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">物理メモリ空き量</attribute>
                         <attribute name="Key">FreePhysicalMemorySize</attribute>
                         <attribute name="ContextKey">Attributes.FreePhysicalMemorySize</attribute>
                     </object>
@@ -1864,6 +1985,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">物理メモリ最大量</attribute>
                         <attribute name="Key">TotalPhysicalMemorySize</attribute>
                         <attribute name="ContextKey">Attributes.TotalPhysicalMemorySize</attribute>
                     </object>
@@ -1873,6 +1995,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
+                        <attribute name="Description">物理メモリ使用量</attribute>
                         <attribute name="Key">UsedPhysicalMemorySize</attribute>
                         <attribute name="ContextKey">UsedPhysicalMemorySize</attribute>
                         <attribute name="Target">
@@ -1891,6 +2014,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">物理メモリ使用率[%]</attribute>
                         <attribute name="Key">UsedPhysicalMemorySizeRate</attribute>
                         <attribute name="ContextKey">UsedPhysicalMemorySizeRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1913,6 +2037,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スワップ空き量</attribute>
                         <attribute name="Key">FreeSwapSpaceSize</attribute>
                         <attribute name="ContextKey">Attributes.FreeSwapSpaceSize</attribute>
                     </object>
@@ -1922,6 +2047,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スワップ最大量</attribute>
                         <attribute name="Key">TotalSwapSpaceSize</attribute>
                         <attribute name="ContextKey">Attributes.TotalSwapSpaceSize</attribute>
                     </object>
@@ -1931,6 +2057,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
+                        <attribute name="Description">スワップ使用量</attribute>
                         <attribute name="Key">UsedSwapSpaceSize</attribute>
                         <attribute name="ContextKey">UsedSwapSpaceSize</attribute>
                         <attribute name="Target">
@@ -1949,6 +2076,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">スワップ使用率[%]</attribute>
                         <attribute name="Key">UsedSwapSpaceSizeRate</attribute>
                         <attribute name="ContextKey">UsedSwapSpaceSizeRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -1970,6 +2098,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ファイルデスクリプタの使用数</attribute>
                         <attribute name="Key">OpenFileDescriptorCount</attribute>
                         <attribute name="ContextKey">Attributes.OpenFileDescriptorCount</attribute>
                     </object>
@@ -1978,6 +2107,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">ファイルデスクリプタの使用数の差分</attribute>
                         <attribute name="Key">OpenFileDescriptorCountDelta</attribute>
                         <attribute name="ContextKey">OpenFileDescriptorCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -1992,6 +2122,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ファイルデスクリプタの最大数</attribute>
                         <attribute name="Key">MaxFileDescriptorCount</attribute>
                         <attribute name="ContextKey">Attributes.MaxFileDescriptorCount</attribute>
                     </object>
@@ -2000,6 +2131,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">ファイルデスクリプタの使用率[%]</attribute>
                         <attribute name="Key">OpenFileDescriptorRate</attribute>
                         <attribute name="ContextKey">OpenFileDescriptorRate</attribute>
                         <attribute name="Scale">2</attribute>
@@ -2035,10 +2167,13 @@
                  instance="template">
 
             <service-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT">60</service-property>
+            
+            <attribute name="Description">CacheMapの監視</attribute>
 
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2048,6 +2183,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Operation">
+                        <attribute name="Description">キャッシュ数</attribute>
                         <attribute name="Key">Size</attribute>
                         <attribute name="ContextKey">Size</attribute>
                         <attribute name="Name">size</attribute>
@@ -2057,6 +2193,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">キャッシュ数の差分</attribute>
                         <attribute name="Key">SizeDelta</attribute>
                         <attribute name="ContextKey">SizeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2071,6 +2208,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内のキャッシュ数の最大</attribute>
                         <attribute name="Key">MaxSize</attribute>
                         <attribute name="ContextKey">MaxSize</attribute>
                         <attribute name="Target">
@@ -2102,9 +2240,13 @@
         <service name="ClusterWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">Clusterの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2128,6 +2270,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">稼働系フラグ（true：稼働系、false:待機系）</attribute>
                         <attribute name="Key">Main</attribute>
                         <attribute name="ContextKey">Attributes.Main</attribute>
                     </object>
@@ -2136,6 +2279,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">参加フラグ（true：参加、false:不参加）</attribute>
                         <attribute name="Key">Join</attribute>
                         <attribute name="ContextKey">Attributes.Join</attribute>
                     </object>
@@ -2144,6 +2288,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">クライアントフラグ（true：クライアントモード、false:サーバモード）</attribute>
                         <attribute name="Key">Client</attribute>
                         <attribute name="ContextKey">Attributes.Client</attribute>
                     </object>
@@ -2152,6 +2297,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">参加メンバ</attribute>
                         <attribute name="Key">Members</attribute>
                         <attribute name="ContextKey">Members</attribute>
                         <attribute name="Property">Members</attribute>
@@ -2166,6 +2312,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">参加メンバ数</attribute>
                         <attribute name="Key">MemberSize</attribute>
                         <attribute name="ContextKey">MemberSize</attribute>
                         <attribute name="Property">size</attribute>
@@ -2180,6 +2327,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Check">
+                        <attribute name="Description">参加メンバ数の差分</attribute>
                         <attribute name="Key">MemberSizeDelta</attribute>
                         <attribute name="ContextKey">MemberSizeDelta</attribute>
                         <attribute name="Target">
@@ -2198,6 +2346,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">クライアントメンバ</attribute>
                         <attribute name="Key">ClientMembers</attribute>
                         <attribute name="ContextKey">ClientMembers</attribute>
                         <attribute name="Property">ClientMembers</attribute>
@@ -2212,6 +2361,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">クライアントメンバ数</attribute>
                         <attribute name="Key">ClientMemberSize</attribute>
                         <attribute name="ContextKey">ClientMemberSize</attribute>
                         <attribute name="Property">size</attribute>
@@ -2226,6 +2376,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">クライアントメンバ数の差分</attribute>
                         <attribute name="Key">ClientMemberSizeDelta</attribute>
                         <attribute name="ContextKey">ClientMemberSizeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2254,10 +2405,13 @@
                  instance="template">
 
             <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</service-property>
+            
+            <attribute name="Description">SharedContextの監視</attribute>
 
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2267,6 +2421,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Operation">
+                        <attribute name="Description">ローカルのデータ数</attribute>
                         <attribute name="Key">SizeLocal</attribute>
                         <attribute name="ContextKey">SizeLocal</attribute>
                         <attribute name="Name">sizeLocal</attribute>
@@ -2276,6 +2431,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">ローカルのデータ数の差分</attribute>
                         <attribute name="Key">SizeLocalDelta</attribute>
                         <attribute name="ContextKey">SizeLocalDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2290,6 +2446,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内のローカルのデータ数の最大</attribute>
                         <attribute name="Key">MaxSizeLocal</attribute>
                         <attribute name="ContextKey">MaxSizeLocal</attribute>
                         <attribute name="Target">
@@ -2320,6 +2477,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">キャッシュヒット率[%]</attribute>
                         <attribute name="Key">CacheHitRatio</attribute>
                         <attribute name="ContextKey">Attributes.CacheHitRatio</attribute>
                     </object>
@@ -2328,6 +2486,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">主ノードフラグ（true：主ノード、false:バックアップノード）</attribute>
                         <attribute name="Key">Main</attribute>
                         <attribute name="ContextKey">Attributes.Main</attribute>
                     </object>
@@ -2345,9 +2504,13 @@
         <service name="DistributedSharedContextWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">DistributedSharedContextの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2357,6 +2520,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Operation">
+                        <attribute name="Description">ローカルのデータ数</attribute>
                         <attribute name="Key">SizeLocal</attribute>
                         <attribute name="ContextKey">SizeLocal</attribute>
                         <attribute name="Name">sizeLocal</attribute>
@@ -2366,6 +2530,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">ローカルのデータ数の差分</attribute>
                         <attribute name="Key">SizeLocalDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
                         <attribute name="Target">
@@ -2379,6 +2544,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内のローカルのデータ数の最大</attribute>
                         <attribute name="Key">MaxSizeLocal</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
@@ -2409,6 +2575,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">キャッシュヒット率[%]</attribute>
                         <attribute name="Key">CacheHitRatio</attribute>
                         <attribute name="ContextKey">Attributes.CacheHitRatio</attribute>
                     </object>
@@ -2417,6 +2584,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">主ノードフラグ（true：主ノード、false:バックアップノード）</attribute>
                         <attribute name="Key">Main</attribute>
                         <attribute name="ContextKey">Attributes.Main</attribute>
                     </object>
@@ -2425,6 +2593,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">主ノード数</attribute>
                         <attribute name="Key">MainNodeCount</attribute>
                         <attribute name="ContextKey">Attributes.MainNodeCount</attribute>
                     </object>
@@ -2445,10 +2614,15 @@
         <service name="UDPClientConnectionsWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">ClientConnection（UDP通信）の集合の監視</attribute>
+            
             <attribute name="MBeanSet">true</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2475,6 +2649,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">受信パケット数</attribute>
                         <attribute name="Key">ReceivePacketCount</attribute>
                         <attribute name="ContextKey">ReceivePacketCount</attribute>
                         <attribute name="Target">
@@ -2493,6 +2668,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">受信パケット数の差分</attribute>
                         <attribute name="Key">ReceivePacketCountDelta</attribute>
                         <attribute name="ContextKey">ReceivePacketCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2507,6 +2683,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">受信パケットの受付キューの滞留数</attribute>
                         <attribute name="Key">ReceivePacketQueueDepth</attribute>
                         <attribute name="ContextKey">ReceivePacketQueueDepth</attribute>
                         <attribute name="Target">
@@ -2526,6 +2703,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">受信パケットの受付キューの滞留数の差分</attribute>
                         <attribute name="Key">ReceivePacketQueueDepthDelta</attribute>
                         <attribute name="ContextKey">ReceivePacketQueueDepthDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2540,6 +2718,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">受信パケットの受付キューの滞留数の最大</attribute>
                         <attribute name="Key">ReceivePacketQueueMaxDepth</attribute>
                         <attribute name="ContextKey">ReceivePacketQueueMaxDepth</attribute>
                         <attribute name="Target">
@@ -2559,6 +2738,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">受信メッセージ数</attribute>
                         <attribute name="Key">ReceiveCount</attribute>
                         <attribute name="ContextKey">ReceiveCount</attribute>
                         <attribute name="Target">
@@ -2578,6 +2758,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">受信メッセージ数の差分</attribute>
                         <attribute name="Key">ReceiveCountDelta</attribute>
                         <attribute name="ContextKey">ReceiveCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2592,6 +2773,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">欠損メッセージ数</attribute>
                         <attribute name="Key">LostCount</attribute>
                         <attribute name="ContextKey">LostCount</attribute>
                         <attribute name="Target">
@@ -2611,6 +2793,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">欠損メッセージ数の差分</attribute>
                         <attribute name="Key">LostCountDelta</attribute>
                         <attribute name="ContextKey">LostCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2625,6 +2808,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">未到達ウィンドウの再送要求回数</attribute>
                         <attribute name="Key">MissingWindowRequestCount</attribute>
                         <attribute name="ContextKey">MissingWindowRequestCount</attribute>
                         <attribute name="Target">
@@ -2644,6 +2828,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">未到達ウィンドウの再送要求回数の差分</attribute>
                         <attribute name="Key">MissingWindowRequestCountDelta</attribute>
                         <attribute name="ContextKey">MissingWindowRequestCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2658,6 +2843,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">不連続メッセージ数</attribute>
                         <attribute name="Key">NoContinuousMessageCount</attribute>
                         <attribute name="ContextKey">NoContinuousMessageCount</attribute>
                         <attribute name="Target">
@@ -2677,6 +2863,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">不連続メッセージ数の差分</attribute>
                         <attribute name="Key">NoContinuousMessageCountDelta</attribute>
                         <attribute name="ContextKey">NoContinuousMessageCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2691,6 +2878,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">重複メッセージ数</attribute>
                         <attribute name="Key">WasteWindowCount</attribute>
                         <attribute name="ContextKey">WasteWindowCount</attribute>
                         <attribute name="Target">
@@ -2710,6 +2898,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">重複メッセージ数の差分</attribute>
                         <attribute name="Key">WasteWindowCountDelta</attribute>
                         <attribute name="ContextKey">WasteWindowCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2733,10 +2922,15 @@
         <service name="TCPClientConnectionsWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">ClientConnection（TCP通信）の集合の監視</attribute>
+            
             <attribute name="MBeanSet">true</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2757,6 +2951,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">受信メッセージ数</attribute>
                         <attribute name="Key">ReceiveCount</attribute>
                         <attribute name="ContextKey">ReceiveCount</attribute>
                         <attribute name="Target">
@@ -2776,6 +2971,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">受信メッセージ数の差分</attribute>
                         <attribute name="Key">ReceiveCountDelta</attribute>
                         <attribute name="ContextKey">ReceiveCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2790,6 +2986,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">送信元アドレス</attribute>
                         <attribute name="Key">RemoteSocketAddress</attribute>
                         <attribute name="ContextKey">RemoteSocketAddress</attribute>
                         <attribute name="Property">RemoteSocketAddress</attribute>
@@ -2805,6 +3002,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                        <attribute name="Description">送信元サーバ数</attribute>
                         <attribute name="Key">ServerSize</attribute>
                         <attribute name="ContextKey">ServerSize</attribute>
                         <attribute name="Property">size</attribute>
@@ -2819,6 +3017,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">送信元サーバ数の差分</attribute>
                         <attribute name="Key">ServerSizeDelta</attribute>
                         <attribute name="ContextKey">ServerSizeDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2842,9 +3041,13 @@
         <service name="UDPServerConnectionWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">ServerConnection（UDP通信）の監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2869,6 +3072,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信メッセージ数</attribute>
                         <attribute name="Key">SendCount</attribute>
                         <attribute name="ContextKey">Attributes.SendCount</attribute>
                     </object>
@@ -2877,6 +3081,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">送信メッセージ数の差分</attribute>
                         <attribute name="Key">SendCountDelta</attribute>
                         <attribute name="ContextKey">SendCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2891,6 +3096,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信パケット数</attribute>
                         <attribute name="Key">SendPacketCount</attribute>
                         <attribute name="ContextKey">Attributes.SendPacketCount</attribute>
                     </object>
@@ -2899,6 +3105,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">送信パケット数の差分</attribute>
                         <attribute name="Key">SendPacketCountDelta</attribute>
                         <attribute name="ContextKey">SendPacketCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -2913,6 +3120,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ウィンドウ数の平均</attribute>
                         <attribute name="Key">AverageWindowCount</attribute>
                         <attribute name="ContextKey">Attributes.AverageWindowCount</attribute>
                     </object>
@@ -2921,6 +3129,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ウィンドウ数の最大</attribute>
                         <attribute name="Key">MaxWindowCount</attribute>
                         <attribute name="ContextKey">Attributes.MaxWindowCount</attribute>
                     </object>
@@ -2929,6 +3138,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信先のクライアント数</attribute>
                         <attribute name="Key">ClientSize</attribute>
                         <attribute name="ContextKey">Attributes.ClientSize</attribute>
                     </object>
@@ -2937,6 +3147,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信先のクライアント</attribute>
                         <attribute name="Key">Clients</attribute>
                         <attribute name="ContextKey">Attributes.Clients</attribute>
                     </object>
@@ -2945,6 +3156,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$ChangeSet">
+                        <attribute name="Description">切断された送信先のクライアント</attribute>
                         <attribute name="Key">DecreaseClient</attribute>
                         <attribute name="ContextKey">DecreaseClient</attribute>
                         <attribute name="ChangeAdd">false</attribute>
@@ -2968,9 +3180,13 @@
         <service name="TCPServerConnectionWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">ServerConnection（TCP通信）の監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -2992,6 +3208,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信メッセージ数</attribute>
                         <attribute name="Key">SendCount</attribute>
                         <attribute name="ContextKey">Attributes.SendCount</attribute>
                     </object>
@@ -3000,6 +3217,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
+                        <attribute name="Description">送信メッセージ数の差分</attribute>
                         <attribute name="Key">SendCountDelta</attribute>
                         <attribute name="ContextKey">SendCountDelta</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -3014,6 +3232,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信先のクライアント数</attribute>
                         <attribute name="Key">ClientSize</attribute>
                         <attribute name="ContextKey">Attributes.ClientSize</attribute>
                     </object>
@@ -3022,6 +3241,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信先のクライアント</attribute>
                         <attribute name="Key">Clients</attribute>
                         <attribute name="ContextKey">Attributes.Clients</attribute>
                     </object>
@@ -3030,6 +3250,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$ChangeSet">
+                        <attribute name="Description">切断された送信先のクライアント</attribute>
                         <attribute name="Key">DecreaseClient</attribute>
                         <attribute name="ContextKey">DecreaseClient</attribute>
                         <attribute name="ChangeAdd">false</attribute>
@@ -3056,9 +3277,13 @@
         <service name="QuerySearchWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">QuerySearchManagerの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3078,6 +3303,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">キャッシュヒット率[%]</attribute>
                         <attribute name="Key">CacheHitRatio</attribute>
                         <attribute name="ContextKey">Attributes.CacheHitRatio</attribute>
                     </object>
@@ -3097,9 +3323,13 @@
         <service name="SemaphoreWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">Semaphoreの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3122,6 +3352,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">リソースの空き数</attribute>
                         <attribute name="Key">ResourceRemain</attribute>
                         <attribute name="ContextKey">Attributes.ResourceRemain</attribute>
                     </object>
@@ -3130,6 +3361,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">リソースの獲得待ち数</attribute>
                         <attribute name="Key">WaitingCount</attribute>
                         <attribute name="ContextKey">Attributes.WaitingCount</attribute>
                     </object>
@@ -3138,6 +3370,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">リソースの最大数</attribute>
                         <attribute name="Key">MaxUsedResource</attribute>
                         <attribute name="ContextKey">Attributes.MaxUsedResource</attribute>
                     </object>
@@ -3146,6 +3379,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">リソースの獲得待ち数の最大</attribute>
                         <attribute name="Key">MaxWaitedCount</attribute>
                         <attribute name="ContextKey">Attributes.MaxWaitedCount</attribute>
                     </object>
@@ -3166,9 +3400,13 @@
         <service name="RequestProcessCheckInterceptorWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">RequestProcessCheckInterceptorの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3188,6 +3426,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">処理中のリクエスト数</attribute>
                         <attribute name="Key">RequestCount</attribute>
                         <attribute name="ContextKey">Attributes.RequestCount</attribute>
                     </object>
@@ -3196,6 +3435,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内の処理中のリクエスト数の最大</attribute>
                         <attribute name="Key">MaxRequestCount</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
@@ -3226,9 +3466,13 @@
         <service name="SchedulerWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">Schedulerの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3251,6 +3495,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">実行中のスケジュール数</attribute>
                         <attribute name="Key">ActiveScheduleDispatcherSize</attribute>
                         <attribute name="ContextKey">Attributes.ActiveScheduleDispatcherSize</attribute>
                     </object>
@@ -3259,6 +3504,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">同時に実行可能なスケジュール数</attribute>
                         <attribute name="Key">ScheduleDispatcherSize</attribute>
                         <attribute name="ContextKey">Attributes.ScheduleDispatcherSize</attribute>
                     </object>
@@ -3267,6 +3513,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
+                        <attribute name="Description">同時に実行可能なスケジュール数の空き</attribute>
                         <attribute name="Key">RemainScheduleDispatcherSize</attribute>
                         <attribute name="ContextKey">RemainScheduleDispatcherSize</attribute>
                         <attribute name="NullToZero">true</attribute>
@@ -3286,6 +3533,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">サービスの状態</attribute>
                         <attribute name="Key">State</attribute>
                         <attribute name="ContextKey">Attributes.StateString</attribute>
                     </object>
@@ -3294,6 +3542,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スケジュールの実行開始フラグ（true：開始、false:停止）</attribute>
                         <attribute name="Key">StartEntry</attribute>
                         <attribute name="ContextKey">Attributes.StartEntry</attribute>
                     </object>
@@ -3314,9 +3563,13 @@
         <service name="ThreadPoolWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">JBossのスレッドプールの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3338,6 +3591,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">実行中スレッドの数</attribute>
                         <attribute name="Key">CurrentThreadsBusy</attribute>
                         <attribute name="ContextKey">Attributes.currentThreadsBusy</attribute>
                     </object>
@@ -3346,6 +3600,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スレッドプールの数</attribute>
                         <attribute name="Key">CurrentThreadCount</attribute>
                         <attribute name="ContextKey">Attributes.currentThreadCount</attribute>
                     </object>
@@ -3354,8 +3609,29 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スレッドプールの数の最大</attribute>
                         <attribute name="Key">MaxThreads</attribute>
                         <attribute name="ContextKey">Attributes.maxThreads</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
+                        <attribute name="Description">スレッドプールの空き</attribute>
+                        <attribute name="Key">RemainThreadCount</attribute>
+                        <attribute name="ContextKey">RemainThreadCount</attribute>
+                        <attribute name="NullToZero">true</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.maxThreads</attribute>
+                            </object>
+                        </attribute>
+                        <attribute name="SecondTarget">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.currentThreadsBusy</attribute>
+                            </object>
+                        </attribute>
                     </object>
                 </argument>
             </invoke>
@@ -3364,16 +3640,20 @@
         <service name="ThreadPoolWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%CurrentThreadsBusy%,%CurrentThreadCount%,%MaxThreads%</attribute>
+            <attribute name="Format">%Timestamp%,%CurrentThreadsBusy%,%CurrentThreadCount%,%RemainThreadCount%,%MaxThreads%</attribute>
         </service>
 
         <!-- org.apache.catalina.Managerを監視するサービス -->
         <service name="WebApplicationWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">JBossのWebアプリケーションの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3397,6 +3677,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">有効なセッション数</attribute>
                         <attribute name="Key">ActiveSessions</attribute>
                         <attribute name="ContextKey">Attributes.activeSessions</attribute>
                     </object>
@@ -3405,6 +3686,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">破棄されたセッション数</attribute>
                         <attribute name="Key">ExpiredSessions</attribute>
                         <attribute name="ContextKey">Attributes.expiredSessions</attribute>
                     </object>
@@ -3413,6 +3695,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">有効なセッション数の最大</attribute>
                         <attribute name="Key">MaxActive</attribute>
                         <attribute name="ContextKey">Attributes.maxActive</attribute>
                     </object>
@@ -3421,6 +3704,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">セッションの生存時間の平均</attribute>
                         <attribute name="Key">SessionAverageAliveTime</attribute>
                         <attribute name="ContextKey">Attributes.sessionAverageAliveTime</attribute>
                     </object>
@@ -3429,6 +3713,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">セッションの生存時間の最大</attribute>
                         <attribute name="Key">SessionMaxAliveTime</attribute>
                         <attribute name="ContextKey">Attributes.sessionMaxAliveTime</attribute>
                     </object>
@@ -3446,9 +3731,13 @@
         <service name="ConnectionPoolWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+            
+            <attribute name="Description">JBossのデータソース接続プールの監視</attribute>
+            
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
 <ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
                         <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
 </ifdef>
@@ -3458,6 +3747,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
+                        <attribute name="Description">タイムスタンプ</attribute>
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             ConnectionCount,
@@ -3471,6 +3761,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">接続プール数の最大</attribute>
                         <attribute name="Key">ConnectionCount</attribute>
                         <attribute name="ContextKey">Attributes.ConnectionCount</attribute>
                     </object>
@@ -3479,6 +3770,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">使用可能な接続数</attribute>
                         <attribute name="Key">AvailableConnectionCount</attribute>
                         <attribute name="ContextKey">Attributes.AvailableConnectionCount</attribute>
                     </object>
@@ -3487,6 +3779,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">使用中の接続数</attribute>
                         <attribute name="Key">InUseConnectionCount</attribute>
                         <attribute name="ContextKey">Attributes.InUseConnectionCount</attribute>
                     </object>
@@ -3495,6 +3788,7 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">使用中の接続数の最大</attribute>
                         <attribute name="Key">MaxConnectionsInUseCount</attribute>
                         <attribute name="ContextKey">Attributes.MaxConnectionsInUseCount</attribute>
                     </object>
