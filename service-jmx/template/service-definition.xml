@@ -2326,18 +2326,14 @@
             </invoke>
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
-                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Check">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
                         <attribute name="Description">参加メンバ数の差分</attribute>
                         <attribute name="Key">MemberSizeDelta</attribute>
                         <attribute name="ContextKey">MemberSizeDelta</attribute>
+                        <attribute name="NullToZero">true</attribute>
                         <attribute name="Target">
-                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Change">
-                                <attribute name="NullToZero">true</attribute>
-                                <attribute name="Target">
-                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
-                                        <attribute name="ContextKey">MemberSize</attribute>
-                                    </object>
-                                </attribute>
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">MemberSize</attribute>
                             </object>
                         </attribute>
                     </object>
