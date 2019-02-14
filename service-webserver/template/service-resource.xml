@@ -125,7 +125,8 @@
                  instance="template"/>
         
         <!-- 非同期送信に使用するQueueサービス -->
-        <service template="Template.Service.Publish.TCP#AsynchSendQueue"/>
+        <service template="Template.Service.Publish.TCP#AsynchSendQueue"
+                 instance="template"/>
         
         <!-- 他サーバにClientConnectionFactoryをクラスタサービスで提供するサービス -->
         <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"
