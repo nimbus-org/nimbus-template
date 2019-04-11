@@ -16,6 +16,10 @@
                  instance="template">
 
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#CommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">#ConcentrateScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSSageMakerScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             <service-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
@@ -24,6 +28,36 @@
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">#ScheduleManager</attribute>
             <depends>ScheduleManager</depends>
+</ifdef>
+            <attribute name="ScheduleExecutorServiceNames">
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+<ifdef name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+                    </constructor>
+                </object>
+            </attribute>
+<ifdef name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">
@@ -66,6 +100,7 @@
     <manager name="Template.Service.Scheduler2.ScheduleExecutor">
 
         <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
 
         <!-- 業務フローでスケジュールを処理するScheduleExecuterサービス -->
         <service name="BeanFlowScheduleExecutor"
@@ -73,6 +108,12 @@
                  instance="template">
 
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -93,6 +134,12 @@
                  code="jp.ossc.nimbus.service.scheduler2.CommandScheduleExecutorService"
                  instance="template">
 
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
@@ -107,6 +154,12 @@
                  instance="template">
 
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.CONCENTRATE_BACKUP_MANAGER_SERVICE_NAME">#ConcentrateBackupManager</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -149,6 +202,32 @@
             <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
+        </service>
+
+        <!-- AWSのSageMakerを呼び出すScheduleExecuterサービス -->
+        <service name="AWSSageMakerScheduleExecutor"
+                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSSageMakerScheduleExecutorService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.AWS_SAGEMAKER_CLIENT_BUILDER_SERVICE_NAME">#AmazonSageMakerClientBuilder</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
+            <!-- ScheduleManagerサービスのサービス名を設定する -->
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.AWS_SAGEMAKER_CLIENT_BUILDER_SERVICE_NAME">
+            <!-- AmazonSageMakerClientBuilderサービスのサービス名を設定する -->
+            <attribute name="AwsClientBuilderServiceName">${Template.Service.Scheduler2.ScheduleExecutor.AWS_SAGEMAKER_CLIENT_BUILDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleExecutor.AWS_SAGEMAKER_CLIENT_BUILDER_SERVICE_NAME}</depends>
+</ifdef>
+
         </service>
     </manager>
 
