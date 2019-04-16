@@ -70,6 +70,20 @@
             <depends>${Template.Service.Queue.SharedQueue.CONTEXT_STORE_SERVICE_NAME}</depends>
 </ifdef>
         </service>
+        
+        <!-- AWSのSimple Queue Serviceを使ったQueueサービス -->
+        <service name="AWSSQSQueue"
+                 code="jp.ossc.nimbus.service.queue.AWSSQSQueueService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Queue.AWS_SQS_CLIENT_BUILDER_SERVICE_NAME" extends="true">#AmazonSQSClientBuilder</service-property>
+            
+<ifdef name="Template.Service.Queue.AWS_SQS_CLIENT_BUILDER_SERVICE_NAME">
+            <!-- AmazonSQSClientBuilderサービスのサービス名を設定する -->
+            <attribute name="AmazonSQSClientBuilderServiceName">${Template.Service.Queue.AWS_SQS_CLIENT_BUILDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Queue.AWS_SQS_CLIENT_BUILDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
 
     </manager>
 
