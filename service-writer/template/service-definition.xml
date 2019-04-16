@@ -279,4 +279,21 @@
         </service>
         
     </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.AWS">
+        
+        <!-- データベースに出力するMessageWriterサービス -->
+        <service name="AWSLogsWriter"
+                 code="jp.ossc.nimbus.service.writer.aws.AWSLogsWriterService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Writer.MessageWriter.AWS.AWS_LOGS_CLIENT_BUILDER_SERVICE_NAME" extends="true">#AWSLogsClientBuilder</service-property>
+            
+<ifdef name="Template.Service.Writer.MessageWriter.AWS.AWS_LOGS_CLIENT_BUILDER_SERVICE_NAME">
+            <!-- AWSLogsClientBuilderサービスのサービス名を設定する -->
+            <attribute name="AwsClientBuilderServiceName">${Template.Service.Writer.MessageWriter.AWS.AWS_LOGS_CLIENT_BUILDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Writer.MessageWriter.AWS.AWS_LOGS_CLIENT_BUILDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+    </manager>
 </server>
