@@ -19,6 +19,8 @@
             <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#CommandScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">#ConcentrateScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSLambdaScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSGlueScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSSageMakerScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
@@ -41,6 +43,12 @@
 <ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
 </ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
 <ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
 </ifdef>
@@ -55,6 +63,12 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
@@ -202,6 +216,58 @@
             <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
 </ifdef>
+        </service>
+
+        <!-- AWSのLambdaを呼び出すScheduleExecuterサービス -->
+        <service name="AWSLambdaScheduleExecutor"
+                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSLambdaScheduleExecutorService "
+                 instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.AWS_LAMBDA_CLIENT_BUILDER_SERVICE_NAME">#AWSLambdaClientBuilder</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
+            <!-- ScheduleManagerサービスのサービス名を設定する -->
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.AWS_LAMBDA_CLIENT_BUILDER_SERVICE_NAME">
+            <!-- AWSLambdaClientBuilderサービスのサービス名を設定する -->
+            <attribute name="AwsClientBuilderServiceName">${Template.Service.Scheduler2.ScheduleExecutor.AWS_LAMBDA_CLIENT_BUILDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleExecutor.AWS_LAMBDA_CLIENT_BUILDER_SERVICE_NAME}</depends>
+</ifdef>
+
+        </service>
+
+        <!-- AWSのGlueを呼び出すScheduleExecuterサービス -->
+        <service name="AWSGlueScheduleExecutor"
+                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSGlueScheduleExecutorService "
+                 instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.AWS_GLUE_CLIENT_BUILDER_SERVICE_NAME">#AWSGlueClientBuilder</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
+            <!-- ScheduleManagerサービスのサービス名を設定する -->
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.AWS_GLUE_CLIENT_BUILDER_SERVICE_NAME">
+            <!-- AWSGlueClientBuilderサービスのサービス名を設定する -->
+            <attribute name="AwsClientBuilderServiceName">${Template.Service.Scheduler2.ScheduleExecutor.AWS_GLUE_CLIENT_BUILDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleExecutor.AWS_GLUE_CLIENT_BUILDER_SERVICE_NAME}</depends>
+</ifdef>
+
         </service>
 
         <!-- AWSのSageMakerを呼び出すScheduleExecuterサービス -->
