@@ -14,19 +14,19 @@
 ========================================================================-->
         <!-- アクセスジャーナル -->
         <service name="AccessJournal"
-                 code="jp.ossc.nimbus.service.journal.ThreadManagedJournalService"
+                 template="Template.Service.Journal#Journal"
                  instance="template">
-            <attribute name="EditorFinderName">#AccessJournalEditorFinder</attribute>
+            
+            <service-property name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME" extends="true">#AccessJournalEditorFinder</service-property>
+            <service-property name="Template.Service.Journal.QUEUE_SERVICE_NAME">#AccessJournalQueue</service-property>
+            
             <attribute name="WritableElementKey">Access</attribute>
             <attribute name="CategoryServiceNames">
                 #AccessNormalJournalCategory
                 #AccessErrorJournalCategory
             </attribute>
-            <attribute name="QueueServiceName">#AccessJournalQueue</attribute>
-            <depends>AccessJournalEditorFinder</depends>
             <depends>AccessNormalJournalCategory</depends>
             <depends>AccessErrorJournalCategory</depends>
-            <depends>AccessJournalQueue</depends>
         </service>
 
         <service name="AccessJournalQueue"
@@ -188,26 +188,32 @@ EditorFinderサービス
 
         <!-- アクセスジャーナルに必要な型に対応するJournalEditorサービスを検索するEditorFinderサービス -->
         <service name="AccessJournalEditorFinder"
-                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 template="Template.Service.Journal.EditorFinder#ObjectMappedEditorFinder"
                  instance="template">
-            <attribute name="EditorProperties">
-                java.lang.Object=#ObjectJournalEditor
-                [Ljava.lang.String;=#ObjectArrayJournalEditor
-                java.lang.Throwable=#ThrowableJournalEditor
-                javax.servlet.http.HttpServletRequest=#HttpServletRequestJournalEditor
-                javax.servlet.http.HttpServletResponse=#ServletResponseJournalEditor
-                javax.servlet.http.HttpSession=#HttpSessionMapJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal=#AccessRequestJournalEditor
-                byte[]=#ByteArrayJournalEditor
-            </attribute>
-            <depends>ObjectJournalEditor</depends>
-            <depends>ObjectArrayJournalEditor</depends>
-            <depends>ThrowableJournalEditor</depends>
-            <depends>HttpServletRequestJournalEditor</depends>
-            <depends>HttpSessionMapJournalEditor</depends>
-            <depends>ServletResponseJournalEditor</depends>
-            <depends>AccessRequestJournalEditor</depends>
-            <depends>ByteArrayJournalEditor</depends>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME" extends="true">#AccessJournalEditorProperties</service-property>
+            
+        </service>
+        
+        <service name="AccessJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.BYTE_ARRAY_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ByteArrayJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ThrowableJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.HTTP_SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#HttpServletRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.HTTP_SESSION_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#HttpSessionMapJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.JOURNAL_HTTP_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ServletResponseJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#AccessRequestJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectArrayJournalEditor</service-property>
+            
+<ifdef name="Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.lang.String[])">${Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+            
         </service>
 
 <!--=======================================================================
@@ -215,7 +221,7 @@ Editorサービス
 ========================================================================-->
         <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
         <service name="AccessRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#SimpleRequestMapJournalEditor"
                  instance="template">
             <attribute name="OutputRequestId">true</attribute>
             <attribute name="OutputStartTime">true</attribute>
@@ -225,21 +231,21 @@ Editorサービス
         </service>
 
         <service name="ObjectJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#MutableObjectJournalEditor"
                  instance="template"/>
 
         <service name="ObjectArrayJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ObjectArrayJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ObjectArrayJournalEditor"
                  instance="template"/>
 
         <service name="ByteArrayJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ByteArrayJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ByteArrayJournalEditor"
                  instance="template">
             <attribute name="ConvertMode">UTF-8</attribute>
         </service>
 
         <service name="HttpServletRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.HttpServletRequestMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#HttpServletRequestMapJournalEditor"
                  instance="template">
             <attribute name="OutputRemoteAddress">true</attribute>
             <attribute name="OutputRemotePort">false</attribute>
@@ -284,7 +290,7 @@ Editorサービス
         </service>
 
         <service name="ServletResponseJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.HttpServletResponseWrapperMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#HttpServletResponseWrapperMapJournalEditor"
                  instance="template">
             <attribute name="OutputBufferSize">false</attribute>
             <attribute name="OutputCharacterEncoding">false</attribute>
@@ -306,7 +312,7 @@ Editorサービス
         </service>
 
         <service name="HttpSessionMapJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.HttpSessionMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#HttpSessionMapJournalEditor"
                  instance="template">
             <attribute name="OutputId">true</attribute>
             <attribute name="OutputCreationTime">false</attribute>
@@ -317,7 +323,7 @@ Editorサービス
         </service>
 
         <service name="ThrowableJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
                  instance="template"/>
 
     </manager>
@@ -326,26 +332,27 @@ Editorサービス
 
         <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">.</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">true</manager-property>
-        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.INDENT">${\t}</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
 ========================================================================-->
         <!-- Businessジャーナル -->
         <service name="BusinessJournal"
-                 code="jp.ossc.nimbus.service.journal.ThreadManagedJournalService"
+                 template="Template.Service.Journal#Journal"
                  instance="template">
-            <attribute name="EditorFinderName">#BusinessJournalEditorFinder</attribute>
+            
+            <service-property name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME" extends="true">#BusinessJournalEditorFinder</service-property>
+            <service-property name="Template.Service.Journal.QUEUE_SERVICE_NAME">#BusinessJournalQueue</service-property>
+            
             <attribute name="WritableElementKey">Business</attribute>
             <attribute name="CategoryServiceNames">
                 #BusinessJournalCategory
                 #BusinessErrorJournalCategory
             </attribute>
-            <attribute name="QueueServiceName">#BusinessJournalQueue</attribute>
-            <depends>BusinessJournalEditorFinder</depends>
             <depends>BusinessJournalCategory</depends>
             <depends>BusinessErrorJournalCategory</depends>
-            <depends>BusinessJournalQueue</depends>
         </service>
 
         <service name="BusinessJournalQueue"
@@ -462,48 +469,60 @@ EditorFinderサービス
 
         <!-- 業務ジャーナルに必要な型に対応するJournalEditorサービスを検索するEditorFinderサービス -->
         <service name="BusinessJournalEditorFinder"
-                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 template="Template.Service.Journal.EditorFinder#ObjectMappedEditorFinder"
                  instance="template">
-            <attribute name="EditorProperties">
-                java.lang.Object=#MutableObjectJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal=#MapRequestJournalEditor
-            </attribute>
-            <depends>MutableObjectJournalEditor</depends>
-            <depends>MapRequestJournalEditor</depends>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME" extends="true">#BusinessJournalEditorProperties</service-property>
+        </service>
+        
+        <service name="BusinessJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MutableObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MapRequestJournalEditor</service-property>
         </service>
 
         <!-- 業務フロージャーナルに必要な型に対応するJournalEditorサービスを検索するEditorFinderサービス -->
         <service name="BeanFlowJournalEditorFinder"
-                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 template="Template.Service.Journal.EditorFinder#ObjectMappedEditorFinder"
                  instance="template">
-            <attribute name="EditorProperties">
-                java.lang.Object=#ObjectJournalEditor
-                java.lang.Class=#ClassJournalEditor
-                java.util.Date=#DateJournalEditor
-                java.util.List=#ListJournalEditor
-                java.lang.Throwable=#ThrowableJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal,Flow=#FlowRequestJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal,Execute=#ExecuteRequestJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal=#StepRequestJournalEditor
-                jp.ossc.nimbus.beans.dataset.DataSet=#DataSetJournalEditor
-                jp.ossc.nimbus.beans.dataset.Header=#HeaderJournalEditor
-                jp.ossc.nimbus.beans.dataset.Record=#RecordJournalEditor
-                jp.ossc.nimbus.beans.dataset.RecordList=#RecordListJournalEditor
-                jp.ossc.nimbus.servlet.BeanFlowServletContext=#BeanJournalEditor
-            </attribute>
-            <depends>ObjectJournalEditor</depends>
-            <depends>ClassJournalEditor</depends>
-            <depends>DateJournalEditor</depends>
-            <depends>ListJournalEditor</depends>
-            <depends>ThrowableJournalEditor</depends>
-            <depends>FlowRequestJournalEditor</depends>
-            <depends>StepRequestJournalEditor</depends>
-            <depends>ExecuteRequestJournalEditor</depends>
-            <depends>DataSetJournalEditor</depends>
-            <depends>HeaderJournalEditor</depends>
-            <depends>RecordJournalEditor</depends>
-            <depends>RecordListJournalEditor</depends>
-            <depends>BeanJournalEditor</depends>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME" extends="true">#BeanFlowJournalEditorProperties</service-property>
+            
+        </service>
+        
+        <service name="BeanFlowJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ClassJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#DateJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.LIST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ListJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ThrowableJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#StepRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#DataSetJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.HEADER_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#HeaderJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.RECORD_LIST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#RecordListJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.RECORD_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#RecordJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#FlowRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ExecuteRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#BeanJournalEditor</service-property>
+            
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.RequestJournal,Flow)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.RequestJournal,Execute)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.servlet.BeanFlowServletContext)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
         </service>
 
 <!--=======================================================================
@@ -511,7 +530,7 @@ Editorサービス
 ========================================================================-->
         <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
         <service name="BusinessRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#SimpleRequestMapJournalEditor"
                  instance="template">
             <attribute name="OutputRequestId">true</attribute>
             <attribute name="OutputStartTime">true</attribute>
@@ -521,11 +540,11 @@ Editorサービス
         </service>
 
         <service name="MutableObjectJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#MutableObjectJournalEditor"
                  instance="template"/>
 
         <service name="MapRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#SimpleRequestMapJournalEditor"
                  instance="template">
             <attribute name="OutputJournalKey">false</attribute>
             <attribute name="OutputRequestId">true</attribute>
@@ -536,39 +555,30 @@ Editorサービス
         </service>
 
         <service name="ObjectJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ObjectJournalEditorService"
-                 instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
-        </service>
+                 template="Template.Service.Journal.JournalEditor#ObjectJournalEditor"
+                 instance="template"/>
 
         <service name="ClassJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ClassJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ClassJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="ShortClassName">true</attribute>
         </service>
 
         <service name="DateJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.DateJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#DateJournalEditor"
                  instance="template">
             <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
         </service>
 
         <service name="ListJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ListJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ListJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="MaxSize">10</attribute>
         </service>
 
         <service name="FlowRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#SimpleRequestJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputHeader">false</attribute>
             <attribute name="OutputRequestId">false</attribute>
             <attribute name="OutputStartTime">true</attribute>
@@ -577,10 +587,8 @@ Editorサービス
         </service>
 
         <service name="StepRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#SimpleRequestJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputHeader">false</attribute>
             <attribute name="OutputRequestId">false</attribute>
             <attribute name="OutputStartTime">true</attribute>
@@ -589,10 +597,8 @@ Editorサービス
         </service>
 
         <service name="ExecuteRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#SimpleRequestJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputHeader">false</attribute>
             <attribute name="OutputRequestId">false</attribute>
             <attribute name="OutputStartTime">false</attribute>
@@ -601,52 +607,38 @@ Editorサービス
         </service>
 
         <service name="ThrowableJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
-                 instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
-        </service>
+                 template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
+                 instance="template"/>
 
         <service name="DataSetJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.DataSetJournalEditorService"
-                 instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
-        </service>
+                 template="Template.Service.Journal.JournalEditor#DataSetJournalEditor"
+                 instance="template"/>
 
         <service name="RecordJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.RecordJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#RecordJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputCSVProperties">true</attribute>
             <attribute name="SecretProperties">password</attribute>
             <attribute name="SecretString">****</attribute>
         </service>
 
         <service name="HeaderJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.HeaderJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#HeaderJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputCSVProperties">true</attribute>
             <attribute name="SecretProperties">password</attribute>
             <attribute name="SecretString">****</attribute>
         </service>
 
         <service name="RecordListJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.RecordListJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#RecordListJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="MaxSize">10</attribute>
         </service>
 
         <service name="BeanJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.BeanJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#BeanJournalEditor"
                  instance="template">
-            <attribute name="Indent">${\t}</attribute>
-            <attribute name="OutputIndent">${Template.Service.Journal.BusinessJournal.JOURNAL_INDENT}</attribute>
             <attribute name="OutputPropertyType">false</attribute>
             <attribute name="EnabledProperties">
                 jp.ossc.nimbus.servlet.BeanFlowServletContext#Input,
@@ -664,19 +656,19 @@ Editorサービス
 ジャーナルサービス
 ========================================================================-->
         <service name="AccessJournal"
-                 code="jp.ossc.nimbus.service.journal.ThreadManagedJournalService"
+                 template="Template.Service.Journal#Journal"
                  instance="template">
-            <attribute name="EditorFinderName">#AccessJournalEditorFinder</attribute>
+            
+            <service-property name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME" extends="true">#AccessJournalEditorFinder</service-property>
+            <service-property name="Template.Service.Journal.QUEUE_SERVICE_NAME">#AccessJournalQueue</service-property>
+            
             <attribute name="WritableElementKey">Access</attribute>
             <attribute name="CategoryServiceNames">
                 #AccessJournalCategory
                 #AccessErrorJournalCategory
             </attribute>
-            <attribute name="QueueServiceName">#AccessJournalQueue</attribute>
-            <depends>AccessJournalEditorFinder</depends>
             <depends>AccessJournalCategory</depends>
             <depends>AccessErrorJournalCategory</depends>
-            <depends>AccessJournalQueue</depends>
         </service>
 
         <service name="AccessJournalQueue"
@@ -811,29 +803,30 @@ WritableRecordFactoryサービス
 EditorFinderサービス
 ========================================================================-->
         <service name="AccessJournalEditorFinder"
-                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 template="Template.Service.Journal.EditorFinder#ObjectMappedEditorFinder"
                  instance="template">
-            <attribute name="EditorProperties">
-                java.lang.Object=#ObjectJournalEditor
-                java.lang.Class=#ClassJournalEditor
-                java.lang.Throwable=#ThrowableJournalEditor
-                java.util.Date=#MutableObjectJournalEditor
-                jp.ossc.nimbus.service.journal.RequestJournal=#AccessRequestJournalEditor
-                jp.ossc.nimbus.service.journal.editor.MethodJournalData=#MethodJournalEditor
-                jp.ossc.nimbus.service.journal.editor.MethodCallJournalData=#MutableObjectJournalEditor
-                jp.ossc.nimbus.service.journal.editor.MethodReturnJournalData=#MutableObjectJournalEditor
-            </attribute>
-            <depends>ObjectJournalEditor</depends>
-            <depends>ClassJournalEditor</depends>
-            <depends>ThrowableJournalEditor</depends>
-            <depends>MutableObjectJournalEditor</depends>
-            <depends>AccessRequestJournalEditor</depends>
-            <depends>MethodJournalEditor</depends>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME" extends="true">#AccessJournalEditorProperties</service-property>
+            
+        </service>
+        
+        <service name="AccessJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ClassJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ThrowableJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MutableObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#AccessRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MethodJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_CALL_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MutableObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_RETURN_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MutableObjectJournalEditor</service-property>
         </service>
 
         <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
         <service name="AccessRequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor.Map#SimpleRequestMapJournalEditor"
                  instance="template">
             <attribute name="OutputRequestId">true</attribute>
             <attribute name="OutputStartTime">true</attribute>
@@ -843,33 +836,1066 @@ EditorFinderサービス
         </service>
 
         <service name="MutableObjectJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#MutableObjectJournalEditor"
                  instance="template"/>
 
         <service name="ObjectJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ObjectJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ObjectJournalEditor"
                  instance="template"/>
 
         <service name="ClassJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ClassJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ClassJournalEditor"
                  instance="template">
             <attribute name="ShortClassName">true</attribute>
         </service>
 
         <service name="RequestJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#SimpleRequestJournalEditor"
                  instance="template"/>
 
         <service name="MethodJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.MethodJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#MethodJournalEditor"
                  instance="template">
             <attribute name="OutputItemName">false</attribute>
         </service>
 
         <service name="ThrowableJournalEditor"
-                 code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
+                 template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
                  instance="template"/>
 
+    </manager>
+    
+    <manager name="Template.Service.Journal">
+        
+        <service name="Journal"
+                 code="jp.ossc.nimbus.service.journal.ThreadManagedJournalService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME" extends="true">#Editorfinder</service-property>
+            <service-property name="Template.Service.Journal.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
+            <service-property name="Template.Service.Journal.QUEUE_SERVICE_NAME">#JournalQueue</service-property>
+            <service-property name="Template.Service.Journal.CATEGORY_SERVICE_NAME">#Category</service-property>
+            
+<ifdef name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME">
+            <attribute name="EditorFinderName">${Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.SEQUENCE_SERVICE_NAME">
+            <attribute name="SequenceServiceName">${Template.Service.Journal.SEQUENCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.SEQUENCE_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.QUEUE_SERVICE_NAME">
+            <attribute name="QueueServiceName">${Template.Service.Journal.QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.QUEUE_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.CATEGORY_SERVICE_NAME">
+            <attribute name="CategoryServiceNames">${Template.Service.Journal.CATEGORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.CATEGORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+
+    <manager name="Template.Service.Journal.EditorFinder">
+        
+        <service name="ObjectMappedEditorFinder"
+                 code="jp.ossc.nimbus.service.journal.editorfinder.ObjectMappedEditorFinderService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME">#Editorfinder</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME">#EditorProperties</service-property>
+            
+<ifdef name="Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME">
+            <attribute name="ParentEditorfinderServiceName">${Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME">
+            <attribute name="EditorProperties"><service-ref>${Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME}</service-ref></attribute>
+            <depends>${Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="EditorProperties"
+                 code="java.util.Properties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.BYTE_ARRAY_JOURNAL_EDITOR_SERVICE_NAME">#ByteArrayJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME">#ClassJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.ENUMERATION_JOURNAL_EDITOR_SERVICE_NAME">#EnumerationJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME">#ThrowableJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.LIST_JOURNAL_EDITOR_SERVICE_NAME">#ListJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.MAP_JOURNAL_EDITOR_SERVICE_NAME">#MapJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME">#DateJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME">#RequestJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_JOURNAL_EDITOR_SERVICE_NAME">#MethodJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_CALL_JOURNAL_EDITOR_SERVICE_NAME">#MethodCallJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_RETURN_JOURNAL_EDITOR_SERVICE_NAME">#MethodReturnJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.METHOD_THROW_JOURNAL_EDITOR_SERVICE_NAME">#MethodThrowJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME">#DataSetJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.HEADER_JOURNAL_EDITOR_SERVICE_NAME">#HeaderJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.RECORD_JOURNAL_EDITOR_SERVICE_NAME">#RecordJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.RECORD_LIST_JOURNAL_EDITOR_SERVICE_NAME">#RecordListJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">#ServletRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">#ServletResponseJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.JOURNAL_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">#ServletResponseWrapperJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.HTTP_SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">#HttpServletRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.HTTP_SESSION_JOURNAL_EDITOR_SERVICE_NAME">#HttpSessionJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.JOURNAL_HTTP_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">#HttpServletResponseWrapperJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.FACADE_VALUE_JOURNAL_EDITOR_SERVICE_NAME">#FacadeValueJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.UNIT_OF_WORK_JOURNAL_EDITOR_SERVICE_NAME">#UnitOfWorkJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.COMMAND_JOURNAL_EDITOR_SERVICE_NAME">#CommandJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.EditorFinder.DYNA_CLASS_JOURNAL_EDITOR_SERVICE_NAME">#DynaClassJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DYNA_BEAN_JOURNAL_EDITOR_SERVICE_NAME">#DynaBeanJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DYNA_PROPERTY_JOURNAL_EDITOR_SERVICE_NAME">#DynaPropertyJournalEditor</service-property>
+            
+<ifdef name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.lang.Object)">${Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.BYTE_ARRAY_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(byte[])">${Template.Service.Journal.EditorFinder.BYTE_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.BYTE_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.lang.Class)">${Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.ENUMERATION_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.util.Enumeration)">${Template.Service.Journal.EditorFinder.ENUMERATION_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.ENUMERATION_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.lang.Throwable)">${Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.LIST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.util.List)">${Template.Service.Journal.EditorFinder.LIST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.LIST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.MAP_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.util.Map)">${Template.Service.Journal.EditorFinder.MAP_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.MAP_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.util.Date)">${Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.RequestJournal)">${Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.METHOD_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.MethodJournalData)">${Template.Service.Journal.EditorFinder.METHOD_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.METHOD_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.METHOD_CALL_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.MethodCallJournalData)">${Template.Service.Journal.EditorFinder.METHOD_CALL_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.METHOD_CALL_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.METHOD_RETURN_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.MethodReturnJournalData)">${Template.Service.Journal.EditorFinder.METHOD_RETURN_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.METHOD_RETURN_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.METHOD_THROW_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.MethodThrowJournalData)">${Template.Service.Journal.EditorFinder.METHOD_THROW_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.METHOD_THROW_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.beans.dataset.DataSet)">${Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.HEADER_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.beans.dataset.Header)">${Template.Service.Journal.EditorFinder.HEADER_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.HEADER_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.RECORD_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.beans.dataset.Record)">${Template.Service.Journal.EditorFinder.RECORD_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.RECORD_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.RECORD_LIST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.beans.dataset.RecordList)">${Template.Service.Journal.EditorFinder.RECORD_LIST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.RECORD_LIST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(javax.servlet.ServletRequest)">${Template.Service.Journal.EditorFinder.SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(javax.servlet.ServletResponse)">${Template.Service.Journal.EditorFinder.SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.JOURNAL_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.JournalServletResponseWrapper)">${Template.Service.Journal.EditorFinder.JOURNAL_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.JOURNAL_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.HTTP_SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(javax.servlet.http.HttpServletRequest)">${Template.Service.Journal.EditorFinder.HTTP_SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.HTTP_SERVLET_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.HTTP_SESSION_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(javax.servlet.http.HttpSession)">${Template.Service.Journal.EditorFinder.HTTP_SESSION_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.HTTP_SESSION_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.JOURNAL_HTTP_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.editor.JournalHttpServletResponseWrapper)">${Template.Service.Journal.EditorFinder.JOURNAL_HTTP_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.JOURNAL_HTTP_SERVLET_RESPONSE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.FACADE_VALUE_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.ioc.FacadeValue)">${Template.Service.Journal.EditorFinder.FACADE_VALUE_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.FACADE_VALUE_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.UNIT_OF_WORK_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.ioc.UnitOfWork)">${Template.Service.Journal.EditorFinder.UNIT_OF_WORK_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.UNIT_OF_WORK_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.COMMAND_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.ioc.Command)">${Template.Service.Journal.EditorFinder.COMMAND_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.COMMAND_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.DYNA_CLASS_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(org.apache.commons.beanutils.DynaClass)">${Template.Service.Journal.EditorFinder.DYNA_CLASS_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.DYNA_CLASS_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.DYNA_BEAN_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(org.apache.commons.beanutils.DynaBean)">${Template.Service.Journal.EditorFinder.DYNA_BEAN_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.DYNA_BEAN_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.EditorFinder.DYNA_PROPERTY_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(org.apache.commons.beanutils.DynaProperty)">${Template.Service.Journal.EditorFinder.DYNA_PROPERTY_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.DYNA_PROPERTY_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="RegexClassMappedEditorFinder"
+                 code="jp.ossc.nimbus.service.journal.editorfinder.RegexClassMappedEditorFinderService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME">#Editorfinder</service-property>
+            
+<ifdef name="Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME">
+            <attribute name="ParentEditorfinderServiceName">${Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.EditorFinder.PARENT_EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+
+    <manager name="Template.Service.Journal.JournalEditor">
+        
+        <manager-property name="Template.Service.Journal.JournalEditor.INDENT">"    "</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
+        
+        <service name="BeanJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.BeanJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ByteArrayJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ByteArrayJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ClassJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ClassJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="CommandJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.CommandJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DataSetJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DataSetJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DateJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DateJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DynaBeanJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaBeanJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DynaClassJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaClassJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DynaPropertyJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaPropertyJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="EnumerationJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.EnumerationJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="FacadeValueJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.FacadeValueJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="FormatConvertJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.FormatConvertJournalEditorService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.JournalEditor.FORMAT_CONVERTER_SERVICE_NAME" extends="true">#FormatConverter</service-property>
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.FORMAT_CONVERTER_SERVICE_NAME">
+            <attribute name="FormatConverterServiceName">${Template.Service.Journal.JournalEditor.FORMAT_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.JournalEditor.FORMAT_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="HeaderJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HeaderJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpServletRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletRequestJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpServletResponseWrapperJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletResponseWrapperJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpSessionJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpSessionJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ListJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ListJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MapJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodCallJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodCallJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodReturnJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodReturnJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodThrowJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodThrowJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MutableObjectJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MutableObjectJournalEditorService"
+                 instance="template"/>
+        
+        <service name="ObjectArrayJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ObjectArrayJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ObjectJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ObjectJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ObjectKeyMapEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ObjectKeyMapEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="RecordJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.RecordJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="RecordListJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.RecordListJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletRequestJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletResponseJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletResponseWrapperJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseWrapperJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="SimpleRequestJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ThrowableJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="UnitOfWorkJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.UnitOfWorkJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Journal.JournalEditor.CSV">
+        
+        <manager-property name="Template.Service.Journal.JournalEditor.INDENT">"    "</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">,</manager-property>
+        
+        <service name="DynaBeanCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaBeanCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DynaClassCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaClassCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DynaPropertyCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaPropertyCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpServletRequestCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletRequestCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpServletResponseWrapperCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletResponseWrapperCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpSessionCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpSessionCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodCallCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodCallCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodReturnCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodReturnCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodThrowCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodThrowCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletRequestCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletRequestCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletResponseCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletResponseWrapperCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseWrapperCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="SimpleRequestCSVJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestCSVJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.CSV.CSV_SEPARATOR}</attribute>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Journal.JournalEditor.Map">
+        
+        <service name="DynaBeanMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaBeanMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="DynaClassMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DynaClassMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="HttpServletRequestMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletRequestMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="HttpServletResponseWrapperMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletResponseWrapperMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="HttpSessionMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpSessionMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="ServletRequestMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletRequestMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="ServletResponseMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="ServletResponseWrapperMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletResponseWrapperMapJournalEditorService"
+                 instance="template"/>
+        
+        <service name="SimpleRequestMapJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.SimpleRequestMapJournalEditorService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Journal.JournalEditor.JSON">
+        
+        <manager-property name="Template.Service.Journal.JournalEditor.INDENT">"    "</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
+        
+        <service name="DataSetJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.DataSetJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpServletRequestJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpServletRequestJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="HttpSessionJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.HttpSessionJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="JournalHttpServletResponseWrapperJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.JournalHttpServletResponseWrapperJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="JournalServletResponseWrapperJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.JournalServletResponseWrapperJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="JSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.JSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodCallJournalJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodCallJournalJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodJournalJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodJournalJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodReturnJournalJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodReturnJournalJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="MethodThrowJournalJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.MethodThrowJournalJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="RequestJournalJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.RequestJournalJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ServletRequestJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.ServletRequestJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
+        
     </manager>
 
 </server>

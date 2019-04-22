@@ -57,6 +57,12 @@ EditorFinderサービス
         
         <service template="Template.Service.Journal.ProxyJournal#AccessJournalEditorFinder"/>
         
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalEditorProperties"/>
+
+<!--=======================================================================
+JournalEditorサービス
+========================================================================-->
+        
         <service template="Template.Service.Journal.ProxyJournal#AccessRequestJournalEditor"/>
         
         <service template="Template.Service.Journal.ProxyJournal#MutableObjectJournalEditor"/>

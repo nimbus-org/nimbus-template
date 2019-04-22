@@ -54,7 +54,11 @@ EditorFinderサービス
         
         <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorFinder"/>
         
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorProperties"/>
+        
         <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorProperties"/>
         
 <!--=======================================================================
 Editorサービス

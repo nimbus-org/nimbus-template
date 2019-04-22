@@ -60,6 +60,8 @@ EditorFinderサービス
         
         <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorFinder"/>
         
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorProperties"/>
+        
 <!--=======================================================================
 Editorサービス
 ========================================================================-->
