@@ -33,7 +33,11 @@
         
         <service template="Template.WebServer.BusinessJournal#BusinessJournalEditorFinder"/>
         
+        <service template="Template.WebServer.BusinessJournal#BusinessJournalEditorProperties"/>
+        
         <service template="Template.WebServer.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.WebServer.BusinessJournal#BeanFlowJournalEditorProperties"/>
         
         <service template="Template.WebServer.BusinessJournal#BusinessRequestJournalEditor"/>
         

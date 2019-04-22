@@ -39,6 +39,8 @@
         
         <service template="Template.WebServer.AccessJournal#AccessJournalEditorFinder"/>
         
+        <service template="Template.WebServer.AccessJournal#AccessJournalEditorProperties"/>
+        
         <service template="Template.WebServer.AccessJournal#AccessRequestJournalEditor"/>
         
         <service template="Template.WebServer.AccessJournal#ObjectJournalEditor"/>

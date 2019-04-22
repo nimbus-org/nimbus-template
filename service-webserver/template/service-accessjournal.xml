@@ -37,6 +37,8 @@
         
         <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorFinder" instance="template"/>
         
+        <service template="Template.Service.Journal.AccessJournal#AccessJournalEditorProperties" instance="template"/>
+        
         <service template="Template.Service.Journal.AccessJournal#AccessRequestJournalEditor" instance="template"/>
         
         <service template="Template.Service.Journal.AccessJournal#ObjectJournalEditor" instance="template"/>

@@ -29,7 +29,11 @@
         
         <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorFinder" instance="template"/>
         
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorProperties" instance="template"/>
+        
         <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorProperties" instance="template"/>
         
         <service template="Template.Service.Journal.BusinessJournal#BusinessRequestJournalEditor" instance="template"/>
         
