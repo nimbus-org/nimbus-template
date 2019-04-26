@@ -220,7 +220,7 @@
 
         <!-- AWSのLambdaを呼び出すScheduleExecuterサービス -->
         <service name="AWSLambdaScheduleExecutor"
-                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSLambdaScheduleExecutorService "
+                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSLambdaScheduleExecutorService"
                  instance="template">
             
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.AWS_LAMBDA_CLIENT_BUILDER_SERVICE_NAME">#AWSLambdaClientBuilder</service-property>
@@ -246,7 +246,7 @@
 
         <!-- AWSのGlueを呼び出すScheduleExecuterサービス -->
         <service name="AWSGlueScheduleExecutor"
-                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSGlueScheduleExecutorService "
+                 code="jp.ossc.nimbus.service.scheduler2.aws.AWSGlueScheduleExecutorService"
                  instance="template">
             
             <service-property name="Template.Service.Scheduler2.ScheduleExecutor.AWS_GLUE_CLIENT_BUILDER_SERVICE_NAME">#AWSGlueClientBuilder</service-property>
