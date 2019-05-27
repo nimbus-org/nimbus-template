@@ -271,6 +271,10 @@
         <service template="Template.Service.AOP.Servlet.Interceptor#SharedContextAuthenticateStore"
                  instance="template"/>
         
+        <!-- RESTFulリクエストを処理するRestServerサービス -->
+        <service template="Template.Service.REST#RestServer"
+                 instance="template"/>
+        
     </manager>
 
 </server>
