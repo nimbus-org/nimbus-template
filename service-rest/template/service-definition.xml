@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+
+    <manager name="Template.Service.REST">
+        
+        <service name="RestServer"
+                 code="jp.ossc.nimbus.service.rest.BeanFlowRestServerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.REST.RestServer.SERVICE_DEFINITION_PATH" extends="true">./restserver-definition.xml</service-property>
+            <service-property name="Template.Service.REST.RestServer.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
+            <service-property name="Template.Service.REST.RestServer.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            <service-property name="Template.Service.REST.RestServer.JOURNAL_SERVICE_NAME">#AccessJournal</service-property>
+            <service-property name="Template.Service.REST.RestServer.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME" extends="true">#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.REST.RestServer.REQUEST_CONVERTER_JSON_SERVICE_NAME">#DataSetJSONConverter</service-property>
+            <service-property name="Template.Service.REST.RestServer.REQUEST_CONVERTER_XML_SERVICE_NAME">#DataSetXMLConverter</service-property>
+            <service-property name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_JSON_SERVICE_NAME">#DataSetJSONConverter</service-property>
+            <service-property name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_XML_SERVICE_NAME">#DataSetXMLConverter</service-property>
+            
+            <attribute name="ServerDifinitionPath">${Template.Service.REST.RestServer.SERVICE_DEFINITION_PATH}</attribute>
+            <attribute name="Validate">true</attribute>
+            
+<ifdef name="Template.Service.REST.RestServer.SEQUENCE_SERVICE_NAME">
+            <attribute name="SequenceServiceName">${Template.Service.REST.RestServer.SEQUENCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.SEQUENCE_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ContextServiceName">${Template.Service.REST.RestServer.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.REST.RestServer.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.REST.RestServer.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.REQUEST_CONVERTER_JSON_SERVICE_NAME">
+            <attribute name="RequestConverterServiceName(application/json)">${Template.Service.REST.RestServer.REQUEST_CONVERTER_JSON_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.REQUEST_CONVERTER_JSON_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.REQUEST_CONVERTER_XML_SERVICE_NAME">
+            <attribute name="RequestConverterServiceName(application/xml)">${Template.Service.REST.RestServer.REQUEST_CONVERTER_XML_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.REQUEST_CONVERTER_XML_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_JSON_SERVICE_NAME">
+            <attribute name="ResponseConverterServiceName(application/json)">${Template.Service.REST.RestServer.RESPONSE_CONVERTER_JSON_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.RESPONSE_CONVERTER_JSON_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_XML_SERVICE_NAME">
+            <attribute name="ResponseConverterServiceName(application/xml)">${Template.Service.REST.RestServer.RESPONSE_CONVERTER_XML_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.REST.RestServer.RESPONSE_CONVERTER_XML_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+
+    </manager>
+
+</server>
