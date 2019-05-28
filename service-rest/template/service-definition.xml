@@ -21,7 +21,7 @@
             <service-property name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_JSON_SERVICE_NAME">#DataSetJSONConverter</service-property>
             <service-property name="Template.Service.REST.RestServer.RESPONSE_CONVERTER_XML_SERVICE_NAME">#DataSetXMLConverter</service-property>
             
-            <attribute name="ServerDifinitionPath">${Template.Service.REST.RestServer.SERVICE_DEFINITION_PATH}</attribute>
+            <attribute name="ServerDefinitionPath">${Template.Service.REST.RestServer.SERVICE_DEFINITION_PATH}</attribute>
             <attribute name="Validate">true</attribute>
             
 <ifdef name="Template.Service.REST.RestServer.SEQUENCE_SERVICE_NAME">
