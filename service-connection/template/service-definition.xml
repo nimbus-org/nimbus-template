@@ -198,6 +198,37 @@
 
     </manager>
 
+    <manager name="Template.Service.Connection.QuerySearchManager">
+
+        <service name="QuerySearchManager"
+                 code="jp.ossc.nimbus.service.connection.DefaultQuerySearchManagerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Connection.QuerySearchManager.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.QuerySearchManager.PERSISTENT_MANAGER_SERVICE_NAME" extends="true">#PersistentManager</service-property>
+            <service-property name="Template.Service.Connection.QuerySearchManager.CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+
+            <!-- データベースとの接続を取得するConnectionFactoryサービス -->
+<ifdef name="Template.Service.Connection.QuerySearchManager.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Connection.QuerySearchManager.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.QuerySearchManager.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+
+            <!-- O/R Mappingを行うPersistentManagerサービス -->
+<ifdef name="Template.Service.Connection.QuerySearchManager.PERSISTENT_MANAGER_SERVICE_NAME">
+            <attribute name="PersistentManagerServiceName">${Template.Service.Connection.QuerySearchManager.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.QuerySearchManager.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+
+            <!-- 検索結果をキャッシュするCacheMapサービス -->
+<ifdef name="Template.Service.Connection.QuerySearchManager.CACHE_MAP_SERVICE_NAME">
+            <attribute name="CacheMapServiceName">${Template.Service.Connection.QuerySearchManager.CACHE_MAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Connection.QuerySearchManager.CACHE_MAP_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+
+    </manager>
+
     <manager name="Template.Service.Connection.TableCreator">
 
         <!-- データベースに出力するMessageWriterサービス -->

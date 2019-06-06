@@ -107,7 +107,7 @@
         <service name="LogConsoleWritableRecordFactory"
                  code="jp.ossc.nimbus.service.log.LogWritableRecordFactoryService"
                  instance="template">
-            <attribute name="Format">%DATE%,%REQUEST_ID%,%PRIORITY%,[%CODE%]%MESSAGE%</attribute>
+            <attribute name="Format">%REQUEST_ID%,%PRIORITY%,[%CODE%]%MESSAGE%</attribute>
         </service>
 
 <!--=======================================================================
@@ -188,7 +188,7 @@
                  instance="template">
             <attribute name="CategoryName">FRAMEWORK</attribute>
             <attribute name="MessageWriterServiceName">#ConsoleWriter</attribute>
-            <attribute name="WritableRecordFactoryServiceName">#LogFileWritableRecordFactory</attribute>
+            <attribute name="WritableRecordFactoryServiceName">#LogConsoleWritableRecordFactory</attribute>
             <attribute name="PriorityRange">40:99</attribute>
             <depends>ConsoleWriter</depends>
             <depends>LogConsoleWritableRecordFactory</depends>
