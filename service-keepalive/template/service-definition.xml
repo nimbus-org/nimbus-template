@@ -53,6 +53,29 @@
 
     </manager>
 
+    <manager name="Template.Service.KeepAlive.Cluster.K8S.Server">
+
+        <service name="Cluster"
+                 code="jp.ossc.nimbus.service.keepalive.KubernetesClusterService"
+                 instance="template">
+            <attribute name="Port">20000</attribute>
+            <attribute name="JoinOnStart">false</attribute>
+        </service>
+        
+    </manager>
+
+    <manager name="Template.Service.KeepAlive.Cluster.K8S.Client">
+
+        <service name="Cluster"
+                 template="Template.Service.KeepAlive.Cluster.K8S.Server#Cluster"
+                 instance="template">
+            <attribute name="Client">true</attribute>
+            <attribute name="AnonymousPort">true</attribute>
+            <attribute name="JoinOnStart">true</attribute>
+        </service>
+
+    </manager>
+
     <manager name="Template.Service.KeepAlive.KeepAliveCheckerSelector.FirstAvailable">
 
         <service name="KeepAliveCheckerSelector"
