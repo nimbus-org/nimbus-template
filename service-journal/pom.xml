@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.nimbus-org</groupId>
         <artifactId>nimbus-template</artifactId>
-        <version>SNAPSHOT</version>
+        <version>1-SNAPSHOT</version>
     </parent>
     <groupId>com.github.nimbus-org</groupId>
     <artifactId>nimbus-template-service-journal</artifactId>

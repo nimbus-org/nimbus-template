@@ -4,7 +4,7 @@
     <groupId>com.github.nimbus-org</groupId>
     <artifactId>nimbus-template</artifactId>
     <packaging>pom</packaging>
-    <version>SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
     <name>nimbus</name>
     <description>Nimbus Framework</description>
     <url>https://github.com/nimbus-org/nimbus-template</url>
@@ -52,4 +52,116 @@
             <organizationUrl>https://github.com/nimbus-org</organizationUrl>
         </developer>
     </developers>
+    <dependencies>
+        
+        <dependency>
+            <groupId>com.github.nimbus-org</groupId>
+            <artifactId>nimbus</artifactId>
+            <version>1.2.5-SNAPSHOT</version>
+        </dependency>
+        
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="build.xml" target="package_all" inheritRefs="true" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+<!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeScope>provided</excludeScope>
+                            <outputDirectory>
+                                ${basedir}/target/service_all/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+-->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.nimbus-org</groupId>
+                        <artifactId>nimbus</artifactId>
+                        <version>1.2.5-SNAPSHOT</version>
+                        <!-- Nimbus‚ªˆË‘¶‚µ‚Ä‚¢‚é‚·‚×‚Ä‚Ìjar‚ðˆê’UœŠO(‘‚©‚È‚¢‚Æ‘S•”“ü‚é) -->
+                        <exclusions>
+                            <exclusion>
+                                <groupId>*</groupId>
+                                <artifactId>*</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>set-custom-property</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                import java.io.*;
+                                import jp.ossc.nimbus.io.*;
+                                def fileSep = File.separator;
+                                def file = new RecurciveSearchFile('./target/template_all');
+                                def files = file.listAllTreeFiles('**/service-definition.xml');
+                                for (int i = 0; i &lt; files.length; i++) {
+                                    def toFile = new File(files[i].getAbsolutePath().replace(fileSep+'tmp'+fileSep,fileSep).replace(fileSep+'template'+fileSep,fileSep));
+                                    if(!toFile.getParentFile().exists()){
+                                        toFile.getParentFile().mkdirs();
+                                    }
+                                    RecurciveSearchFile.dataCopy(files[i],toFile);
+                                }
+                                RecurciveSearchFile.deleteAllTree(new File('./target/template_all/tmp'), true);
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>nimbus</id>
+            <name>Nimbus Maven Repository</name>
+            <url>https://nimbus-org.github.io/gh-pages/mvn</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nimbus</id>
+            <name>Nimbus Maven Repository</name>
+            <url>https://nimbus-org.github.io/gh-pages/mvn</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

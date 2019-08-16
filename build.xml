@@ -101,4 +101,20 @@
             <fileset dir="template"/>
         </copy>
     </target>
+
+    <target name="package_all">
+        
+        <delete dir="target" failonerror="false"/>
+        
+        <property name="target.dir" value="target/template_all"/>
+        
+        <mkdir dir="${target.dir}"/>
+        
+        <copy todir="${target.dir}/tmp" overwrite="true" encoding="UTF-8">
+            <fileset dir="${basedir}">
+                <include name="**/template/service-definition.xml"/>
+            </fileset>
+        </copy>
+
+    </target>
 </project>
