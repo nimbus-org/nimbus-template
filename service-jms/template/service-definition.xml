@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.JMS">
+        
+        <manager-property name="Template.Service.JMS.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        
+        <!-- JMSサーバとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSConnectionFactoryService"
+                 instance="template">
+            
+<ifdef name="Template.Service.JMS.JNDI_FINDER_SERVICE_NAME">
+            <!-- javax.jms.ConnectionFactoryをJNDIからlookupする場合に使用するJndiFinderサービスのサービス名を設定する -->
+            <attribute name="JndiFinderServiceName">${Template.Service.JMS.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- JMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSQueueConnectionFactory"
+                 template="Template.Service.JMS#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- JMSサーバのTopicとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSTopicConnectionFactory"
+                 template="Template.Service.JMS#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- JMSサーバとのセッションを生成するJMSSessionFactoryサービス -->
+        <service name="JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSConnectionFactory</service-property>
+            
+<ifdef name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME">
+            <!-- JMSサーバとの接続を生成するJMSConnectionFactoryサービスのサービス名を設定する -->
+            <attribute name="JMSConnectionFactoryServiceName">${Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- JMSサーバのQueueとのセッションを生成するJMSSessionFactoryサービス -->
+        <service name="JMSQueueSessionFactory"
+                 template="Template.Service.JMS#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSQueueConnectionFactory</service-property>
+        </service>
+        
+        <!-- JMSサーバのTopicとのセッションを生成するJMSSessionFactoryサービス -->
+        <service name="JMSTopicSessionFactory"
+                 template="Template.Service.JMS#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSTopicConnectionFactory</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.JMS.Consumer">
+        
+        <manager-property name="Template.Service.JMS.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        
+        <!-- 受信用にJMSサーバとの接続を生成するJMSConnectionFactoryサービス -->
+        <service template="Template.Service.JMS#JMSConnectionFactory"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMSConnectionFactoryService.AUTO_RECONNECT">true</service-property>
+            <service-property name="Template.Service.JMS.JMSConnectionFactoryService.CONNECTION_CACHEMAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.JMS.JMSConnectionFactoryService.JNDI_KEEP_ALIVE_CHECKER_SERVICE_NAME">#JndiFinder</service-property>
+            
+<ifdef name="Template.Service.JMS.JMSConnectionFactoryService.AUTO_RECONNECT" value="true">
+            <!-- javax.jms.Connectionの接続を自動で再接続するかどうか設定する -->
+            <attribute name="AutoReconnectMode">${Template.Service.JMS.JMSConnectionFactoryService.AUTO_RECONNECT}</attribute>
+            
+<ifdef name="Template.Service.JMS.JMSConnectionFactoryService.CONNECTION_CACHEMAP_SERVICE_NAME">
+            <!-- javax.jms.ConnectionをキャッシュするCacheMapサービスのサービス名を設定する -->
+            <attribute name="ConnectionCacheMapServiceName">${Template.Service.JMS.JMSConnectionFactoryService.CONNECTION_CACHEMAP_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JMSConnectionFactoryService.CONNECTION_CACHEMAP_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.JMS.JMSConnectionFactoryService.JNDI_KEEP_ALIVE_CHECKER_SERVICE_NAME">
+            <!-- JNDIサーバを監視するKeepAliveCheckerサービスのサービス名を設定する -->
+            <attribute name="JndiKeepAliveCheckerServiceName">${Template.Service.JMS.JMSConnectionFactoryService.JNDI_KEEP_ALIVE_CHECKER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JMSConnectionFactoryService.JNDI_KEEP_ALIVE_CHECKER_SERVICE_NAME}</depends>
+</ifdef>
+</ifdef>
+            
+            <!-- javax.jms.Connectionの接続を開始し、受信するように設定する -->
+            <attribute name="StartConnection">true</attribute>
+        </service>
+        
+        <!-- 受信用にJMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSQueueConnectionFactory"
+                 template="Template.Service.JMS.Consumer#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- 受信用にJMSサーバのTopicとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSTopicConnectionFactory"
+                 template="Template.Service.JMS.Consumer#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- 受信用にJMSサーバとのセッションを生成するJMSSessionFactoryサービス -->
+        <service template="Template.Service.JMS#JMSSessionFactory"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME">true</service-property>
+            
+            <!-- サービスの開始時に、javax.jms.Connectionを生成するかどうかを設定する -->
+            <attribute name="ConnectionCreate">true</attribute>
+        </service>
+        
+        <!-- 受信用にJMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSQueueSessionFactory"
+                 template="Template.Service.JMS.Consumer#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSQueueConnectionFactory</service-property>
+        </service>
+        
+        <!-- 受信用にJMSサーバのTopicとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSTopicSessionFactory"
+                 template="Template.Service.JMS.Consumer#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSTopicConnectionFactory</service-property>
+        </service>
+        
+        <!-- JMSサーバから受信するMessageConsumerを生成するJMSMessageConsumerFactoryサービス -->
+        <service name="JMSMessageConsumerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSMessageConsumerFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSSessionFactory</service-property>
+            <service-property name="Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME">${Template.Service.JMS.JNDI_FINDER_SERVICE_NAME}</service-property>
+            
+<ifdef name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">
+            <!-- javax.jms.Sessionを生成するJMSSessionFactoryサービスのサービス名を設定する -->
+            <attribute name="JMSSessionFactoryServiceName">${Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME">
+            <!-- 宛先をlookupするJndiFinderサービスのサービス名を設定する -->
+            <attribute name="DestinationFinderServiceName">${Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- JMSサーバのQueueから受信するjavax.jms.QueueReceiverを生成するJMSMessageConsumerFactoryサービス -->
+        <service name="JMSQueueReceiverFactory"
+                 template="Template.Service.JMS.Consumer#JMSMessageConsumerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueReceiverFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSQueueSessionFactory</service-property>
+        </service>
+        
+        <!-- JMSサーバのTopicから受信するjavax.jms.TopicSubscriberを生成するJMSMessageConsumerFactoryサービス -->
+        <service name="JMSTopicSubscriberFactory"
+                 template="Template.Service.JMS.Consumer#JMSMessageConsumerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicSubscriberFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSTopicSessionFactory</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.JMS.Producer">
+        
+        <manager-property name="Template.Service.JMS.JNDI_FINDER_SERVICE_NAME">#JndiFinder</manager-property>
+        
+        <!-- 送信用にJMSサーバとの接続を生成するJMSConnectionFactoryサービス -->
+        <service template="Template.Service.JMS#JMSConnectionFactory"
+                 instance="template">
+            
+            <!-- javax.jms.Connectionのを毎回生成するかどうかを設定する -->
+            <attribute name="SingleConnection">false</attribute>
+        </service>
+        
+        <!-- 送信用にJMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSQueueConnectionFactory"
+                 template="Template.Service.JMS.Producer#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- 送信用にJMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSTopicConnectionFactory"
+                 template="Template.Service.JMS.Producer#JMSConnectionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicConnectionFactoryService"
+                 instance="template"/>
+        
+        <!-- 送信用にJMSサーバとのセッションを生成するJMSSessionFactoryサービス -->
+        <service template="Template.Service.JMS#JMSSessionFactory"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME">true</service-property>
+            
+            <!-- サービスの開始時に、javax.jms.Connectionを生成するかどうかを設定する -->
+            <attribute name="ConnectionCreate">false</attribute>
+        </service>
+        
+        <!-- 送信用にJMSサーバのQueueとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSQueueSessionFactory"
+                 template="Template.Service.JMS.Producer#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSQueueConnectionFactory</service-property>
+        </service>
+        
+        <!-- 送信用にJMSサーバのTopicとの接続を生成するJMSConnectionFactoryサービス -->
+        <service name="JMSTopicSessionFactory"
+                 template="Template.Service.JMS.Producer#JMSSessionFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicSessionFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JMSTopicConnectionFactory</service-property>
+        </service>
+        
+        <!-- JMSサーバに送信するMessageProducerを生成するJMSMessageProducerFactoryサービス -->
+        <service name="JMSMessageProducerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSMessageProducerFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSSessionFactory</service-property>
+            <service-property name="Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME">${Template.Service.JMS.JNDI_FINDER_SERVICE_NAME}</service-property>
+            
+<ifdef name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">
+            <!-- javax.jms.Sessionを生成するJMSSessionFactoryサービスのサービス名を設定する -->
+            <attribute name="JMSSessionFactoryServiceName">${Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME">
+            <!-- 宛先をlookupするJndiFinderサービスのサービス名を設定する -->
+            <attribute name="DestinationFinderServiceName">${Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.JMS.DESTINATION_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- JMSサーバのQueueに送信するjavax.jms.QueueReceiverを生成するJMSMessageProducerFactoryサービス -->
+        <service name="JMSQueueSenderFactory"
+                 template="Template.Service.JMS.Consumer#JMSMessageProducerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSQueueSenderFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSQueueSessionFactory</service-property>
+        </service>
+        
+        <!-- JMSサーバのTopicに送信するjavax.jms.TopicPublisherを生成するJMSMessageProducerFactoryサービス -->
+        <service name="JMSTopicPublisherFactory"
+                 template="Template.Service.JMS.Consumer#JMSMessageProducerFactory"
+                 code="jp.ossc.nimbus.service.jms.JMSTopicPublisherFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.JMS.JMS_SESSION_FACTORY_SERVICE_NAME">#JMSTopicSessionFactory</service-property>
+        </service>
+        
+    </manager>
+</server>
