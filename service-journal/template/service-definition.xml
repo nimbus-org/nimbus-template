@@ -377,7 +377,7 @@ Editorサービス
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessJournalWriter</service-property>
             <attribute name="Enabled">${Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED}</attribute>
             <attribute name="WritableConditions">
-                @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]@!=null or @Business.JournalRecords.Flow[0]@!=null
+                @Business.JournalRecords.Flow[0]@!=null or @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]@!=null or @Business.JournalRecords.Validate[0].JournalRecords.Request[0].JournalRecords.Flow[0]@!=null
             </attribute>
         </service>
 
@@ -389,7 +389,7 @@ Editorサービス
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessErrorJournalWriter</service-property>
             <attribute name="Enabled">true</attribute>
             <attribute name="WritableConditions">
-                @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Business.JournalRecords.Exception[0]@!=null
+                @Business.JournalRecords.Exception[0]@!=null or @Business.JournalRecords.Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]@!=null or @Business.JournalRecords.Validate[0].JournalRecords.Request[0].JournalRecords.Exception[0]@!=null
             </attribute>
         </service>
 
@@ -401,7 +401,7 @@ WritableRecordFactoryサービス
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
             <attribute name="FormatKeyMapping">
-                ACTION_FLOW=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Flow[0]}}
+                ACTION_FLOW=Business.JournalRecords.{{Flow[0]}|{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Validate[0].JournalRecords.Request[0].JournalRecords.Flow[0]}}
             </attribute>
             <attribute name="Format">*****************************************${line.separator}%ACTION_FLOW%</attribute>
         </service>
@@ -413,8 +413,8 @@ WritableRecordFactoryサービス
             <attribute name="FormatKeyMapping">
                 DATE=Business.StartTime
                 REQUEST_ID=Business.RequestID
-                ACTION_FLOW=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Flow[0]}}
-                EXCEPTION=Business.JournalRecords.{{Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]}|{Exception[0]}}
+                ACTION_FLOW=Business.JournalRecords.{{Flow[0]}|{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Validate[0].JournalRecords.Request[0].JournalRecords.Flow[0]}}
+                EXCEPTION=Business.JournalRecords.{{Exception[0]}|{Action[0].JournalRecords.Request[0].JournalRecords.Exception[0]}|{Validate[0].JournalRecords.Request[0].JournalRecords.Exception[0]}}
             </attribute>
             <attribute name="Format">
                 時刻=%DATE%${line.separator}リクエスト通番=%REQUEST_ID%${line.separator}発生例外:%EXCEPTION%${line.separator}BeanFlowトレース:${line.separator}Action=%ACTION_FLOW%
