@@ -134,7 +134,7 @@
                                 import jp.ossc.nimbus.io.*;
                                 def fileSep = File.separator;
                                 def file = new RecurciveSearchFile('./target/template_all');
-                                def files = file.listAllTreeFiles('**/service-definition.xml');
+                                def files = file.listAllTreeFiles('**/.*');
                                 for (int i = 0; i &lt; files.length; i++) {
                                     def toFile = new File(files[i].getAbsolutePath().replace(fileSep+'tmp'+fileSep,fileSep).replace(fileSep+'template'+fileSep,fileSep));
                                     if(!toFile.getParentFile().exists()){

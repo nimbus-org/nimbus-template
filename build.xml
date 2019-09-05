@@ -112,7 +112,7 @@
         
         <copy todir="${target.dir}/tmp" overwrite="true" encoding="UTF-8">
             <fileset dir="${basedir}">
-                <include name="**/template/service-definition.xml"/>
+                <include name="**/template/*.xml"/>
             </fileset>
         </copy>
 
