@@ -11,9 +11,14 @@
                  code="jp.ossc.nimbus.service.proxy.RemoteClientService"
                  instance="template">
 
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#InterceptorChainFactory</service-property>
             <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">#InterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#Invoker</service-property>
 
+<ifdef name="Template.Service.Proxy.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">
+            <attribute name="InterceptorChainFactoryServiceName">${Template.Service.Proxy.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Proxy.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
 <ifdef name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">
             <attribute name="InterceptorChainListServiceName">${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME}</depends>

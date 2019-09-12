@@ -116,7 +116,7 @@
         <service template="Template.Service.JMS#JMSSessionFactory"
                  instance="template">
             
-            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME">true</service-property>
+            <service-property name="Template.Service.JMS.JMS_CONNECTION_FACTORY_SERVICE_NAME">#JMSConnectionFactory</service-property>
             
             <!-- サービスの開始時に、javax.jms.Connectionを生成するかどうかを設定する -->
             <attribute name="ConnectionCreate">true</attribute>
