@@ -29,7 +29,7 @@ BeanFlowサービス
             <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
         </service>
         
-        <service template="Template.Service.Template#TemplateEngine"/>
+        <service template="Template.Service.Template.Velocity#TemplateEngine"/>
         
         <service template="Template.Service.BeanControl#BeanFlowInterceptorChainFactory"/>
         

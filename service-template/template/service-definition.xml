@@ -5,9 +5,9 @@
 
 <server>
 
-    <manager name="Template.Service.Template">
-
-        <!-- テンプレートエンジンとして動作するTemplateEngineサービス -->
+    <manager name="Template.Service.Template.Velocity">
+        
+        <!-- Velocityを使ったTemplateEngineサービス -->
         <service name="TemplateEngine"
                  code="jp.ossc.nimbus.service.template.VelocityTemplateEngineService"
                  instance="template">
@@ -15,6 +15,24 @@
                 runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem
             </attribute>
         </service>
-
+        
+    </manager>
+    
+    <manager name="Template.Service.Template.Thymeleaf">
+        
+        <!-- Thymeleafを使ったTemplateEngineサービス -->
+        <service name="TemplateEngine"
+                 code="jp.ossc.nimbus.service.template.ThymeleafTemplateEngineService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Template.FreeMarker">
+        
+        <!-- FreeMarkerを使ったTemplateEngineサービス -->
+        <service name="TemplateEngine"
+                 code="jp.ossc.nimbus.service.template.FreeMarkerTemplateEngineService"
+                 instance="template"/>
+        
     </manager>
 </server>

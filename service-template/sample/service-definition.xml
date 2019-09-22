@@ -7,7 +7,7 @@
     
     <manager name="Sample.Service.Template">
         
-        <service template="Template.Service.Template#TemplateEngine">
+        <service template="Template.Service.Template.Velocity#TemplateEngine">
             <attribute name="TemplateFileRootDirectory">templates</attribute>
             <attribute name="CharacterEncoding">UTF-8</attribute>
             <attribute name="TemplateFile(sample)">sample.txt</attribute>
