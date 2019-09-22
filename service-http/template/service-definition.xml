@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.HTTP.HttpClientFactory.HttpClient">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</manager-property>
+        
+        <!-- HTTPサーバと通信するHttpClientを生成するHttpClientFactoryサービス -->
+        <service name="HttpClientFactory"
+                 code="jp.ossc.nimbus.service.http.httpclient.HttpClientFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.REQUEST_STREAM_CONVERTER_SERVICE_NAME">#StreamConverter</service-property>
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.RESPONSE_STREAM_CONVERTER_SERVICE_NAME">#StreamConverter</service-property>
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.JOURNAL_SERVICE_NAME">#AccessJournal</service-property>
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.PERFORMANCE_RECORDER_SERVICE_NAME">#PerformanceRecorder</service-property>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.REQUEST_STREAM_CONVERTER_SERVICE_NAME">
+            <attribute name="RequestStreamConverterServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.REQUEST_STREAM_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.REQUEST_STREAM_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.RESPONSE_STREAM_CONVERTER_SERVICE_NAME">
+            <attribute name="ResponseStreamConverterServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.RESPONSE_STREAM_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.RESPONSE_STREAM_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.SEQUENCE_SERVICE_NAME">
+            <attribute name="SequenceServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.SEQUENCE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.SEQUENCE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.SEMAPHORE_SERVICE_NAME">
+            <attribute name="SemaphoreServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.SEMAPHORE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.SEMAPHORE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.HttpClientFactory.HttpClient.PERFORMANCE_RECORDER_SERVICE_NAME">
+            <attribute name="PerformanceRecorderServiceName">${Template.Service.HTTP.HttpClientFactory.HttpClient.PERFORMANCE_RECORDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.HttpClientFactory.HttpClient.PERFORMANCE_RECORDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.HTTP.Proxy">
+        
+        <!-- プロキシサーバとなるサービス -->
+        <service name="ProxyServer"
+                 code="jp.ossc.nimbus.service.http.proxy.ProxyServerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME">#Process</service-property>
+            <service-property name="Template.Service.HTTP.Proxy.SERVER_SOCKET_FACTORY_SERVICE_NAME">#ServerSocketFactory</service-property>
+            
+<ifdef name="Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME">
+            <attribute name="ProcessServiceName">${Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.HTTP.Proxy.SERVER_SOCKET_FACTORY_SERVICE_NAME">
+            <attribute name="ServerSocketFactoryServiceName">${Template.Service.HTTP.Proxy.SERVER_SOCKET_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.HTTP.Proxy.SERVER_SOCKET_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.HTTP.Proxy.Process">
+        
+        <!-- テスト用のHTTP処理を行うProcessサービス -->
+        <service name="TestHttpProcess"
+                 code="jp.ossc.nimbus.service.http.proxy.TestHttpProcessService"
+                 instance="template"/>
+    </manager>
+</server>

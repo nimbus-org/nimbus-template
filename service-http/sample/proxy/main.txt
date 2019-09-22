@@ -1,0 +1,5 @@
+do{
+    Thread.sleep(1000l);
+}while(true);
+
+return "終了";

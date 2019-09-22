@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.HTTP">
+        
+        <service template="Template.Service.HTTP.HttpClientFactory.HttpClient#HttpClientFactory">
+            <service-property name="Template.Service.HTTP.HttpClientFactory.HttpClient.RESPONSE_STREAM_CONVERTER_SERVICE_NAME">#StreamConverter</service-property>
+            
+            <attribute name="Request(hello)">
+                <object code="jp.ossc.nimbus.service.http.httpclient.GetHttpRequestImpl">
+                    <attribute name="URL">http://localhost:8080/hello</attribute>
+                </object>
+            </attribute>
+        </service>
+        
+        <service name="StreamConverter"
+                 code="jp.ossc.nimbus.util.converter.BeanJSONConverter"/>
+    </manager>
+    
+</server>

@@ -1,0 +1,11 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.http.*;
+
+HttpClientFactory factory = ServiceManagerFactory.getServiceObject("Sample.Service.HTTP", "HttpClientFactory");
+
+HttpClient client = factory.createHttpClient();
+HttpRequest request = factory.createRequest("hello");
+HttpResponse response = client.executeRequest(request);
+
+print(response.getStatusCode());
+return response.getObject().toString();

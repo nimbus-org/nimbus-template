@@ -8,8 +8,6 @@
     
     <target name="test">
         
-        <antcall target="clean"/>
-        
         <property name="target.dir" value="../target/${project.name}"/>
         
         <mkdir dir="${target.dir}"/>
@@ -42,21 +40,21 @@
         
         <ac:for list="${template.service.definitions}" param="template.service.definition" xmlns:ac="antlib:net.sf.antcontrib">
             <sequential>
-                <echo file="${temp.properties.file}" append="true">template/${project.name}/@{template.service.definition};</echo>
+                <echo file="${temp.properties.file}" append="true">template/@{template.service.definition};</echo>
             </sequential>
         </ac:for>
         
-        <copy todir="${target.dir}/template/${project.name}/">
+        <copy todir="${target.dir}/template/">
             <fileset dir="template"/>
         </copy>
         
         <ac:for list="${sample.service.definitions}" param="sample.service.definition" xmlns:ac="antlib:net.sf.antcontrib">
             <sequential>
-                <echo file="${temp.properties.file}" append="true">${sample.name}/${project.name}/@{sample.service.definition};</echo>
+                <echo file="${temp.properties.file}" append="true">${sample.name}/@{sample.service.definition};</echo>
             </sequential>
         </ac:for>
         
-        <copy todir="${target.dir}/${sample.name}/${project.name}/">
+        <copy todir="${target.dir}/${sample.name}/">
             <fileset dir="${sample.name}"/>
             <fileset dir="target/classes">
                 <include name="**/*.class"/>
@@ -68,7 +66,7 @@
         <java classname="jp.ossc.nimbus.service.interpreter.BeanShellInterpreterService" fork="yes" dir="${target.dir}">
             <classpath>
                 <pathelement path="${classpath.runtime}"/>
-                <pathelement path="${target.dir}/${sample.name}/${project.name}"/>
+                <pathelement path="${target.dir}/${sample.name}"/>
             </classpath>
             <jvmarg value="-Dlocal.ip=${local.ip}"/>
             <jvmarg value="-Xdebug"/>
@@ -76,7 +74,7 @@
             <arg value="-servicepath"/>
             <arg value="${servicepath}"/>
             <arg value="-file"/>
-            <arg value="${sample.name}/${project.name}/main.txt"/>
+            <arg value="${sample.name}/main.txt"/>
             <arg value="-encoding"/>
             <arg value="UTF-8"/>
         </java>
@@ -85,7 +83,7 @@
     
     <target name="package">
         
-        <property name="target.dir" value="../target/${project.name}"/>
+        <property name="target.dir" value="../target"/>
         
         <mkdir dir="${target.dir}"/>
         
@@ -97,7 +95,7 @@
             </sequential>
         </ac:for>
         
-        <copy todir="${target.dir}/template/${project.name}/">
+        <copy todir="${target.dir}/template/">
             <fileset dir="template"/>
         </copy>
     </target>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.HTTP.Proxy">
+        
+        <service template="Template.Service.HTTP.Proxy#ProxyServer">
+            <service-property name="Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME">#TestHttpProcess</service-property>
+        </service>
+        
+        <service template="Template.Service.HTTP.Proxy.Process#TestHttpProcess">
+            <attribute name="RequestOutputFileEncoding">UTF-8</attribute>
+            <attribute name="ResponseInputFileEncoding">UTF-8</attribute>
+            <invoke name="setAction">
+                <argument>@Header.URLMatcher(.*).matches@</argument>
+                <argument>
+                    <object code="jp.ossc.nimbus.service.http.proxy.TestHttpProcessService$Action">
+                        <attribute name="RequestOutputFile">sample/proxy/request.txt</attribute>
+                        <attribute name="Header(Content-Type)">application/json;charset=UTF-8</attribute>
+                        <attribute name="ResponseBodyInputFile">sample/proxy/response.json</attribute>
+                    </object>
+                </argument>
+            </invoke>
+        </service>
+    </manager>
+    
+</server>
