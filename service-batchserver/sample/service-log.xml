@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <log manager-name="BatchServer.Log">Logger</log>
+    
+    <manager name="BatchServer.Log" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">${BatchServer.LOG_OUTPUT_PATH}</manager-property>
+        
+        <service template="Template.BatchServer.Log#Context"/>
+        
+        <service template="Template.BatchServer.Log#ThreadContext"/>
+        
+        <service template="Template.BatchServer.Log#ServerInfo"/>
+        
+        <service template="Template.BatchServer.Log#Logger"/>
+        
+        <service template="Template.BatchServer.Log#LogMessageRecordFactory"/>
+        <service template="Template.BatchServer.Log#MessageRecordFactory"/>
+        
+        <service template="Template.BatchServer.Log#LogFileWritableRecordFactory"/>
+        <service template="Template.BatchServer.Log#LogConsoleWritableRecordFactory"/>
+        
+        <service template="Template.BatchServer.Log#FrameLogWriter"/>
+        <service template="Template.BatchServer.Log#ApplLogWriter"/>
+        <service template="Template.BatchServer.Log#ConsoleWriter"/>
+        
+        <service template="Template.BatchServer.Log#FrameGroupCategory"/>
+        <service template="Template.BatchServer.Log#FrameFileCategory"/>
+        <service template="Template.BatchServer.Log#FrameConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#SysDebugGroupCategory"/>
+        <service template="Template.BatchServer.Log#SysDebugFileCategory"/>
+        <service template="Template.BatchServer.Log#SysDebugConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#SysInfoGroupCategory"/>
+        <service template="Template.BatchServer.Log#SysInfoFileCategory"/>
+        <service template="Template.BatchServer.Log#SysInfoConsoleCategory">
+            <attribute name="Enabled">true</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Log#SysWarnGroupCategory"/>
+        <service template="Template.BatchServer.Log#SysWarnFileCategory"/>
+        <service template="Template.BatchServer.Log#SysWarnConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#SysErrorGroupCategory"/>
+        <service template="Template.BatchServer.Log#SysErrorFileCategory"/>
+        <service template="Template.BatchServer.Log#SysErrorConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#SysFatalGroupCategory"/>
+        <service template="Template.BatchServer.Log#SysFatalFileCategory"/>
+        <service template="Template.BatchServer.Log#SysFatalConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComTraceGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComTraceFileCategory"/>
+        <service template="Template.BatchServer.Log#ComTraceConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComDebugGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComDebugFileCategory"/>
+        <service template="Template.BatchServer.Log#ComDebugConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComInfoGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComInfoFileCategory"/>
+        <service template="Template.BatchServer.Log#ComInfoConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComWarnGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComWarnFileCategory"/>
+        <service template="Template.BatchServer.Log#ComWarnConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComErrorGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComErrorFileCategory"/>
+        <service template="Template.BatchServer.Log#ComErrorConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ComFatalGroupCategory"/>
+        <service template="Template.BatchServer.Log#ComFatalFileCategory"/>
+        <service template="Template.BatchServer.Log#ComFatalConsoleCategory"/>
+        
+        <service template="Template.BatchServer.Log#ApplGroupCategory"/>
+        <service template="Template.BatchServer.Log#ApplFileCategory"/>
+        <service template="Template.BatchServer.Log#ApplConsoleCagegory"/>
+        
+    </manager>
+    
+</server>

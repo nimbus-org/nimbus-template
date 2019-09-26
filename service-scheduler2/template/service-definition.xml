@@ -340,7 +340,7 @@
 
     </manager>
 
-    <manager name="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB">
+    <manager name="Template.Service.Scheduler2.ScheduleManager.DB">
 
         <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
@@ -358,10 +358,6 @@
             <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
 
-<ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
-            <!-- スケジュールIDを発番するSQLを設定する -->
-            <attribute name="NextScheduleIdSelectQuery">select next value for SEQUENCE_SCHEDULE_ID from SCHEDULE_ID_SEQUENCE</attribute>
-</ifdef>
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">
             <!-- スケジュールIDを発番するSequenceサービスのサービス名を設定する -->
             <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
@@ -375,6 +371,25 @@
 </ifdef>
 
         </service>
+    </manager>
+    
+    <manager name="Template.Service.Scheduler2.ScheduleManager.DB.HSQLDB">
+
+        <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+
+        <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB#ScheduleManager"
+                 instance="template">
+
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
+            <!-- スケジュールIDを発番するSQLを設定する -->
+            <attribute name="NextScheduleIdSelectQuery">select next value for SEQUENCE_SCHEDULE_ID from SCHEDULE_ID_SEQUENCE</attribute>
+</ifdef>
+
+        </service>
 
     </manager>
 
@@ -384,32 +399,14 @@
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
 
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
-        <service name="ScheduleManager"
-                 code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB#ScheduleManager"
                  instance="template">
 
             <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
 
-<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
-            <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
-            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
-</ifdef>
-
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
             <attribute name="NextScheduleIdSelectQuery">VALUES (NEXT VALUE FOR SEQUENCE_SCHEDULE_ID)</attribute>
-</ifdef>
-<ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">
-            <!-- スケジュールIDを発番するSequenceサービスのサービス名を設定する -->
-            <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</depends>
-</ifdef>
-
-<ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
-            <!-- スケジュール監視機能をクラスタ化するクラスタサービスのサービス名を設定する -->
-            <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
 
             <attribute name="ScheduleMasterTableSchema">
@@ -435,31 +432,14 @@
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
 
         <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
-        <service name="ScheduleManager"
-                 code="jp.ossc.nimbus.service.scheduler2.DatabaseScheduleManagerService"
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB#ScheduleManager"
                  instance="template">
 
             <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
 
-<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
-            <!-- JDBCコネクションを取得するConnectionFactoryサービスのサービス名を設定する -->
-            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
-</ifdef>
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
             <attribute name="NextScheduleIdSelectQuery">SELECT nextval('sequence_schedule_id')</attribute>
-</ifdef>
-<ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">
-            <!-- スケジュールIDを発番するSequenceサービスのサービス名を設定する -->
-            <attribute name="SequenceServiceName">${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME}</depends>
-</ifdef>
-
-<ifdef name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">
-            <!-- スケジュール監視機能をクラスタ化するクラスタサービスのサービス名を設定する -->
-            <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
 </ifdef>
 
         </service>
@@ -653,7 +633,7 @@
             <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='${Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME}' AND TABLES.TABLENAME='SCHEDULE'</attribute>
             <attribute name="CreateTableQuery">
                 create table SCHEDULE(
-                    ID             VARCHAR(20) NOT NULL,
+                    ID             VARCHAR(256) NOT NULL,
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,
@@ -1042,7 +1022,7 @@
             <attribute name="ExistsTableQuery">select count(1) from INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_NAME='SCHEDULE'</attribute>
             <attribute name="CreateTableQuery">
                 create table SCHEDULE(
-                    ID             VARCHAR(20) NOT NULL,
+                    ID             VARCHAR(256) NOT NULL,
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,
@@ -1488,7 +1468,7 @@
             </attribute>
             <attribute name="CreateTableQuery">
                 create table SCHEDULE(
-                    ID             VARCHAR(20) NOT NULL,
+                    ID             VARCHAR(256) NOT NULL,
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,

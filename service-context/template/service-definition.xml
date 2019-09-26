@@ -180,7 +180,7 @@
 
     </manager>
 
-    <manager name="Template.Service.Context.ContextStore">
+    <manager name="Template.Service.Context.ContextStore.Database">
 
         <!-- コンテキストをデータベースに永続化するContextStoreサービス -->
         <service name="ContextStore"
@@ -206,6 +206,25 @@
 
     </manager>
 
+    <manager name="Template.Service.Context.ContextStore.File">
+
+        <!-- コンテキストをデータベースに永続化するContextStoreサービス -->
+        <service name="ContextStore"
+                 code="jp.ossc.nimbus.service.context.FileContextStoreService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Context.ContextStore.EXTERNALIZER_SERVICE_NAME" extends="true">#Externalizer</service-property>
+
+<ifdef name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">
+            <!-- ファイルへの直列化/非直列化を行うExternalizerサービスのサービス名を設定する -->
+            <attribute name="ExternalizerServiceName">${Template.Service.Context.ContextStore.EXTERNALIZER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Context.ContextStore.EXTERNALIZER_SERVICE_NAME}</depends>
+</ifdef>
+
+        </service>
+
+    </manager>
+    
     <manager name="Template.Service.Context.TransactionManager">
 
         <!-- 共有コンテキストのトランザクション管理を行うSharedContextTransactionManagerサービス -->

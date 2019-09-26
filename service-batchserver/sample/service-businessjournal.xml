@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="BatchServer.BusinessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">${BatchServer.LOG_OUTPUT_PATH}</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">${BatchServer.BusinessJournal.JOURNAL_ENABLED}</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournal"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalQueue"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalCategory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessErrorJournalCategory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalWritableRecordFactory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ErrorDateElement" instance="factory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ErrorThrowableElement" instance="factory"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalWriter"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessErrorJournalWriter"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalEditorFinder"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessJournalEditorProperties"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BeanFlowJournalEditorProperties"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BusinessRequestJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#MapRequestJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ClassJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#DateJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ListJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#FlowRequestJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#StepRequestJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ExecuteRequestJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#ThrowableJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#DataSetJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#RecordJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#HeaderJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#RecordListJournalEditor"/>
+        
+        <service template="Template.BatchServer.BusinessJournal#BeanJournalEditor"/>
+        
+    </manager>
+    
+</server>

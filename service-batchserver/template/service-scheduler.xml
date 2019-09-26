@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <!-- スケジューラサービス群 -->
+    <manager name="Template.BatchServer.Scheduler">
+        
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">Template.BatchServer.Resource.JDBC#ConnectionFactory</manager-property>
+        
+        <service template="Template.Service.Scheduler2.Scheduler.Default#Scheduler"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">Template.BatchServer.Resource#Sequence</service-property>
+            <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">Template.BatchServer.Log#ThreadContext</service-property>
+            
+            <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#CommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">#ConcentrateScheduleExecutor</service-property>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB.JavaDB#ScheduleManager"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">Template.BatchServer.Resource#ScheduleIdSequence</service-property>
+        </service>
+        
+        <service name="ScheduleExecutorSelector"
+                 template="Template.Service.KeepAlive.KeepAliveCheckerSelector.RoundRobin#KeepAliveCheckerSelector"
+                 instance="template">
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
+        </service>
+        
+    </manager>
+    
+    <!-- 業務フロースケジュール実行サービス群 -->
+    <manager name="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow">
+        
+        <service name="BeanFlowScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalBeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#BeanFlowScheduleExecutorInvoker</service-property>
+        </service>
+        
+        <service name="BeanFlowScheduleExecutorInvoker"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ScheduleExecutorInvoker"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME" extends="true">#ScheduleExecutorSelector</service-property>
+            <attribute name="Type"><static-field-ref code="jp.ossc.nimbus.service.scheduler2.BeanFlowScheduleExecutorServiceMBean" name="DEFAULT_EXECUTOR_TYPE"/></attribute>
+        </service>
+        
+        <service name="LocalBeanFlowScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#BeanFlowScheduleExecutor"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">Template.BatchServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+        </service>
+        
+    </manager>
+    
+    <!-- コマンドスケジュール実行サービス群 -->
+    <manager name="Template.BatchServer.Scheduler.ScheduleExecutor.Command">
+        
+        <service name="CommandScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalCommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#CommandScheduleExecutorInvoker</service-property>
+        </service>
+        
+        <service name="CommandScheduleExecutorInvoker"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ScheduleExecutorInvoker"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME" extends="true">#ScheduleExecutorSelector</service-property>
+            <attribute name="Type"><static-field-ref code="jp.ossc.nimbus.service.scheduler2.CommandScheduleExecutorServiceMBean" name="DEFAULT_EXECUTOR_TYPE"/></attribute>
+        </service>
+        
+        <service name="LocalCommandScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#CommandScheduleExecutor"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!-- 集配信スケジュール実行サービス群 -->
+    <manager name="Template.BatchServer.Scheduler.ScheduleExecutor.Concentrate">
+        
+        <service name="ConcentrateScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalConcentrateScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#ConcentrateScheduleExecutorInvoker</service-property>
+        </service>
+        
+        <service name="ConcentrateScheduleExecutorInvoker"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ScheduleExecutorInvoker"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME" extends="true">#ScheduleExecutorSelector</service-property>
+            <attribute name="Type"><static-field-ref code="jp.ossc.nimbus.service.scheduler2.ConcentrateScheduleExecutorServiceMBean" name="DEFAULT_EXECUTOR_TYPE"/></attribute>
+        </service>
+        
+        <service name="LocalConcentrateScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ConcentrateScheduleExecutor"
+                 instance="template"/>
+        
+        <service template="Template.Service.Scheduler2.ScheduleExecutor#FileConcentrateBackupManager"
+                 instance="template"/>
+        
+    </manager>
+</server>

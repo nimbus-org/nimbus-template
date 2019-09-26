@@ -6,7 +6,7 @@
 <server>
     
     <!-- 共有コンテキストサービス群 -->
-    <manager name="Template.WebServer.SharedContext">
+    <manager name="Template.BatchServer.SharedContext">
         
         <!-- データを複数のサーバで共有するSharedContextサービス -->
         <service template="Template.Service.Context.SharedContext#SharedContext"

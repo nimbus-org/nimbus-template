@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="BatchServer.Resource" shutdown-hook="true">
+        
+        <service template="Template.BatchServer.Resource#TemplateEngine"/>
+        
+        <service template="Template.BatchServer.Resource#BeanShellInterpreter"/>
+        
+        <service name="JavaScriptInterpreter"
+                 template="Template.BatchServer.Resource#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Resource#Sequence">
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</service-property>
+        </service>
+        
+        <service name="ScheduleIdSequence"
+                 template="Template.BatchServer.Resource#Sequence">
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME}</service-property>
+        </service>
+        
+        <service template="Template.Service.CodeMaster#CodeMasterFinder">
+            <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">BatchServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">BatchServer.Resource.Publish#MessageReceiver</service-property>
+            <attribute name="MasterNames">
+            </attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="BatchServer.Resource.JDBC" shutdown-hook="true">
+        
+        <service template="Template.BatchServer.Resource.JDBC#JDBCConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+        <service name="InnerConnectionFactory"
+                 template="Template.BatchServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">BatchServer.BusinessJournal#BusinessJournal</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">BatchServer.Performance.JDBC#PerformanceRecorder</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.JDBC#ConnectionResourceFactory"/>
+        
+        <service template="Template.BatchServer.Resource.JDBC#PersistentManager"/>
+        
+        <service template="Template.BatchServer.Resource.JDBC#SQLMetricsCollector"/>
+        
+    </manager>
+    
+    <manager name="BatchServer.Resource.Publish">
+        
+        <service template="Template.BatchServer.Resource.Publish#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.Publish#AsynchSendQueue"/>
+        
+        <service template="Template.BatchServer.Resource.Publish#ClusterConnectionFactory"/>
+        
+        <service template="Template.BatchServer.Resource.Publish#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterConnectionFactory</service-property>
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
+            <attribute name="MulticastPort">20002</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="BatchServer.Resource.BeanControl" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">BatchServer.BusinessJournal#BusinessJournal</manager-property>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+            <service-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">BatchServer.BusinessJournal#BeanFlowJournalEditorFinder</service-property>
+            <service-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">BatchServer.Resource#JavaScriptInterpreter</service-property>
+            <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">BatchServer.Resource#TemplateEngine</service-property>
+            <service-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</service-property>
+            
+            <depends>BatchServer.Resource.JDBC#PersistentManager</depends>
+            <depends>BatchServer.Resource.JDBC#ConnectionResourceFactory</depends>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#AsynchInvokeQueueHandlerContainer">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">#AsynchInvokeQueue</service-property>
+            <attribute name="QueueHandlerSize">100</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#AsynchInvokeQueue"/>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#BeanFlowInterceptorChainFactory"/>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#BeanFlowInterceptorChainList"/>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#JournalInterceptor">
+            <attribute name="BushingCallBlock">true</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#BeanFlowMetricsInterceptor">
+            <service-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">BatchServer.Performance.BeanFlow#PerformanceRecorder</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Resource.BeanControl#BeanFlowExceptionHandlingInterceptor">
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>#DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 template="Template.BatchServer.Resource.BeanControl#ExceptionHandler">
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
+            <attribute name="LogMessageCode">LOG_MSG_001</attribute>
+        </service>
+        
+    </manager>
+    
+</server>

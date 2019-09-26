@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.BatchServer.BusinessJournal" shutdown-hook="true">
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournal" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalQueue" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ErrorDateElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ErrorThrowableElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessErrorJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorFinder" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessJournalEditorProperties" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorFinder" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanFlowJournalEditorProperties" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BusinessRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#MutableObjectJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#MapRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ObjectJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ClassJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#DateJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ListJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#FlowRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#StepRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ExecuteRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#ThrowableJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#DataSetJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#RecordJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#HeaderJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#RecordListJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.BusinessJournal#BeanJournalEditor" instance="template"/>
+        
+    </manager>
+    
+</server>

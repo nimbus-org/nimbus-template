@@ -14,7 +14,7 @@
             <attribute name="LoadOnStart">true</attribute>
         </service>
         
-        <service template="Template.Service.Context.ContextStore#ContextStore">
+        <service template="Template.Service.Context.ContextStore.Database#ContextStore">
             <service-property name="Template.Service.Context.ContextStore.CONNECTION_FAC_SERVICE_NAME">Sample.Service.Connection#ConnectionFactory</service-property>
             
             <invoke name="addDatabaseMapping">

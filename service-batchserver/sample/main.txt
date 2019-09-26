@@ -1,0 +1,33 @@
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.system.Time;
+import jp.ossc.nimbus.service.scheduler2.*;
+
+ScheduleManager scheduleManager = ServiceManagerFactory.getServiceObject("BatchServer.Scheduler", "ScheduleManager");
+Time time = ServiceManagerFactory.getServiceObject("BatchServer.Scheduler", "Time");
+java.util.List schedules = null;
+try{
+do{
+    schedules = scheduleManager.findSchedules(
+        new int[]{
+            Schedule.STATE_INITIAL,
+            Schedule.STATE_ENTRY,
+            Schedule.STATE_RUN,
+            Schedule.STATE_RETRY
+        }
+    );
+    StringBuilder buf = new StringBuilder();
+    if(schedules.size() != 0){
+        for(int i = 0; i < schedules.size(); i++){
+            buf.append(schedules.get(i).getMasterId());
+            if(i != schedules.size() - 1){
+                buf.append(',');
+            }
+        }
+    }
+    Thread.sleep(1000);
+    System.out.println(new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(time.currentTimeMillis())) + "=>" + buf);
+}while(schedules.size() != 0);
+}catch(Exception e){
+    e.printStackTrace();
+}
+return "終了";

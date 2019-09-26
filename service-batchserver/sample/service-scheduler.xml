@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <!-- スケジューラサービス群 -->
+    <manager name="BatchServer.Scheduler">
+        
+        <manager-property name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</manager-property>
+        <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">BatchServer.Server#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">BatchServer.Resource.JDBC#InnerConnectionFactory</manager-property>
+        
+        <service template="Template.BatchServer.Scheduler#Scheduler">
+            <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">BatchServer.Resource#Sequence</service-property>
+            <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</service-property>
+            
+            <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
+            
+            <attribute name="ControlCluster">false</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Scheduler#ScheduleManager">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">BatchServer.Resource#ScheduleIdSequence</service-property>
+            
+            <attribute name="TimeServiceName">#Time</attribute>
+            <depends>Time</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleMasterTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleDependsMasterTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleGroupDependsMasterTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleGroupMasterTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleGroupTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleDependsTableCreator</depends>
+            <depends>BatchServer.Scheduler.TableCreator#ScheduleGroupDependsTableCreator</depends>
+        </service>
+        
+        <service name="Time"
+                 code="jp.ossc.nimbus.service.system.DefaultTimeService">
+            <attribute name="Time">NOW/NOW/NOW 07:59:55 000</attribute>
+        </service>
+        
+        <service template="Template.BatchServer.Scheduler#ScheduleExecutorSelector">
+            <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
+        </service>
+        
+        <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#BeanFlowScheduleExecutor"/>
+        <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#BeanFlowScheduleExecutorInvoker"/>
+        <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#LocalBeanFlowScheduleExecutor">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.BEAN_FLOW_INVOKER_FACTORY_SERVICE_NAME">BatchServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="BatchServer.Scheduler.TableCreator">
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">BatchServer.Resource.JDBC#InnerConnectionFactory</manager-property>
+        <manager-property name="Template.Service.Scheduler2.TableCreator.JavaDB.SCHEMA_NAME">APP</manager-property>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_depends_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupDependsMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_depends_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupMasterTableCreator">
+            <attribute name="InsertRecordsFilePath">schedule_group_master.csv</attribute>
+        </service>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleDependsTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#ScheduleGroupDependsTableCreator"/>
+        
+        <service template="Template.Service.Scheduler2.TableCreator.JavaDB#RecordListConverter"/>
+    </manager>
+</server>

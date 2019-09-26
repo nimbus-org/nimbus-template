@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <property file="build.properties"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <import file="../build.xml"/>
+    <property name="project.name" value="service-batchserver"/>
+    <property name="project.dependencies" value="service-queue,service-writer,service-context,service-log,service-journal,service-connection,service-performance,service-jndi,service-publish,service-interpreter,service-keepalive,service-codemaster,service-beancontrol,service-sequence,service-performance,service-system,service-template,service-aop,service-proxy,service-scheduler2"/>
+    <property name="template.service.definitions" value="service-log.xml,service-businessjournal.xml,service-performance.xml,service-resource.xml,service-scheduler.xml,service-server.xml"/>
+    <property name="sample.service.definitions" value="service-properties.xml,service-log.xml,service-businessjournal.xml,service-performance.xml,service-resource.xml,service-scheduler.xml,service-server.xml"/>
+    
+    <!-- target処理は../build.xmlに記載 -->
+    
+</project>
