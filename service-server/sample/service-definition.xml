@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Sample.Service.Server" shutdown-hook="true">
+        
+        <service template="Template.Service.Server#Server">
+            
+            <!-- リクエストの実装クラスを設定する -->
+            <attribute name="RequestClass">jp.ossc.nimbus.service.server.ActionRequest</attribute>
+            
+            <!-- レスポンスの実装クラスを設定する -->
+            <attribute name="ResponseClass">jp.ossc.nimbus.service.server.StatusResponse</attribute>
+        </service>
+        
+        <service template="Template.Service.Queue.QueueHandlerContainer#QueueHandlerContainer">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">#BeanFlowInvokerCallQueueHandler</service-property>
+            <attribute name="QueueHandlerSize">5</attribute>
+        </service>
+        
+        <service template="Template.Service.Server#BeanFlowInvokerCallQueueHandler">
+            <service-property name="Template.Service.Server.BeanFlowInvokerCallQueueHandlerService.REQUEST_STREAM_CONVERTER_SERVICE_NAME">#DataSetJSONConverter</service-property>
+            <service-property name="Template.Service.Server.BeanFlowInvokerCallQueueHandlerService.RESPONSE_STREAM_CONVERTER_SERVICE_NAME">#DataSetJSONConverter</service-property>
+        </service>
+        
+        <service template="Template.Service.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+        </service>
+        
+        <service name="DataSetJSONConverter"
+                 code="jp.ossc.nimbus.util.converter.DataSetJSONConverter">
+            <attribute name="OutputSchema">false</attribute>
+        </service>
+        
+    </manager>
+    
+</server>
