@@ -1,0 +1,1033 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.Test.TestController">
+        
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
+        
+        <service name="TestController"
+                 code="jp.ossc.nimbus.service.test.TestControllerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_FILE_BASE_DIR" extends="true">resource</service-property>
+            <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME" extends="true">#TestResourceManager</service-property>
+            <service-property name="Template.Service.Test.TestController.STUB_RESOURCE_MANAGER_SERVICE_NAME">#StubResourceManager</service-property>
+            
+            <attribute name="TestResourceFileBaseDirectory">${Template.Service.Test.OUTPUT_DIR}/${Template.Service.Test.TestController.TEST_RESOURCE_FILE_BASE_DIR}</attribute>
+            
+<ifdef name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="TestResourceManagerServiceName">${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestController.STUB_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="StubResourceManagerServiceName">${Template.Service.Test.TestController.STUB_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.STUB_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestController.HTTP.Client">
+        
+        <service name="TestController"
+                 code="jp.ossc.nimbus.service.test.HttpTestControllerClientService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#TestResourceManager</service-property>
+            <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">#TestResourceManager</service-property>
+            <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_FILE_BASE_DIR" extends="true">resource</service-property>
+            
+<ifdef name="Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="HttpClientFactoryServiceName">${Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="TestResourceManagerServiceName">${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+            
+            <attribute name="TestResourceFileBaseDirectory">${Template.Service.Test.TestController.TEST_RESOURCE_FILE_BASE_DIR}</attribute>
+</ifdef>
+        </service>
+        
+        <service template="Template.Service.HTTP.HttpClientFactory.HttpClient#HttpClientFactory"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestController.HTTP.URL" extends="true">http://localhost</service-property>
+            
+            <attribute name="Request(template)">
+                <object code="jp.ossc.nimbus.service.http.httpclient.GetHttpRequestImpl">
+                    <attribute name="URL">${Template.Service.Test.TestController.HTTP.URL}</attribute>
+                </object>
+            </attribute>
+            
+            <attribute name="Request(upload)">
+                <object code="jp.ossc.nimbus.service.http.httpclient.PostHttpRequestImpl">
+                    <attribute name="URL">${Template.Service.Test.TestController.HTTP.URL}</attribute>
+                </object>
+            </attribute>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestController.HTTP.Server">
+        
+        <service name="TestControllerServer"
+                 template="Template.Service.HTTP.Proxy#ProxyServer"
+                 instance="template">
+            <service-property name="Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME" extends="true">#TestControllerProcess</service-property>
+        </service>
+        
+        <service name="TestControllerProcess"
+                 code="jp.ossc.nimbus.service.test.HttpTestControllerServerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestController.HTTP.TEST_CONTROLLER_SERVICE_NAME" extends="true">#TestController</service-property>
+            <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">#TestResourceManager</service-property>
+            
+<ifdef name="Template.Service.Test.TestController.HTTP.TEST_CONTROLLER_SERVICE_NAME">
+            <attribute name="TestControllerServiceName">${Template.Service.Test.TestController.HTTP.TEST_CONTROLLER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.HTTP.TEST_CONTROLLER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="TestResourceManagerServiceName">${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestReporter">
+        
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
+        <manager-property name="Template.Service.Test.TestReporter.OUTPUT_DIR">${Template.Service.Test.OUTPUT_DIR}/report</manager-property>
+        
+        <service name="ConsoleTestEstimateReporter"
+                 code="jp.ossc.nimbus.service.test.report.ConsoleTestEstimateReporterService"
+                 instance="template"/>
+        
+        <service name="CSVTestEstimateReporter"
+                 code="jp.ossc.nimbus.service.test.report.CSVTestEstimateReporterService"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestReporter.CSVTestEstimateReporterService.OUTPUT_FILE" extends="true">estimate.csv</service-property>
+            
+            <attribute name="OutputFile">${Template.Service.Test.TestReporter.OUTPUT_DIR}/${Template.Service.Test.TestReporter.CSVTestEstimateReporterService.OUTPUT_FILE}</attribute>
+        </service>
+        
+        <service name="HtmlTestCaseProgressReporter"
+                 code="jp.ossc.nimbus.service.test.report.HtmlTestCaseProgressReporterService"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestReporter.HtmlTestCaseProgressReporterService.OUTPUT_PATH" extends="true">html/progress</service-property>
+            
+            <attribute name="OutputPath">${Template.Service.Test.TestReporter.OUTPUT_DIR}/${Template.Service.Test.TestReporter.HtmlTestCaseProgressReporterService.OUTPUT_PATH}</attribute>
+        </service>
+        
+        <service name="MSProjectTestReporter"
+                 code="jp.ossc.nimbus.service.test.report.MSProjectTestReporterService"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestReporter.MSProjectTestReporterService.OUTPUT_FILE" extends="true">progress.xml</service-property>
+            
+            <attribute name="OutputFile">${Template.Service.Test.TestReporter.OUTPUT_DIR}/${Template.Service.Test.TestReporter.MSProjectTestReporterService.OUTPUT_FILE}</attribute>
+        </service>
+        
+        <service name="ConsoleTestReporter"
+                 code="jp.ossc.nimbus.service.test.report.ConsoleTestReporterService"
+                 instance="template"/>
+        
+        <service name="CSVTestReporter"
+                 code="jp.ossc.nimbus.service.test.report.CSVTestReporterService"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestReporter.CSVTestReporterService.OUTPUT_FILE" extends="true">result.csv</service-property>
+            
+            <attribute name="OutputFile">${Template.Service.Test.TestReporter.OUTPUT_DIR}/${Template.Service.Test.TestReporter.CSVTestReporterService.OUTPUT_FILE}</attribute>
+        </service>
+        
+        <service name="HtmlTestReporter"
+                 code="jp.ossc.nimbus.service.test.report.HtmlTestReporterService"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestReporter.HtmlTestReporterService.OUTPUT_PATH" extends="true">html/result</service-property>
+            
+            <attribute name="OutputPath">${Template.Service.Test.TestReporter.OUTPUT_DIR}/${Template.Service.Test.TestReporter.HtmlTestReporterService.OUTPUT_PATH}</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestResourceManager.Local">
+        
+        <service name="TestResourceManager"
+                 code="jp.ossc.nimbus.service.test.resource.LocalTestResourceManagerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.TEST_RESOURCE_DIR" extends="true">resource</service-property>
+            
+            <attribute name="TestResourceDirectory">${Template.Service.Test.TestResourceManager.TEST_RESOURCE_DIR}</attribute>
+            
+<ifdef name="Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME">
+            <attribute name="TemplateEngineServiceName">${Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestResourceManager.CVS">
+        
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
+        
+        <service template="Template.Service.Test.TestResourceManager.Local#TestResourceManager"
+                 code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.TEST_RESOURCE_DIR" extends="true">resource</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.CHECKOUT_DIR" extends="true">checkout</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.USER_NAME">anonymous</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.PASSWORD"></service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.SERVER_NAME">cvs.osdn.net</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.PORT">2401</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.REPOSITORY_PATH" extends="true">/cvsroot/nimbus</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.MODULE_PATH" extends="true">nimbus</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.CVS.METHOD" extends="true">pserver</service-property>
+            
+            <attribute name="CvsCheckOutDirectory">${Template.Service.Test.OUTPUT_DIR}/${Template.Service.Test.TestResourceManager.CVS.CHECKOUT_DIR}</attribute>
+            
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.USER_NAME">
+            <attribute name="UserName">${Template.Service.Test.TestResourceManager.CVS.USER_NAME}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.PASSWORD">
+            <attribute name="Password">${Template.Service.Test.TestResourceManager.CVS.PASSWORD}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.SERVER_NAME">
+            <attribute name="ServerName">${Template.Service.Test.TestResourceManager.CVS.SERVER_NAME}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.PORT">
+            <attribute name="Port">${Template.Service.Test.TestResourceManager.CVS.PORT}</attribute>
+</ifdef>
+            <attribute name="RepositoryPath">${Template.Service.Test.TestResourceManager.CVS.REPOSITORY_PATH}</attribute>
+            <attribute name="ModulePath">${Template.Service.Test.TestResourceManager.CVS.MODULE_PATH}</attribute>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.METHOD" value="ext">
+            <attribute name="Method"><static-field-ref code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerServiceMBean" name="METHOD_EXT"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.METHOD" value="local">
+            <attribute name="Method"><static-field-ref code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerServiceMBean" name="METHOD_LOCAL"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.METHOD" value="lserver">
+            <attribute name="Method"><static-field-ref code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerServiceMBean" name="METHOD_LSERVER"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.METHOD" value="pserver">
+            <attribute name="Method"><static-field-ref code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerServiceMBean" name="METHOD_PSERVER"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.CVS.METHOD" value="sspi">
+            <attribute name="Method"><static-field-ref code="jp.ossc.nimbus.service.test.resource.CVSTestResourceManagerServiceMBean" name="METHOD_SSPI"/></attribute>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestResourceManager.SVN">
+        
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
+        
+        <service template="Template.Service.Test.TestResourceManager.Local#TestResourceManager"
+                 code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.TEST_RESOURCE_DIR" extends="true">resource</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.CHECKOUT_DIR" extends="true">checkout</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.SERVER_NAME" extends="true">svn.osdn.net</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.PORT">3690</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.REPOSITORY_PATH" extends="true">/svnroot/nimbus2</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" extends="true">svn</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.TARGET_BRANCH">HEAD</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.SVN.TARGET_TAG">tag</service-property>
+            
+            <attribute name="SvnCheckOutDirectory">${Template.Service.Test.OUTPUT_DIR}/${Template.Service.Test.TestResourceManager.SVN.CHECKOUT_DIR}</attribute>
+            
+            <attribute name="ServerName">${Template.Service.Test.TestResourceManager.SVN.SERVER_NAME}</attribute>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PORT">
+            <attribute name="Port">${Template.Service.Test.TestResourceManager.SVN.PORT}</attribute>
+</ifdef>
+            <attribute name="RepositoryPath">${Template.Service.Test.TestResourceManager.SVN.REPOSITORY_PATH}</attribute>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" value="svn">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerServiceMBean" name="PROTOCOL_SVN"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" value="http">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerServiceMBean" name="PROTOCOL_HTTP"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" value="https">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerServiceMBean" name="PROTOCOL_HTTPS"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" value="svn+ssh">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerServiceMBean" name="PROTOCOL_SVN_SSH"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.PROTOCOL" value="file">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.SVNTestResourceManagerServiceMBean" name="PROTOCOL_FILE"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.TARGET_BRANCH">
+            <attribute name="TargetBranch">${Template.Service.Test.TestResourceManager.SVN.TARGET_BRANCH}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.SVN.TARGET_TAG">
+            <attribute name="TargetTag">${Template.Service.Test.TestResourceManager.SVN.TARGET_TAG}</attribute>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestResourceManager.Git">
+        
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
+        
+        <service template="Template.Service.Test.TestResourceManager.Local#TestResourceManager"
+                 code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestResourceManager.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.TEST_RESOURCE_DIR" extends="true">resource</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.CHECKOUT_DIR" extends="true">checkout</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.SERVER_NAME" extends="true">github.com</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.PORT">9418</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.REPOSITORY_PATH" extends="true">nimbus-org/nimbus.git</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" extends="true">git</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.TARGET_BRANCH">master</service-property>
+            <service-property name="Template.Service.Test.TestResourceManager.Git.TARGET_TAG">tag</service-property>
+            
+            <attribute name="GitCheckOutDirectory">${Template.Service.Test.OUTPUT_DIR}/${Template.Service.Test.TestResourceManager.Git.CHECKOUT_DIR}</attribute>
+            
+            <attribute name="ServerName">${Template.Service.Test.TestResourceManager.Git.SERVER_NAME}</attribute>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PORT">
+            <attribute name="Port">${Template.Service.Test.TestResourceManager.Git.PORT}</attribute>
+</ifdef>
+            <attribute name="RepositoryPath">${Template.Service.Test.TestResourceManager.Git.REPOSITORY_PATH}</attribute>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" value="git">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerServiceMBean" name="PROTOCOL_GIT"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" value="http">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerServiceMBean" name="PROTOCOL_HTTP"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" value="https">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerServiceMBean" name="PROTOCOL_HTTPS"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" value="ssh">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerServiceMBean" name="PROTOCOL_SSH"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.PROTOCOL" value="file">
+            <attribute name="Protocol"><static-field-ref code="jp.ossc.nimbus.service.test.resource.GitTestResourceManagerServiceMBean" name="PROTOCOL_FILE"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.TARGET_BRANCH">
+            <attribute name="TargetBranch">${Template.Service.Test.TestResourceManager.Git.TARGET_BRANCH}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestResourceManager.Git.TARGET_TAG">
+            <attribute name="TargetTag">${Template.Service.Test.TestResourceManager.Git.TARGET_TAG}</attribute>
+</ifdef>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TemplateEngine.Velocity">
+        
+        <service name="TemplateEngine"
+                 code="jp.ossc.nimbus.service.test.resource.VelocityTemplateEngineService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TemplateEngine.TEMPLATE_RESOURCE_DIR" extends="true">template</service-property>
+            
+            <attribute name="TemplateResourceDirectory">${Template.Service.Test.TemplateEngine.TEMPLATE_RESOURCE_DIR}</attribute>
+            
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.StubResourceManager.Local">
+        
+        <service name="StubResourceManager"
+                 code="jp.ossc.nimbus.service.test.resource.LocalStubResourceManagerService"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.Stub.HTTP">
+        
+        <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
+        
+        <service name="TestStub"
+                 code="jp.ossc.nimbus.service.test.stub.http.HttpTestStubService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.Stub.ID">WebServer</service-property>
+            <service-property name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">#StubResourceManager</service-property>
+            <service-property name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="Id">${Template.Service.Test.Stub.ID}</attribute>
+            
+<ifdef name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="StubResourceManagerServiceName">${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+        </service>
+        
+        <service template="Template.Service.HTTP.Proxy#ProxyServer"
+                 instance="template">
+            <service-property name="Template.Service.HTTP.Proxy.PROCESS_SERVICE_NAME">#TestStub</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.Stub.Proxy">
+        
+        <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
+        
+        <service name="TestStub"
+                 code="jp.ossc.nimbus.service.test.stub.proxy.RemoteServiceTestStubService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.Stub.ID">RemoteServer</service-property>
+            <service-property name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">#StubResourceManager</service-property>
+            <service-property name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="Id">${Template.Service.Test.Stub.ID}</attribute>
+            
+<ifdef name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="StubResourceManagerServiceName">${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+        </service>
+        
+        <service template="Template.Service.Proxy.Client#RemoteClient"
+                 instance="template">
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME">#TestStub</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.Stub.TCP">
+        
+        <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
+        
+        <service name="TestStub"
+                 code="jp.ossc.nimbus.service.test.stub.tcp.TCPTextTestStubService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.Stub.ID">TCPServer</service-property>
+            <service-property name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">#StubResourceManager</service-property>
+            <service-property name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="Id">${Template.Service.Test.Stub.ID}</attribute>
+            
+<ifdef name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">
+            <attribute name="StubResourceManagerServiceName">${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+        </service>
+        
+        <service template="Template.Service.Server#Server"
+                 instance="template"/>
+        
+        <service template="Template.Service.Queue.QueueHandlerContainer#QueueHandlerContainer"
+                 instance="template">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_HANDLER_SERVICE_NAME">#TestStub</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.TestAction">
+        
+        <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
+        
+        <service name="CodeMasterNotifyAction"
+                 code="jp.ossc.nimbus.service.test.action.CodeMasterNotifyActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JMS_TOPIC_SESSION_FACTORY_SERVICE_NAME">#JMSTopicSessionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">ServerConnectionFactory</service-property>
+            
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SUBJECT">CodeMaster</service-property>
+            
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME">
+            <attribute name="JndiFinderServiceName">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JMS_TOPIC_SESSION_FACTORY_SERVICE_NAME">
+            <attribute name="JMSTopicSessionFactoryServiceName">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.JMS_TOPIC_SESSION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.CodeMasterNotifyActionService.JMS_TOPIC_SESSION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.TOPIC_NAME">
+            <attribute name="TopicName">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.TOPIC_NAME}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SUBJECT">
+            <attribute name="Subject">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.SUBJECT}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.CodeMasterNotifyActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.CodeMasterNotifyActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="CommandExecuteAction"
+                 code="jp.ossc.nimbus.service.test.action.CommandExecuteActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="SSHCommandExecuteAction"
+                 code="jp.ossc.nimbus.service.test.action.SSHCommandExecuteActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.HOST_NAME" extends="true">localhost</service-property>
+            <service-property name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.PORT" extends="true">22</service-property>
+            <service-property name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.USER_NAME" extends="true">user</service-property>
+            <service-property name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.PASSWORD">password</service-property>
+            <service-property name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.PEM_FILE">key.pem</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+            <attribute name="HostName">${Template.Service.Test.TestAction.SSHCommandExecuteActionService.HOST_NAME}</attribute>
+            <attribute name="Port">${Template.Service.Test.TestAction.SSHCommandExecuteActionService.PORT}</attribute>
+            <attribute name="UserName">${Template.Service.Test.TestAction.SSHCommandExecuteActionService.USER_NAME}</attribute>
+<ifdef name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.PASSWORD">
+            <attribute name="Password">${Template.Service.Test.TestAction.SSHCommandExecuteActionService.PASSWORD}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.SSHCommandExecuteActionService.PEM_FILE">
+            <attribute name="PemFile">${Template.Service.Test.TestAction.SSHCommandExecuteActionService.PEM_FILE}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="Encoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="DatabaseSearchAction"
+                 code="jp.ossc.nimbus.service.test.action.DatabaseSearchActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchActionService.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchActionService.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.DatabaseSearchActionService.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Test.TestAction.DatabaseSearchActionService.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchActionService.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.DatabaseSearchActionService.PERSISTENT_MANAGER_SERVICE_NAME">
+            <attribute name="PersistentManagerServiceName">${Template.Service.Test.TestAction.DatabaseSearchActionService.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchActionService.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="DatabaseUpdateAction"
+                 code="jp.ossc.nimbus.service.test.action.DatabaseUpdateActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.DatabaseUpdateActionService.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.DatabaseUpdateActionService.PERSISTENT_MANAGER_SERVICE_NAME">#PersistentManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.DatabaseUpdateActionService.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Test.TestAction.DatabaseUpdateActionService.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.DatabaseUpdateActionService.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.DatabaseUpdateActionService.PERSISTENT_MANAGER_SERVICE_NAME">
+            <attribute name="PersistentManagerServiceName">${Template.Service.Test.TestAction.DatabaseUpdateActionService.PERSISTENT_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.DatabaseUpdateActionService.PERSISTENT_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="DiffUtilsTextDiffGetAction"
+                 code="jp.ossc.nimbus.service.test.action.DiffUtilsTextDiffGetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="DiffFileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="JGitTextDiffGetAction"
+                 code="jp.ossc.nimbus.service.test.action.JGitTextDiffGetActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.JGitTextDiffGetActionService.DIFF_ALGORITHM_TYPE">HISTGRAM</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="DiffFileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestAction.JGitTextDiffGetActionService.DIFF_ALGORITHM_TYPE" value="HISTGRAM">
+            <attribute name="DiffAlgorithmType"><static-field-ref code="jp.ossc.nimbus.service.test.action.JGitTextDiffGetActionServiceMBean" name="DIFF_ALGORITHM_TYPE_JGIT_HISTGRAM"/></attribute>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.JGitTextDiffGetActionService.DIFF_ALGORITHM_TYPE" value="MYERS">
+            <attribute name="DiffAlgorithmType"><static-field-ref code="jp.ossc.nimbus.service.test.action.JGitTextDiffGetActionServiceMBean" name="DIFF_ALGORITHM_TYPE_JGIT_MYERS"/></attribute>
+</ifdef>
+        </service>
+        
+        <service name="JSONDiffGetAction"
+                 code="jp.ossc.nimbus.service.test.action.JSONDiffGetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="DiffFileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="FileCompressAction"
+                 code="jp.ossc.nimbus.service.test.action.FileCompressActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="FileOperateAction"
+                 code="jp.ossc.nimbus.service.test.action.FileOperateActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="FileToObjectConvertAction"
+                 code="jp.ossc.nimbus.service.test.action.FileToObjectConvertActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME">#StreamConverter</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.FORMAT_CONVERTER_SERVICE_NAME">#FormatConverter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestAction.FileToObjectConvertActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.FileToObjectConvertActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.FileToObjectConvertActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME">
+            <attribute name="StreamConverterServiceName">${Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.FileToObjectConvertActionService.FORMAT_CONVERTER_SERVICE_NAME">
+            <attribute name="FormatConverterServiceName">${Template.Service.Test.TestAction.FileToObjectConvertActionService.FORMAT_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.FileToObjectConvertActionService.FORMAT_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ObjectToFileConvertAction"
+                 code="jp.ossc.nimbus.service.test.action.ObjectToFileConvertActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME">#StreamConverter</service-property>
+            <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.FORMAT_CONVERTER_SERVICE_NAME">#FormatConverter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME">
+            <attribute name="StreamConverterServiceName">${Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.FORMAT_CONVERTER_SERVICE_NAME">
+            <attribute name="FormatConverterServiceName">${Template.Service.Test.TestAction.ObjectToFileConvertActionService.FORMAT_CONVERTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ObjectToFileConvertActionService.FORMAT_CONVERTER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="FTPAction"
+                 code="jp.ossc.nimbus.service.test.action.FTPActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.FTPActionService.FTP_CLIENT_FACTORY_SERVICE_NAME">#FTPClientFactory</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.FTPActionService.FTP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="FTPClientFactoryServiceName">${Template.Service.Test.TestAction.FTPActionService.FTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.FTPActionService.FTP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="SCPAction"
+                 code="jp.ossc.nimbus.service.test.action.SCPActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.SCPActionService.SCP_CLIENT_FACTORY_SERVICE_NAME">#ScpClientFactory</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.SCPActionService.SCP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="ScpClientFactoryServiceName">${Template.Service.Test.TestAction.SCPActionService.SCP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.SCPActionService.SCP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="HttpRequestAction"
+                 code="jp.ossc.nimbus.service.test.action.HttpRequestActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.HttpRequestActionService.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#HttpClientFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.HttpRequestActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.HttpRequestActionService.HTTP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="HttpClientFactoryServiceName">${Template.Service.Test.TestAction.HttpRequestActionService.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.HttpRequestActionService.HTTP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.HttpRequestActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.HttpRequestActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.HttpRequestActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="InterpreterAction"
+                 code="jp.ossc.nimbus.service.test.action.InterpreterActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.InterpreterActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.InterpreterActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.InterpreterActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.InterpreterActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="JMSMessageReceiverGetAction"
+                 code="jp.ossc.nimbus.service.test.action.JMSMessageReceiverGetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="JMSMessageReceiverListenAction"
+                 code="jp.ossc.nimbus.service.test.action.JMSMessageReceiverListenActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JMS_MESSAGE_CONSUMER_FACTORY_SERVICE_NAME">#JMSMessageConsumerFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JMS_MESSAGE_CONSUMER_FACTORY_SERVICE_NAME">
+            <attribute name="JMSMessageConsumerFactoryServiceName">${Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JMS_MESSAGE_CONSUMER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JMS_MESSAGE_CONSUMER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JNDI_FINDER_SERVICE_NAME">
+            <attribute name="JndiFinderServiceName">${Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.JMSMessageReceiverListenActionService.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="JMSMessageSendAction"
+                 code="jp.ossc.nimbus.service.test.action.JMSMessageSendActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.JMSMessageSendActionService.JMS_MESSAGE_PRODUCER_FACTORY_SERVICE_NAME">#JMSMessageProducer</service-property>
+            <service-property name="Template.Service.Test.TestAction.JMSMessageSendActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
+            <service-property name="Template.Service.Test.TestAction.JMSMessageSendActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.JMSMessageSendActionService.JMS_MESSAGE_PRODUCER_FACTORY_SERVICE_NAME">
+            <attribute name="JMSMessageProducerFactoryServiceName">${Template.Service.Test.TestAction.JMSMessageSendActionService.JMS_MESSAGE_PRODUCER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.JMSMessageSendActionService.JMS_MESSAGE_PRODUCER_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.JMSMessageSendActionService.JNDI_FINDER_SERVICE_NAME">
+            <attribute name="DestinationFinderServiceName">${Template.Service.Test.TestAction.JMSMessageSendActionService.JNDI_FINDER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.JMSMessageSendActionService.JNDI_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.JMSMessageSendActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.JMSMessageSendActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.JMSMessageSendActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="MessageReceiverGetAction"
+                 code="jp.ossc.nimbus.service.test.action.MessageReceiverGetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="MessageReceiverListenAction"
+                 code="jp.ossc.nimbus.service.test.action.MessageReceiverListenActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.MessageReceiverListenActionService.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.MessageReceiverListenActionService.MESSAGE_RECEIVER_SERVICE_NAME">
+            <attribute name="MessageReceiverServiceName">${Template.Service.Test.TestAction.MessageReceiverListenActionService.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.MessageReceiverListenActionService.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ServerConnectionSendAction"
+                 code="jp.ossc.nimbus.service.test.action.ServerConnectionSendActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ServerConnectionSendActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">#ServerConnectionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.ServerConnectionSendActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ServerConnectionSendActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ServerConnectionFactoryServiceName">${Template.Service.Test.TestAction.ServerConnectionSendActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ServerConnectionSendActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.ServerConnectionSendActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.ServerConnectionSendActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ServerConnectionSendActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="NetProxyControlAction"
+                 code="jp.ossc.nimbus.service.test.action.NetProxyControlActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.NetProxyControlActionService.NET_PROXY_SERVICE_NAME">#NetProxy</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.NetProxyControlActionService.NET_PROXY_SERVICE_NAME">
+            <attribute name="NetProxyServiceName">${Template.Service.Test.TestAction.NetProxyControlActionService.NET_PROXY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.NetProxyControlActionService.NET_PROXY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="TcpNetProxyControlAction"
+                 code="jp.ossc.nimbus.service.test.action.TcpNetProxyControlActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.TcpNetProxyControlActionService.TCP_NET_PROXY_SERVICE_NAME">#TcpNetProxy</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.TcpNetProxyControlActionService.TCP_NET_PROXY_SERVICE_NAME">
+            <attribute name="TcpNetProxyServiceName">${Template.Service.Test.TestAction.TcpNetProxyControlActionService.TCP_NET_PROXY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.TcpNetProxyControlActionService.TCP_NET_PROXY_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="PropertyGetAction"
+                 code="jp.ossc.nimbus.service.test.action.PropertyGetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="PropertySetAction"
+                 code="jp.ossc.nimbus.service.test.action.PropertySetActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="ScheduleMakeAction"
+                 code="jp.ossc.nimbus.service.test.action.ScheduleMakeActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME">
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="MBeanCallAction"
+                 code="jp.ossc.nimbus.service.test.action.MBeanCallActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.MBeanCallActionService.MBEAN_SERVER_CONNECTION_FACTORY_SERVICE_NAME">#MBeanServerConnectionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.MBeanCallActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.MBeanCallActionService.MBEAN_SERVER_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="MBeanServerConnectionFactoryServiceName">${Template.Service.Test.TestAction.MBeanCallActionService.MBEAN_SERVER_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.MBeanCallActionService.MBEAN_SERVER_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.MBeanCallActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.MBeanCallActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.MBeanCallActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ServiceCallAction"
+                 code="jp.ossc.nimbus.service.test.action.ServiceCallActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ServiceCallActionService.INVOKER_SERVICE_NAME">#Invoker</service-property>
+            <service-property name="Template.Service.Test.TestAction.ServiceCallActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ServiceCallActionService.INVOKER_SERVICE_NAME">
+            <attribute name="InvokerServiceName">${Template.Service.Test.TestAction.ServiceCallActionService.INVOKER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ServiceCallActionService.INVOKER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.ServiceCallActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.ServiceCallActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ServiceCallActionService.INTERPRETER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ChainTestAction"
+                 code="jp.ossc.nimbus.service.test.ChainTestActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="Template.Service.Test.EvaluateTestAction">
+        
+        <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
+        
+        <service name="BinaryCompareEvaluateAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.BinaryCompareEvaluateActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="CSVCompareEvaluateAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.CSVCompareEvaluateActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="TextCompareEvaluateAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.TextCompareEvaluateActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="TextEvaluateAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.TextEvaluateActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.FILE_ENCODING">
+            <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+        </service>
+        
+        <service name="ScheduleWaitAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.ScheduleWaitActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ScheduleWaitActionService.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ScheduleWaitActionService.SCHEDULE_MANAGER_SERVICE_NAME">
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Test.TestAction.ScheduleWaitActionService.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ScheduleWaitActionService.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ServiceLoadAction"
+                 code="jp.ossc.nimbus.service.test.evaluate.ServiceLoadActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="ChainEvaluateTestAction"
+                 code="jp.ossc.nimbus.service.test.ChainEvaluateTestActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="RetryEvaluateTestAction"
+                 code="jp.ossc.nimbus.service.test.RetryEvaluateTestActionService"
+                 instance="template">
+            
+            <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+    </manager>
+    
+</server>
