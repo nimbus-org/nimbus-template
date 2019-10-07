@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="Template.Service.FTP.FTPClientFactory.FTPClient">
+        
+        <service name="FTPClientFactory"
+                 code="jp.ossc.nimbus.service.ftp.ftpclient.FTPClientFactoryService"
+                 instance="template">
+            
+            <service-property name="Template.Service.FTP.FTPClientFactory.FTPClient.HOST_NAME">localhost</service-property>
+            <service-property name="Template.Service.FTP.FTPClientFactory.FTPClient.PORT">21</service-property>
+            <service-property name="Template.Service.FTP.FTPClientFactory.FTPClient.USER_NAME">user</service-property>
+            <service-property name="Template.Service.FTP.FTPClientFactory.FTPClient.PASSWORD">password</service-property>
+            
+            <!-- FTPサーバのホスト名を設定する -->
+<ifdef name="Template.Service.FTP.FTPClientFactory.FTPClient.HOST_NAME">
+            <attribute name="HostName">${Template.Service.FTP.FTPClientFactory.FTPClient.HOST_NAME}</attribute>
+</ifdef>
+            
+            <!-- FTPサーバのポート番号を設定する -->
+<ifdef name="Template.Service.FTP.FTPClientFactory.FTPClient.PORT">
+            <attribute name="Port">${Template.Service.FTP.FTPClientFactory.FTPClient.PORT}</attribute>
+</ifdef>
+            
+            <!-- FTPサーバのユーザを設定する -->
+<ifdef name="Template.Service.FTP.FTPClientFactory.FTPClient.USER_NAME">
+            <attribute name="UserName">${Template.Service.FTP.FTPClientFactory.FTPClient.USER_NAME}</attribute>
+</ifdef>
+            
+            <!-- FTPサーバのパスーワードを設定する -->
+<ifdef name="Template.Service.FTP.FTPClientFactory.FTPClient.PASSWORD">
+            <attribute name="Password">${Template.Service.FTP.FTPClientFactory.FTPClient.PASSWORD}</attribute>
+</ifdef>
+        </service>
+        
+    </manager>
+</server>
