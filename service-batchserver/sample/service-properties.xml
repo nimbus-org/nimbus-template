@@ -15,6 +15,7 @@
     
     <server-property name="BatchServer.LOG_OUTPUT_PATH">./target/</server-property>
     <server-property name="BatchServer.BusinessJournal.JOURNAL_ENABLED">true</server-property>
+    <server-property name="BatchServer.BusinessJournal.OUTPUT_INDENT">true</server-property>
     <server-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">BatchServer.Log#ThreadContext</server-property>
     <server-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">BatchServer.Log#Context</server-property>
     

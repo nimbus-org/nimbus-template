@@ -15,6 +15,7 @@
     
     <server-property name="WebServer.LOG_OUTPUT_PATH">./target/</server-property>
     <server-property name="WebServer.BusinessJournal.JOURNAL_ENABLED">true</server-property>
+    <server-property name="WebServer.BusinessJournal.OUTPUT_INDENT">true</server-property>
     <server-property name="WebServer.Servlet.CHARACTER_ENCODING">UTF-8</server-property>
     <server-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">WebServer.Log#ThreadContext</server-property>
     <server-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">WebServer.Log#Context</server-property>
