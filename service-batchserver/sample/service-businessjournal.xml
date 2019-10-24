@@ -59,7 +59,9 @@
         
         <service template="Template.BatchServer.BusinessJournal#ExecuteRequestJournalEditor"/>
         
-        <service template="Template.BatchServer.BusinessJournal#ThrowableJournalEditor"/>
+        <service template="Template.BatchServer.BusinessJournal#ThrowableJournalEditor">
+            <service-property name="Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</service-property>
+        </service>
         
         <service template="Template.BatchServer.BusinessJournal#DataSetJournalEditor"/>
         

@@ -1482,6 +1482,13 @@ EditorFinderサービス
                  code="jp.ossc.nimbus.service.journal.editor.ThrowableJournalEditorService"
                  instance="template">
             
+            <service-property name="Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            
+<ifdef name="Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
 <ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
             <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
 </ifdef>

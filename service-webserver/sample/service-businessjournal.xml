@@ -59,7 +59,9 @@
         
         <service template="Template.WebServer.BusinessJournal#ExecuteRequestJournalEditor"/>
         
-        <service template="Template.WebServer.BusinessJournal#ThrowableJournalEditor"/>
+        <service template="Template.WebServer.BusinessJournal#ThrowableJournalEditor">
+            <service-property name="Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</service-property>
+        </service>
         
         <service template="Template.WebServer.BusinessJournal#DataSetJournalEditor"/>
         
