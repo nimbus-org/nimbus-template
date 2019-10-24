@@ -9,7 +9,7 @@
         
         <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</manager-property>
         <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">${WebServer.BusinessJournal.JOURNAL_ENABLED}</manager-property>
-        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_INDENT">true</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
         
         <service template="Template.WebServer.BusinessJournal#BusinessJournal"/>
         
