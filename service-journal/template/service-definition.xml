@@ -556,7 +556,9 @@ Editorサービス
 
         <service name="ObjectJournalEditor"
                  template="Template.Service.Journal.JournalEditor#ObjectJournalEditor"
-                 instance="template"/>
+                 instance="template">
+            <attribute name="MaxArrayLength">10</attribute>
+        </service>
 
         <service name="ClassJournalEditor"
                  template="Template.Service.Journal.JournalEditor#ClassJournalEditor"
