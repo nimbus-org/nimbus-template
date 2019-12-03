@@ -25,6 +25,7 @@ BeanFlowサービス
             <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
             <service-property name="Template.Service.BeanControl.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInterceptorChainFactory</service-property>
             <service-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</service-property>
+            <service-property name="Template.Service.BeanControl.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
 
             <attribute name="BeanFlowInvokerAccessClass">jp.ossc.nimbus.service.beancontrol.BeanFlowInvokerAccessImpl2</attribute>
             <attribute name="Validate">true</attribute>
@@ -67,6 +68,10 @@ BeanFlowサービス
 <ifdef name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">
             <attribute name="AsynchInvokeQueueHandlerContainerServiceName">${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">
+            <attribute name="TransactionManagerFactoryServiceName">${Template.Service.BeanControl.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.BeanControl.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
