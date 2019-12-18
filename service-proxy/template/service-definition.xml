@@ -4,6 +4,14 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
 
     <manager name="Template.Service.Proxy.Client">
 
@@ -95,10 +103,16 @@
             <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">#InterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.Server.RESOURCE_USAGE_SERVICE_NAME">#ResourceUsage</service-property>
             <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Proxy.Server.RMI.REPOSITORY_SERVICE_NAME">#JndiRepository</service-property>
 
 <ifdef name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME">
             <attribute name="ClusterServiceName">${Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Proxy.Server.RMI.REPOSITORY_SERVICE_NAME">
+            <attribute name="JndiRepositoryServiceName">${Template.Service.Proxy.Server.RMI.REPOSITORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Proxy.Server.RMI.REPOSITORY_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME">

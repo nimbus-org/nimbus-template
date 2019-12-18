@@ -5,6 +5,14 @@
 
 <server>
     
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
     <manager name="Template.Service.Server">
         
         <!-- サーバサービス -->

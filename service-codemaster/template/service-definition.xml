@@ -5,6 +5,14 @@
 
 <server>
     
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
     <manager name="Template.Service.CodeMaster">
         
         <!-- マスタをメモリ中に管理し、読み取り一貫性を担保するCodeMasterFinderサービス -->

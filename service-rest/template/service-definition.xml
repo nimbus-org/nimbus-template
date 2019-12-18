@@ -4,6 +4,14 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
 
     <manager name="Template.Service.REST">
         
