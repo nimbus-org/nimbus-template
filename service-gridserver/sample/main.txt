@@ -1,0 +1,17 @@
+import java.io.*;
+
+import jp.ossc.nimbus.core.ServiceManagerFactory;
+import jp.ossc.nimbus.service.context.SharedContext;
+import jp.ossc.nimbus.service.context.SharedContextTimeoutException;
+
+SharedContext context = ServiceManagerFactory.getServiceObject("GridServer.SharedContext.Sample","Context");
+
+for(int i = 0; i < 60; i++){
+    Thread.sleep(1000l);
+    String key = context.getId() + String.valueOf(i);
+    context.put(key, new Integer(i));
+    print("put(" + key + ", " + new Integer(i) + ")");
+}
+print("size()=" + context.size());
+
+return "終了";

@@ -5,9 +5,9 @@
 
 <server>
     
-    <log manager-name="Template.WebServer.Log">Logger</log>
+    <log manager-name="Template.GridServer.Log">Logger</log>
     
-    <manager name="Template.WebServer.Log" shutdown-hook="true">
+    <manager name="Template.GridServer.Log" shutdown-hook="true">
         
         <service template="Template.Service.ThreadContext#Context" instance="template"/>
         

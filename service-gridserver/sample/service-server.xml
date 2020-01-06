@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <!-- サーバサービス群 -->
+    <manager name="GridServer.Server">
+        
+        <service template="Template.GridServer.Server#RemoteServiceServer"/>
+        
+        <service template="Template.GridServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.1</attribute>
+            <attribute name="MulticastPort">20001</attribute>
+        </service>
+        
+    </manager>
+</server>

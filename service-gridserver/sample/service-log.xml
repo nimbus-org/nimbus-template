@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <log manager-name="GridServer.Log">Logger</log>
+    
+    <manager name="GridServer.Log" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">${GridServer.LOG_OUTPUT_PATH}</manager-property>
+        
+        <service template="Template.GridServer.Log#Context"/>
+        
+        <service template="Template.GridServer.Log#ThreadContext"/>
+        
+        <service template="Template.GridServer.Log#ServerInfo"/>
+        
+        <service template="Template.GridServer.Log#Logger"/>
+        
+        <service template="Template.GridServer.Log#LogMessageRecordFactory"/>
+        <service template="Template.GridServer.Log#MessageRecordFactory"/>
+        
+        <service template="Template.GridServer.Log#LogFileWritableRecordFactory"/>
+        <service template="Template.GridServer.Log#LogConsoleWritableRecordFactory"/>
+        
+        <service template="Template.GridServer.Log#FrameLogWriter"/>
+        <service template="Template.GridServer.Log#ApplLogWriter"/>
+        <service template="Template.GridServer.Log#ConsoleWriter"/>
+        
+        <service template="Template.GridServer.Log#FrameGroupCategory"/>
+        <service template="Template.GridServer.Log#FrameFileCategory"/>
+        <service template="Template.GridServer.Log#FrameConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#SysDebugGroupCategory"/>
+        <service template="Template.GridServer.Log#SysDebugFileCategory"/>
+        <service template="Template.GridServer.Log#SysDebugConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#SysInfoGroupCategory"/>
+        <service template="Template.GridServer.Log#SysInfoFileCategory"/>
+        <service template="Template.GridServer.Log#SysInfoConsoleCategory">
+            <attribute name="Enabled">true</attribute>
+        </service>
+        
+        <service template="Template.GridServer.Log#SysWarnGroupCategory"/>
+        <service template="Template.GridServer.Log#SysWarnFileCategory"/>
+        <service template="Template.GridServer.Log#SysWarnConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#SysErrorGroupCategory"/>
+        <service template="Template.GridServer.Log#SysErrorFileCategory"/>
+        <service template="Template.GridServer.Log#SysErrorConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#SysFatalGroupCategory"/>
+        <service template="Template.GridServer.Log#SysFatalFileCategory"/>
+        <service template="Template.GridServer.Log#SysFatalConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComTraceGroupCategory"/>
+        <service template="Template.GridServer.Log#ComTraceFileCategory"/>
+        <service template="Template.GridServer.Log#ComTraceConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComDebugGroupCategory"/>
+        <service template="Template.GridServer.Log#ComDebugFileCategory"/>
+        <service template="Template.GridServer.Log#ComDebugConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComInfoGroupCategory"/>
+        <service template="Template.GridServer.Log#ComInfoFileCategory"/>
+        <service template="Template.GridServer.Log#ComInfoConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComWarnGroupCategory"/>
+        <service template="Template.GridServer.Log#ComWarnFileCategory"/>
+        <service template="Template.GridServer.Log#ComWarnConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComErrorGroupCategory"/>
+        <service template="Template.GridServer.Log#ComErrorFileCategory"/>
+        <service template="Template.GridServer.Log#ComErrorConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ComFatalGroupCategory"/>
+        <service template="Template.GridServer.Log#ComFatalFileCategory"/>
+        <service template="Template.GridServer.Log#ComFatalConsoleCategory"/>
+        
+        <service template="Template.GridServer.Log#ApplGroupCategory"/>
+        <service template="Template.GridServer.Log#ApplFileCategory"/>
+        <service template="Template.GridServer.Log#ApplConsoleCagegory"/>
+        
+    </manager>
+    
+</server>

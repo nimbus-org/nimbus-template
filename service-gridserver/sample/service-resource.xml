@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="GridServer.Resource" shutdown-hook="true">
+        
+        <service template="Template.GridServer.Resource#BeanShellInterpreter"/>
+        
+        <service name="JavaScriptInterpreter"
+                 template="Template.GridServer.Resource#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
+        
+        <service template="Template.GridServer.Resource#Externalizer"/>
+        
+    </manager>
+    
+    <manager name="GridServer.Resource.Publish">
+        
+        <service template="Template.GridServer.Resource.Publish#RequestConnectionFactory"/>
+        
+        <service template="Template.GridServer.Resource.Publish#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+            <attribute name="Acknowledge">true</attribute>
+        </service>
+        
+        <service template="Template.GridServer.Resource.Publish#AsynchSendQueue"/>
+        
+        <service template="Template.GridServer.Resource.Publish#ClusterConnectionFactory"/>
+        
+        <service template="Template.GridServer.Resource.Publish#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterConnectionFactory</service-property>
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.GridServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.3</attribute>
+            <attribute name="MulticastPort">20002</attribute>
+        </service>
+        
+    </manager>
+    
+</server>

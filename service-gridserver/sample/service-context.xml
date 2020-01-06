@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="GridServer.SharedContext.Sample" shutdown-hook="true">
+        
+        <manager-property name="GridServer.SharedContext.CONTEXT_NAME">sample</manager-property>
+        
+        <service name="Context"
+                 template="Template.GridServer.SharedContext#SharedContext">
+            
+            <service-property name="Template.Service.Context.SharedContext.REQUEST_CONNECTION_FAC_SERVICE_NAME">GridServer.Resource.Publish#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Context.SharedContext.CLUSTER_SERVICE_NAME">GridServer.Resource.Publish#Cluster</service-property>
+            <service-property name="Template.Service.Context.SharedContext.TRANSACTION_MANAGER_SERVICE_NAME">GridServer.TransactionManager#TransactionManager</service-property>
+            <service-property name="Template.Service.Context.SharedContext.SERVER_CACHE_MAP_SERVICE_NAME">#CacheMap</service-property>
+            <service-property name="Template.Service.Context.SharedContext.INTERPRETER_SERVICE_NAME">GridServer.Resource#JavaScriptInterpreter</service-property>
+            
+            <attribute name="Subject">${GridServer.SharedContext.CONTEXT_NAME}</attribute>
+            <attribute name="ExecuteThreadSize">10</attribute>
+        </service>
+        
+        <service template="Template.GridServer.CacheMap#CacheMap"/>
+        
+        <service template="Template.GridServer.CacheMap#OverflowController"/>
+        
+        <service template="Template.GridServer.CacheMap#OverflowValidator">
+            <attribute name="MaxSize">1000</attribute>
+            <attribute name="OverflowThreshold">900</attribute>
+        </service>
+        
+        <service template="Template.GridServer.CacheMap#OverflowAlgorithm">
+            <attribute name="CachedRatioCompare">true</attribute>
+            <attribute name="RatioUnitTime">600000</attribute>
+        </service>
+        
+        <service template="Template.GridServer.CacheMap#OverflowAction"/>
+        
+        <service template="Template.GridServer.CacheMap#StoreCacheMap">
+            <service-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">GridServer.Resource#Externalizer</service-property>
+            <attribute name="OutputDirectory">${GridServer.CACHE_OUTPUT_PATH}/${GridServer.SharedContext.CONTEXT_NAME}</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="GridServer.TransactionManager" shutdown-hook="true">
+        
+        <service template="Template.GridServer.TransactionManager#TransactionManager"/>
+    </manager>
+    
+</server>

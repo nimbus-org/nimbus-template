@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <!-- 汎用のリソースサービス群 -->
+    <manager name="Template.GridServer.Resource">
+        
+        <!-- Java言語互換のスクリプト実行環境を提供するInterpreterサービス -->
+        <service template="Template.Service.Interpreter#BeanShellInterpreter"
+                 instance="template"/>
+        
+        <!-- javax.script.ScriptEngineでスクリプト実行環境を提供するInterpreterサービス -->
+        <service template="Template.Service.Interpreter#ScriptEngineInterpreter"
+                 instance="template"/>
+        
+        <service name="Externalizer" template="Template.Service.IO.Externalizer#NimbusExternalizer"/>
+        
+    </manager>
+    
+    <!-- クラスタ（マルチキャスト）のリソースサービス群 -->
+    <manager name="Template.GridServer.Resource.Cluster.Multicast">
+        
+        <!-- マルチキャストでクラスタに参加するクラスタサービス -->
+        <service template="Template.Service.KeepAlive.Cluster.Multicast.Server#Cluster"
+                 instance="template"/>
+        
+        <!-- マルチキャストでクラスタに参加するメンバを共有するクラスタサービス-->
+        <service name="ClinetCluster"
+                 template="Template.Service.KeepAlive.Cluster.Multicast.Client#Cluster"
+                 instance="template"/>
+    </manager>
+    
+    <!-- クラスタ（ユニキャスト）のリソースサービス群 -->
+    <manager name="Template.GridServer.Resource.Cluster.Unicast">
+        
+        <!-- ユニキャストでクラスタに参加するクラスタサービス -->
+        <service template="Template.Service.KeepAlive.Cluster.Unicast.Server#Cluster"
+                 instance="template"/>
+        
+        <!-- ユニキャストでクラスタに参加するメンバを共有するクラスタサービス-->
+        <service name="ClinetCluster"
+                 template="Template.Service.KeepAlive.Cluster.Unicast.Client#Cluster"
+                 instance="template"/>
+    </manager>
+    
+    <!-- JDBC接続関連のリソースサービス群 -->
+    <manager name="Template.GridServer.Resource.JDBC">
+        
+        <!-- JDBCドライバからJDBC接続を取得するConnectionFactoryサービス -->
+        <service name="JDBCConnectionFactory"
+                 template="Template.Service.Connection.JDBC#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 実体となるJDBC接続を取得するConnectionFactoryサービスから取得したJDBC接続をラップして機能を付加するConnectionFactoryサービス -->
+        <service name="ConnectionFactory"
+                 template="Template.Service.Connection.Wrapper#WrappedConnectionFactory"
+                 instance="template">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME" extends="true">#JDBCConnectionFactory</service-property>
+        </service>
+        
+        <!-- JDBC接続を使ったデータベースとのO/R Mappingを支援するPersistentManagerサービス -->
+        <service template="Template.Service.Connection.PersistentManager#PersistentManager"
+                 instance="template"/>
+        
+        <!-- SQLの性能統計を集計するサービス -->
+        <service template="Template.Service.Connection.Wrapper#SQLMetricsCollector"
+                 instance="template"/>
+        
+    </manager>
+    
+    <!-- サーバ間メッセージングのリソースサービス群 -->
+    <manager name="Template.GridServer.Resource.Publish">
+        
+        <!-- 他サーバとメッセージを送受信する接続を生成するRequestConnectionFactoryサービス -->
+        <service template="Template.Service.Publish.Request#RequestConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 他サーバにメッセージを送信する接続を生成するServerConnectionFactoryサービス -->
+        <service template="Template.Service.Publish.TCP#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 非同期送信に使用するQueueサービス -->
+        <service template="Template.Service.Publish.TCP#AsynchSendQueue"
+                 instance="template"/>
+        
+        <!-- 他サーバにClientConnectionFactoryをクラスタサービスで提供するサービス -->
+        <service template="Template.Service.Publish.Cluster#ClusterConnectionFactory"
+                 instance="template">
+            
+            <attribute name="Multiple">true</attribute>
+        </service>
+        
+        <!-- 他サーバからメッセージを受信する接続を生成するClientConnectionFactoryサービス -->
+        <service template="Template.Service.Publish.Cluster#ClusterClientConnectionFactory"
+                 instance="template"/>
+        
+        <!-- 他サーバからメッセージを受信してハンドリングするMessageListenerを管理するサービス -->
+        <service template="Template.Service.Publish.Receiver#MessageReceiver"
+                 instance="template"/>
+        
+    </manager>
+</server>

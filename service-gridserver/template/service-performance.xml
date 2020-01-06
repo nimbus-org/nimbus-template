@@ -4,9 +4,9 @@
   "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
 
 <server>
-    
+   
     <!-- 性能系のサービス群 -->
-    <manager name="Template.BatchServer.Performance">
+    <manager name="Template.GridServer.Performance">
         
         <!-- サーバの性能情報を取得するOperationSystemサービス -->
         <service template="Template.Service.System.OperationSystem#OperationSystem"

@@ -6,7 +6,7 @@
 <server>
     
     <!-- サーバサービス群 -->
-    <manager name="Template.WebServer.Server">
+    <manager name="Template.GridServer.Server">
         
         <!-- 他サーバからのサービスの呼び出し口を提供するサービス -->
         <service template="Template.Service.Proxy.Server.RMI#RemoteServiceServer"
