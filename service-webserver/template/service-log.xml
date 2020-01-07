@@ -5,7 +5,13 @@
 
 <server>
     
-    <log manager-name="Template.WebServer.Log">Logger</log>
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
     
     <manager name="Template.WebServer.Log" shutdown-hook="true">
         
