@@ -8,6 +8,7 @@
     <manager name="Sample.Service.Journal.AccessJournal" shutdown-hook="true">
         
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.SEPARATOR">,</manager-property>
         <manager-property name="Template.Service.Journal.AccessJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</manager-property>
         
 <!--=======================================================================

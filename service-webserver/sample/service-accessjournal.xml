@@ -8,6 +8,7 @@
     <manager name="WebServer.AccessJournal" shutdown-hook="true">
         
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">${WebServer.LOG_OUTPUT_PATH}</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.SEPARATOR">,</manager-property>
         
         <service template="Template.WebServer.AccessJournal#AccessJournal"/>
         

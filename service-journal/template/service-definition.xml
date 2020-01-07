@@ -16,6 +16,7 @@
     <manager name="Template.Service.Journal.AccessJournal">
 
         <manager-property name="Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.AccessJournal.SEPARATOR">,</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
@@ -89,7 +90,7 @@ WritableRecordFactoryサービス
                 RESPONSE_OBJ=Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Response[0].JournalRecords.ResponseBytes[0]
                 PERFORMANCE=Access.Performance
             </attribute>
-            <attribute name="Format">%DATE%,%REQUEST_ID%,%CLIENT_IP%,%SESSION_ID%,%REQUEST_URL%,%REQUEST_OBJ%,%RESPONSE_STATUS%,%RESPONSE_OBJ%,%PERFORMANCE%</attribute>
+            <attribute name="Format">%DATE%${Template.Service.Journal.AccessJournal.SEPARATOR}%REQUEST_ID%${Template.Service.Journal.AccessJournal.SEPARATOR}%CLIENT_IP%${Template.Service.Journal.AccessJournal.SEPARATOR}%SESSION_ID%${Template.Service.Journal.AccessJournal.SEPARATOR}%REQUEST_URL%${Template.Service.Journal.AccessJournal.SEPARATOR}%REQUEST_OBJ%${Template.Service.Journal.AccessJournal.SEPARATOR}%RESPONSE_STATUS%${Template.Service.Journal.AccessJournal.SEPARATOR}%RESPONSE_OBJ%${Template.Service.Journal.AccessJournal.SEPARATOR}%PERFORMANCE%</attribute>
             <attribute name="ImplementServiceNames">
                 DATE=#AccessNormalDateElement
                 REQUEST_OBJ=#CSVElement
@@ -128,6 +129,7 @@ WritableRecordFactoryサービス
                  code="jp.ossc.nimbus.io.CSVWriter"
                  instance="template">
             <attribute name="Enclose">true</attribute>
+            <attribute name="Separator">${Template.Service.Journal.AccessJournal.SEPARATOR}</attribute>
         </service>
 
         <!-- アクセスエラージャーナルのフォーマッタ -->
