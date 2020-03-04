@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.BeanFlowServer.Log" shutdown-hook="true">
+        
+        <service template="Template.Service.ThreadContext#Context" instance="template"/>
+        
+        <service template="Template.Service.ThreadContext#ThreadContext" instance="template"/>
+        
+        <service template="Template.Service.ThreadContext#ServerInfo" instance="template"/>
+        
+        <service template="Template.Service.Log#Logger" instance="template">
+            <service-property name="Template.Service.Log.CONTEXT_SERVICE_NAME" extends="true">#Context</service-property>
+        </service>
+        
+        <service template="Template.Service.Log#LogMessageRecordFactory" instance="template"/>
+        <service template="Template.Service.Log#MessageRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Log#LogFileWritableRecordFactory" instance="template"/>
+        <service template="Template.Service.Log#LogConsoleWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Log#FrameLogWriter" instance="template"/>
+        <service template="Template.Service.Log#ApplLogWriter" instance="template"/>
+        <service template="Template.Service.Log#ConsoleWriter" instance="template"/>
+        
+        <service template="Template.Service.Log#FrameGroupCategory"  instance="template"/>
+        <service template="Template.Service.Log#FrameFileCategory" instance="template"/>
+        <service template="Template.Service.Log#FrameConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#SysDebugGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#SysDebugFileCategory" instance="template"/>
+        <service template="Template.Service.Log#SysDebugConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#SysInfoGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#SysInfoFileCategory" instance="template"/>
+        <service template="Template.Service.Log#SysInfoConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#SysWarnGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#SysWarnFileCategory" instance="template"/>
+        <service template="Template.Service.Log#SysWarnConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#SysErrorGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#SysErrorFileCategory" instance="template"/>
+        <service template="Template.Service.Log#SysErrorConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#SysFatalGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#SysFatalFileCategory" instance="template"/>
+        <service template="Template.Service.Log#SysFatalConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComTraceGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComTraceFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComTraceConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComDebugGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComDebugFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComDebugConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComInfoGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComInfoFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComInfoConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComWarnGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComWarnFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComWarnConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComErrorGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComErrorFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComErrorConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ComFatalGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ComFatalFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ComFatalConsoleCategory" instance="template"/>
+        
+        <service template="Template.Service.Log#ApplGroupCategory" instance="template"/>
+        <service template="Template.Service.Log#ApplFileCategory" instance="template"/>
+        <service template="Template.Service.Log#ApplConsoleCagegory" instance="template"/>
+        
+    </manager>
+    
+</server>

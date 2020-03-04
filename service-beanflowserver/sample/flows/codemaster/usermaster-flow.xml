@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE flows PUBLIC
+  "-//Nimbus//DTD Nimbus Bean Flow 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/beanflow_1_0.dtd">
+
+<flows>
+    
+    <flow name="codemaster/userMaster">
+        
+        <resource name="Connection" service="BeanFlowServer.Resource.JDBC#ConnectionResourceFactory"/>
+        
+        <step>
+            <target><service-ref>BeanFlowServer.Resource.JDBC#PersistentManager</service-ref></target>
+            <result>
+                <invoke name="loadQuery">
+                    <argument type="java.sql.Connection"><resource-ref>Connection</resource-ref></argument>
+                    <argument type="java.lang.String">
+                        <!--
+                        select * from USER_MST
+                        -->
+                    </argument>
+                    <argument type="java.lang.Object" nullValue="true"/>
+                    <argument type="java.lang.Object">
+                        <object code="jp.ossc.nimbus.beans.dataset.RecordList">
+                            <attribute name="Schema">
+                                :ID,java.lang.String,,,,1
+                                :NAME,java.lang.String
+                                :AGE,short
+                                :SEX,java.lang.String
+                                :PASSWORD,java.lang.String
+                            </attribute>
+                        </object>
+                    </argument>
+                </invoke>
+            </result>
+        </step>
+        
+    </flow>
+    
+</flows>

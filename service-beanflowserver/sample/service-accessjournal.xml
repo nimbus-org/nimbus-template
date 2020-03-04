@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="BeanFlowServer.AccessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH">${BeanFlowServer.LOG_OUTPUT_PATH}</manager-property>
+        <manager-property name="Template.Service.Journal.ProxyJournal.SEPARATOR">,</manager-property>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournal"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalQueue"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalCategory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessErrorJournalCategory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalWritableRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#NormalDateElement" instance="factory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#ErrorDateElement" instance="factory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#ParametersElement" instance="factory"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#CustomConverter"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#CSVEscapeConverter"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalWriter"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessErrorJournalWriter"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalEditorFinder"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessJournalEditorProperties"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#AccessRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#ClassJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#MethodJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.AccessJournal#ThrowableJournalEditor"/>
+        
+    </manager>
+    
+</server>

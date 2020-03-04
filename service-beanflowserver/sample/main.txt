@@ -1,0 +1,19 @@
+
+import java.text.*;
+import java.util.*;
+
+import jp.ossc.nimbus.core.*;
+import jp.ossc.nimbus.service.context.*;
+import jp.ossc.nimbus.service.beancontrol.interfaces.*;
+
+
+Thread.sleep(2000);
+
+BeanFlowInvokerFactory factory = ServiceManagerFactory.getServiceObject("BeanFlowServer.Resource.BeanControl.Remote", "ServerBeanFlowInvokerFactory");
+
+Context context = ServiceManagerFactory.getServiceObject("BeanFlowServer.Log", "ThreadContext");
+context.put("REQUEST_ID", new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
+
+print(factory.createFlow("getUser").invokeFlow("00001"));
+
+return "OK";

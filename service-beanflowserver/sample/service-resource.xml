@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="BeanFlowServer.Resource" shutdown-hook="true">
+        
+        <service template="Template.BeanFlowServer.Resource#TemplateEngine"/>
+        
+        <service template="Template.BeanFlowServer.Resource#BeanShellInterpreter"/>
+        
+        <service name="JavaScriptInterpreter"
+                 template="Template.BeanFlowServer.Resource#ScriptEngineInterpreter">
+            <service-property name="Template.Service.Interpreter.ScriptEngine.ENGINE_NAME">javascript</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource#Sequence">
+            <service-property name="Template.Service.Sequence.CONTEXT_SERVICE_NAME">BeanFlowServer.Log#Context</service-property>
+        </service>
+        
+        <service template="Template.Service.CodeMaster#CodeMasterFinder">
+            <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">BeanFlowServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">BeanFlowServer.Resource.Publish#MessageReceiver</service-property>
+            <attribute name="MasterNames">
+                codemaster/userMaster
+            </attribute>
+            <depends>BeanFlowServer.Resource.JDBC#UserMasterTableCreator</depends>
+        </service>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Resource.JDBC" shutdown-hook="true">
+        
+        <service template="Template.BeanFlowServer.Resource.JDBC#JDBCConnectionFactory">
+            <attribute name="ConnectionURL">jdbc:derby:javadb/sample;create=true</attribute>
+        </service>
+        
+        <service name="InnerConnectionFactory"
+                 template="Template.BeanFlowServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.JDBC#ConnectionFactory">
+            <service-property name="Template.Service.Connection.Wrapper.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.JOURNAL_SERVICE_NAME">BeanFlowServer.BusinessJournal#BusinessJournal</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.SQL_METRICS_SERVICE_NAME">#SQLMetricsCollector</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.PERFORMANCE_RECORDER_SERVICE_NAME">BeanFlowServer.Performance.JDBC#PerformanceRecorder</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_SIZE">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.FETCH_DIRECTION">1000</service-property>
+            <service-property name="Template.Service.Connection.Wrapper.QUERY_TIMEOUT">60</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.JDBC#ConnectionResourceFactory"/>
+        
+        <service template="Template.BeanFlowServer.Resource.JDBC#PersistentManager"/>
+        
+        <service template="Template.BeanFlowServer.Resource.JDBC#SQLMetricsCollector"/>
+        
+        <service name="UserMasterTableCreator"
+                 template="Template.Service.Connection.TableCreator#TableCreator">
+            
+            <service-property name="Template.Service.Connection.TableCreator.CONNECTION_FACTORY_SERVICE_NAME">#JDBCConnectionFactory</service-property>
+            <service-property name="Template.Service.Connection.TableCreator.RECORDLIST_CONVERTER_SERVICE_NAME">#CSVRecordListConverter</service-property>
+            
+            <attribute name="ExistsTableQuery">select count(1) from SYS.SYSTABLES as TABLES, SYS.SYSSCHEMAS as SCHEMAS where TABLES.SCHEMAID=SCHEMAS.SCHEMAID and SCHEMAS.SCHEMANAME='APP' AND TABLES.TABLENAME='USER_MST'</attribute>
+            <attribute name="CreateTableQuery">
+                create table USER_MST(
+                    ID              CHAR(5) not null,
+                    NAME            VARCHAR(256),
+                    AGE             NUMERIC(3,0),
+                    SEX             CHAR(1),
+                    PASSWORD        VARCHAR(20),
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into USER_MST values(?,?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :NAME,java.lang.String
+                :AGE,short
+                :SEX,java.lang.String
+                :PASSWORD,java.lang.String
+            </attribute>
+            <attribute name="InsertRecords">
+                00001,山田太郎,25,M,sample123
+                00002,山田花子,20,F,sample456
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">23505</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+        </service>
+        
+        <service template="Template.Service.Connection.TableCreator#CSVRecordListConverter"/>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Resource.Publish">
+        
+        <service template="Template.BeanFlowServer.Resource.Publish#ConnectionFactory">
+            <service-property name="Template.Service.Publish.TCP.ASYNCH_SEND_QUEUE_SERVICE_NAME">#AsynchSendQueue</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.Publish#AsynchSendQueue"/>
+        
+        <service template="Template.BeanFlowServer.Resource.Publish#ClusterConnectionFactory"/>
+        
+        <service template="Template.BeanFlowServer.Resource.Publish#MessageReceiver">
+            <service-property name="Template.Service.Publish.Receiver.CLIENT_CONNECTION_FAC_SERVICE_NAME" extends="true">#ClusterConnectionFactory</service-property>
+            <attribute name="StartReceiveOnStart">true</attribute>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.2</attribute>
+            <attribute name="MulticastPort">20002</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Resource.BeanControl" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">BeanFlowServer.BusinessJournal#BusinessJournal</manager-property>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#BeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.DIR_PATHS">flows</service-property>
+            <service-property name="Template.Service.BeanControl.BEAN_FLOW_JOURNAL_EDITOR_FINDER_SERVICE_NAME">BeanFlowServer.BusinessJournal#BeanFlowJournalEditorFinder</service-property>
+            <service-property name="Template.Service.BeanControl.INTERPRETER_SERVICE_NAME">BeanFlowServer.Resource#JavaScriptInterpreter</service-property>
+            <service-property name="Template.Service.BeanControl.TEMPLATE_ENGINE_SERVICE_NAME">BeanFlowServer.Resource#TemplateEngine</service-property>
+            <service-property name="Template.Service.BeanControl.ASYNCH_INVOKE_QUEUE_HANDLER_CONTAINER_SERVICE_NAME">#AsynchInvokeQueueHandlerContainer</service-property>
+            
+            <depends>BeanFlowServer.Resource.JDBC#PersistentManager</depends>
+            <depends>BeanFlowServer.Resource.JDBC#ConnectionResourceFactory</depends>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#AsynchInvokeQueueHandlerContainer">
+            <service-property name="Template.Service.Queue.QueueHandlerContainer.QUEUE_SERVICE_NAME">#AsynchInvokeQueue</service-property>
+            <attribute name="QueueHandlerSize">100</attribute>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#AsynchInvokeQueue"/>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#BeanFlowInterceptorChainFactory"/>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#BeanFlowInterceptorChainList"/>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#JournalInterceptor">
+            <attribute name="BushingCallBlock">true</attribute>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#BeanFlowMetricsInterceptor">
+            <service-property name="Template.Service.AOP.Interceptor.BeanFlowMetrics.PERFORMANCE_RECORDER_SERVICE_NAME">BeanFlowServer.Performance.BeanFlow#PerformanceRecorder</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl#BeanFlowExceptionHandlingInterceptor">
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>#DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 template="Template.BeanFlowServer.Resource.BeanControl#ExceptionHandler">
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
+        </service>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Resource.BeanControl.Server" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME">BeanFlowServer.AccessJournal#AccessJournal</manager-property>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#BeanFlowInvokerServer">
+            <service-property name="Template.Service.BeanControl.Dist.Server.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME" extends="true">BeanFlowServer.Resource.BeanControl#BeanFlowInvokerFactory</service-property>
+            <service-property name="Template.Service.BeanControl.Dist.Server.INTERCEPTOR_CHAIN_FACTORY_SERVICE_NAME">#BeanFlowInvokerServerInterceptorChainFactory</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.Cluster.Multicast#Cluster">
+            <attribute name="MulticastGroupAddress">239.0.1.3</attribute>
+            <attribute name="MulticastPort">20003</attribute>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#BeanFlowInvokerServerInterceptorChainFactory"/>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#BeanFlowInvokerServerInterceptorChainList">
+            
+            <service-property name="Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">#ThreadContextInitializeInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.ACCESS_JOURNAL_INTERCEPTOR_SERVICE_NAME">#AccessJournalInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
+                                                                                                                                                                </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#ThreadContextInitializeInterceptor">
+            <service-property name="Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME">BeanFlowServer.Resource#CodeMasterFinder</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#AccessJournalInterceptor"/>
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Server#ExceptionHandlingInterceptor">
+            <attribute name="DefaultExceptionHandlerServiceName">#DefaultExceptionHandler</attribute>
+            <depends>#DefaultExceptionHandler</depends>
+        </service>
+        
+        <service name="DefaultExceptionHandler"
+                 template="Template.BeanFlowServer.Resource.BeanControl.Server#ExceptionHandler">
+            <service-property name="Template.Service.AOP.Interceptor.ExceptionHandler.JOURNAL_SERVICE_NAME">${Template.Service.AOP.Interceptor.JOURNAL_SERVICE_NAME}</service-property>
+            <attribute name="LogMessageCode">LOG_MSG_001</attribute>
+        </service>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Resource.BeanControl.Remote">
+        
+        <service template="Template.BeanFlowServer.Resource.BeanControl.Remote#ServerBeanFlowInvokerFactory">
+            <service-property name="Template.Service.BeanControl.Dist.Client.CLUSTER_SERVICE_NAME">BeanFlowServer.Resource.BeanControl.Server#Cluster</service-property>
+            <service-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</service-property>
+        </service>
+         
+    </manager>
+    
+</server>

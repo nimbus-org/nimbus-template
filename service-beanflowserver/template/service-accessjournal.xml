@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.BeanFlowServer.AccessJournal" shutdown-hook="true">
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournal" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalQueue" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalCategory" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalWritableRecordFactory" instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Access.StartTime
+                REQUEST_ID=Access.RequestID
+                FLOW_NAME=Access.JournalRecords.MethodCall[0].Target.FlowName
+                METHOD_PARAMS=Access.JournalRecords.MethodCall[0].Parameters[0]
+                PERFORMANCE=Access.Performance
+            </attribute>
+            <attribute name="Format">""%DATE%","%REQUEST_ID%","%FLOW_NAME%","%METHOD_PARAMS%","%PERFORMANCE%""</attribute>
+        </service>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalWritableRecordFactory" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#NormalDateElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ErrorDateElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ParametersElement" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#CustomConverter" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#CSVEscapeConverter" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessErrorJournalWriter" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalEditorFinder" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessJournalEditorProperties" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#AccessRequestJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#MutableObjectJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ObjectJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ClassJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#MethodJournalEditor" instance="template"/>
+        
+        <service template="Template.Service.Journal.ProxyJournal#ThrowableJournalEditor" instance="template"/>
+        
+    </manager>
+    
+</server>

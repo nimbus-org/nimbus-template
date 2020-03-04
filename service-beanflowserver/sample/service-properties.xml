@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <server-property name="BeanFlowServer.LOG_OUTPUT_PATH">./target/</server-property>
+    <server-property name="BeanFlowServer.BusinessJournal.JOURNAL_ENABLED">true</server-property>
+    <server-property name="BeanFlowServer.BusinessJournal.OUTPUT_INDENT">true</server-property>
+    <server-property name="Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME">BeanFlowServer.Log#ThreadContext</server-property>
+    <server-property name="Template.Service.AOP.Interceptor.CONTEXT_SERVICE_NAME">BeanFlowServer.Log#Context</server-property>
+    
+</server>

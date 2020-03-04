@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <log manager-name="BeanFlowServer.Log">Logger</log>
+    
+    <manager name="BeanFlowServer.Log" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Log.LOG_OUTPUT_PATH">${BeanFlowServer.LOG_OUTPUT_PATH}</manager-property>
+        
+        <service template="Template.BeanFlowServer.Log#Context"/>
+        
+        <service template="Template.BeanFlowServer.Log#ThreadContext"/>
+        
+        <service template="Template.BeanFlowServer.Log#ServerInfo"/>
+        
+        <service template="Template.BeanFlowServer.Log#Logger"/>
+        
+        <service template="Template.BeanFlowServer.Log#LogMessageRecordFactory"/>
+        <service template="Template.BeanFlowServer.Log#MessageRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.Log#LogFileWritableRecordFactory"/>
+        <service template="Template.BeanFlowServer.Log#LogConsoleWritableRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.Log#FrameLogWriter"/>
+        <service template="Template.BeanFlowServer.Log#ApplLogWriter"/>
+        <service template="Template.BeanFlowServer.Log#ConsoleWriter"/>
+        
+        <service template="Template.BeanFlowServer.Log#FrameGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#FrameFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#FrameConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#SysDebugGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysDebugFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysDebugConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#SysInfoGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysInfoFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysInfoConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#SysWarnGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysWarnFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysWarnConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#SysErrorGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysErrorFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysErrorConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#SysFatalGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysFatalFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#SysFatalConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComTraceGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComTraceFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComTraceConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComDebugGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComDebugFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComDebugConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComInfoGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComInfoFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComInfoConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComWarnGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComWarnFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComWarnConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComErrorGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComErrorFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComErrorConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ComFatalGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComFatalFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ComFatalConsoleCategory"/>
+        
+        <service template="Template.BeanFlowServer.Log#ApplGroupCategory"/>
+        <service template="Template.BeanFlowServer.Log#ApplFileCategory"/>
+        <service template="Template.BeanFlowServer.Log#ApplConsoleCagegory"/>
+        
+    </manager>
+    
+</server>

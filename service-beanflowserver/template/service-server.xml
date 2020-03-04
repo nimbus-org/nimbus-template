@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <!-- サーバサービス群 -->
+    <manager name="Template.BeanFlowServer.Server">
+        
+        <!-- 他サーバからのサービスの呼び出し口を提供するサービス -->
+        <service template="Template.Service.Proxy.Server.RMI#RemoteServiceServer"
+                 instance="template">
+            
+            <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
+        </service>
+    </manager>
+</server>

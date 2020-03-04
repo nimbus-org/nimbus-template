@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <!-- 性能系のサービス群 -->
+    <manager name="Template.BeanFlowServer.Performance">
+        
+        <!-- サーバの性能情報を取得するOperationSystemサービス -->
+        <service template="Template.Service.System.OperationSystem#OperationSystem"
+                 instance="template"/>
+        
+        <!-- 性能統計を時系列で記録するPerformanceRecorderサービス群 -->
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceRecorder"
+                 instance="template"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalCategory"
+                 instance="template"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWriter"
+                 instance="template"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#PerformanceJournalWritableRecordFactory"
+                 instance="template"/>
+        <service template="Template.Service.Performance.PerformanceRecorder#DateElement"
+                 instance="template"/>
+        
+    </manager>
+    
+</server>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<!DOCTYPE flows PUBLIC
+  "-//Nimbus//DTD Nimbus Bean Flow 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/beanflow_1_0.dtd">
+
+<flows>
+    
+    <flow name="getUser">
+        
+        <input-def name="userId"/>
+        
+        <step name="codemaster">
+            <target><service-ref>BeanFlowServer.Log#ThreadContext</service-ref></target>
+            <result><attribute name="CODE_MASTER"/></result>
+        </step>
+        
+        <step name="userMaster">
+            <target><step-ref>codemaster</step-ref></target>
+            <result><attribute name="codemaster/userMaster"/></result>
+        </step>
+        
+        <step name="key">
+            <target><step-ref>userMaster.createRecord</step-ref></target>
+            <attribute name="Property(ID)"><input name="userId"/></attribute>
+            <result><this/></result>
+        </step>
+        
+        <step name="user">
+            <target><step-ref>userMaster</step-ref></target>
+            <result>
+                <invoke name="searchByPrimaryKey">
+                    <argument><step-ref>key</step-ref></argument>
+                </invoke>
+            </result>
+        </step>
+        
+    </flow>
+    
+</flows>

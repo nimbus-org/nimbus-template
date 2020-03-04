@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <manager name="BeanFlowServer.BusinessJournal" shutdown-hook="true">
+        
+        <manager-property name="Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH">${BeanFlowServer.LOG_OUTPUT_PATH}</manager-property>
+        <manager-property name="Template.Service.Journal.BusinessJournal.JOURNAL_ENABLED">${BeanFlowServer.BusinessJournal.JOURNAL_ENABLED}</manager-property>
+        <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">${BeanFlowServer.BusinessJournal.OUTPUT_INDENT}</manager-property>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournal"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalQueue"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalCategory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessErrorJournalCategory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalWritableRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessErrorJournalWritableRecordFactory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ErrorDateElement" instance="factory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ErrorThrowableElement" instance="factory"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalWriter"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessErrorJournalWriter"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalEditorFinder"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessJournalEditorProperties"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BeanFlowJournalEditorFinder"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BeanFlowJournalEditorProperties"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BusinessRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#MutableObjectJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#MapRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ObjectJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ClassJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#DateJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ListJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#FlowRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#StepRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ExecuteRequestJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#ThrowableJournalEditor">
+            <service-property name="Template.Service.Journal.JournalEditor.ThrowableJournalEditorService.THREAD_CONTEXT_SERVICE_NAME">${Template.Service.AOP.Interceptor.THREAD_CONTEXT_SERVICE_NAME}</service-property>
+        </service>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#DataSetJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#RecordJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#HeaderJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#RecordListJournalEditor"/>
+        
+        <service template="Template.BeanFlowServer.BusinessJournal#BeanJournalEditor"/>
+        
+    </manager>
+    
+</server>

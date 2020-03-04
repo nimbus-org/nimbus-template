@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <server-property name="Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH">${BeanFlowServer.LOG_OUTPUT_PATH}</server-property>
+    
+    <manager name="BeanFlowServer.Performance">
+        
+        <service template="Template.BeanFlowServer.Performance#OperationSystem"/>
+        
+    </manager>
+    
+    <manager name="BeanFlowServer.Performance.JDBC">
+        
+        <service template="Template.BeanFlowServer.Performance#PerformanceRecorder"/>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalCategory"/>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalWriter">
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/jdbc_performancejournal.log</attribute>
+        </service>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.BeanFlowServer.Performance#DateElement"
+                 instance="factory"/>
+    </manager>
+    
+    <manager name="BeanFlowServer.Performance.BeanFlow">
+        
+        <service template="Template.BeanFlowServer.Performance#PerformanceRecorder"/>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalCategory"/>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalWriter">
+            <attribute name="File">${Template.Service.Performance.PerformanceRecorder.LOG_OUTPUT_PATH}/flow_performancejournal.log</attribute>
+        </service>
+        <service template="Template.BeanFlowServer.Performance#PerformanceJournalWritableRecordFactory"/>
+        <service template="Template.BeanFlowServer.Performance#DateElement"
+                 instance="factory"/>
+    </manager>
+    
+</server>

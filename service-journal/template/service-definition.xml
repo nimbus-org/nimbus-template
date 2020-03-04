@@ -663,6 +663,7 @@ Editorサービス
     <manager name="Template.Service.Journal.ProxyJournal">
 
         <manager-property name="Template.Service.Journal.ProxyJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.ProxyJournal.SEPARATOR">,</manager-property>
 
 <!--=======================================================================
 ジャーナルサービス
@@ -784,7 +785,28 @@ WritableRecordFactoryサービス
 
         <service name="ParametersElement"
                  template="Template.Service.Writer.WritableRecordFactory#ArrayElement"
-                 instance="template"/>
+                 instance="template">
+            <attribute name="StringConverter"><service-ref>#CustomConverter</service-ref></attribute>
+            <depends>CustomConverter</depends>
+        </service>
+
+        <service name="CustomConverter"
+                 code="jp.ossc.nimbus.util.converter.CustomConverter"
+                 instance="template">
+            <invoke name="add">
+                <argument type="jp.ossc.nimbus.util.converter.Converter">
+                    <service-ref>#CSVEscapeConverter</service-ref>
+                </argument>
+            </invoke>
+            <depends>#CSVEscapeConverter</depends>
+        </service>
+
+        <service name="CSVEscapeConverter"
+                 code="jp.ossc.nimbus.io.CSVWriter"
+                 instance="template">
+            <attribute name="Enclose">true</attribute>
+            <attribute name="Separator">${Template.Service.Journal.ProxyJournal.SEPARATOR}</attribute>
+        </service>
 
 <!--=======================================================================
 ライターサービス
@@ -860,10 +882,6 @@ EditorFinderサービス
                  instance="template">
             <attribute name="ShortClassName">true</attribute>
         </service>
-
-        <service name="RequestJournalEditor"
-                 template="Template.Service.Journal.JournalEditor#SimpleRequestJournalEditor"
-                 instance="template"/>
 
         <service name="MethodJournalEditor"
                  template="Template.Service.Journal.JournalEditor#MethodJournalEditor"
