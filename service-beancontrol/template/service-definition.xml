@@ -95,6 +95,7 @@ BeanFlowサービス
                  instance="template">
 
             <service-property name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">#RequestProcessCheckInterceptor</service-property>
+            <service-property name="Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">#ThreadContextInitializeInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">#JournalInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.JOURANL_METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowJournalMetricsInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME">#BeanFlowMetricsInterceptor</service-property>
@@ -105,6 +106,9 @@ BeanFlowサービス
                     <constructor>
 <ifdef name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME}</argument>
 </ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</argument>
@@ -123,6 +127,9 @@ BeanFlowサービス
             </attribute>
 <ifdef name="Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME">
             <depends>${Template.Service.BeanControl.Interceptor.REQUEST_PROC_CHECK_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME">
             <depends>${Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME}</depends>
