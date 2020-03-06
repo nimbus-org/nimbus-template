@@ -207,4 +207,12 @@
                  instance="template"/>
         
     </manager>
+    
+    <manager name="Template.BatchServer.Resource.BeanControl.Remote">
+        
+        <!-- リモートの業務フローを呼び出すBeanFlowInvokerFactoryサービス -->
+        <service template="Template.Service.BeanControl.Dist.Client#ServerBeanFlowInvokerFactory"
+                 instance="template"/>
+        
+    </manager>
 </server>
