@@ -22,6 +22,7 @@
             
             <service-property name="Template.Service.CodeMaster.BEANFLOW_INVOKER_FACTORY_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
             <service-property name="Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME">#MessageReceiver</service-property>
+            <service-property name="Template.Service.CodeMaster.REQUEST_CONNECTOIN_FACTORY_SERVICE_NAME">#RequestConnectionFactory</service-property>
             <service-property name="Template.Service.CodeMaster.SUBJECTS" extends="true">CodeMaster</service-property>
             <service-property name="Template.Service.CodeMaster.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             
@@ -39,6 +40,12 @@
             <attribute name="MessageReceiverServiceName">${Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME}</attribute>
             <attribute name="Subjects">${Template.Service.CodeMaster.SUBJECTS}</attribute>
             <depends>${Template.Service.CodeMaster.MESSAGE_RECEIVER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.CodeMaster.REQUEST_CONNECTOIN_FACTORY_SERVICE_NAME">
+            <attribute name="RequestConnectionFactoryServiceName">${Template.Service.CodeMaster.REQUEST_CONNECTOIN_FACTORY_SERVICE_NAME}</attribute>
+            <attribute name="Subjects">${Template.Service.CodeMaster.SUBJECTS}</attribute>
+            <depends>${Template.Service.CodeMaster.REQUEST_CONNECTOIN_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
         </service>
         
