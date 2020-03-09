@@ -24,7 +24,8 @@
         <service template="Template.Service.Interpreter#ScriptEngineInterpreter"
                  instance="template"/>
         
-        <service name="Externalizer" template="Template.Service.IO.Externalizer#NimbusExternalizer"/>
+        <service name="Externalizer" template="Template.Service.IO.Externalizer#NimbusExternalizer"
+                 instance="template"/>
         
     </manager>
     
