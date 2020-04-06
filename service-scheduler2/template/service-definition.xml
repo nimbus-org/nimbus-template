@@ -30,6 +30,7 @@
             <service-property name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSLambdaScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSGlueScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSSageMakerScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.K8S_SCHEDULE_EXECUTOR_SERVICE_NAME">#KuberneteseScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             <service-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
@@ -60,6 +61,9 @@
 <ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
 </ifdef>
+<ifdef name="Template.Service.Scheduler2.K8S_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.K8S_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
                     </constructor>
                 </object>
             </attribute>
@@ -80,6 +84,9 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.AWS_SAGEMAKER_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.K8S_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.K8S_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">
@@ -303,6 +310,68 @@
 </ifdef>
 
         </service>
+
+        <!-- K8Sを呼び出すScheduleExecuterサービス -->
+        <service name="KuberneteseScheduleExecutor"
+                 code="jp.ossc.nimbus.service.scheduler2.k8s.KuberneteseScheduleExecutorService"
+                 instance="template">
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
+            <!-- ScheduleManagerサービスのサービス名を設定する -->
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+            
+            <attribute name="ApiClasses">
+                io.kubernetes.client.openapi.apis.AdmissionregistrationV1beta1Api,
+                io.kubernetes.client.openapi.apis.ApiextensionsV1beta1Api,
+                io.kubernetes.client.openapi.apis.ApiregistrationV1Api,
+                io.kubernetes.client.openapi.apis.ApiregistrationV1beta1Api,
+                io.kubernetes.client.openapi.apis.AppsV1Api,
+                io.kubernetes.client.openapi.apis.AppsV1beta1Api,
+                io.kubernetes.client.openapi.apis.AppsV1beta2Api,
+                io.kubernetes.client.openapi.apis.AuditregistrationV1alpha1Api,
+                io.kubernetes.client.openapi.apis.AuthenticationV1Api,
+                io.kubernetes.client.openapi.apis.AuthenticationV1beta1Api,
+                io.kubernetes.client.openapi.apis.AuthorizationV1Api,
+                io.kubernetes.client.openapi.apis.AuthorizationV1beta1Api,
+                io.kubernetes.client.openapi.apis.AutoscalingV1Api,
+                io.kubernetes.client.openapi.apis.AutoscalingV2beta1Api,
+                io.kubernetes.client.openapi.apis.AutoscalingV2beta2Api,
+                io.kubernetes.client.openapi.apis.BatchV1Api,
+                io.kubernetes.client.openapi.apis.BatchV1beta1Api,
+                io.kubernetes.client.openapi.apis.BatchV2alpha1Api,
+                io.kubernetes.client.openapi.apis.CertificatesV1beta1Api,
+                io.kubernetes.client.openapi.apis.CoordinationV1Api,
+                io.kubernetes.client.openapi.apis.CoordinationV1beta1Api,
+                io.kubernetes.client.openapi.apis.CoreV1Api,
+                io.kubernetes.client.openapi.apis.EventsV1beta1Api,
+                io.kubernetes.client.openapi.apis.ExtensionsV1beta1Api,
+                io.kubernetes.client.openapi.apis.NetworkingV1Api,
+                io.kubernetes.client.openapi.apis.NetworkingV1beta1Api,
+                io.kubernetes.client.openapi.apis.NodeV1alpha1Api,
+                io.kubernetes.client.openapi.apis.NodeV1beta1Api,
+                io.kubernetes.client.openapi.apis.PolicyV1beta1Api,
+                io.kubernetes.client.openapi.apis.RbacAuthorizationV1alpha1Api,
+                io.kubernetes.client.openapi.apis.RbacAuthorizationV1Api,
+                io.kubernetes.client.openapi.apis.RbacAuthorizationV1beta1Api,
+                io.kubernetes.client.openapi.apis.SchedulingV1alpha1Api,
+                io.kubernetes.client.openapi.apis.SchedulingV1Api,
+                io.kubernetes.client.openapi.apis.SchedulingV1beta1Api,
+                io.kubernetes.client.openapi.apis.SettingsV1alpha1Api,
+                io.kubernetes.client.openapi.apis.StorageV1alpha1Api,
+                io.kubernetes.client.openapi.apis.StorageV1Api,
+                io.kubernetes.client.openapi.apis.StorageV1beta1Api
+            </attribute>
+            
+        </service>
+        
     </manager>
 
     <manager name="Template.Service.Scheduler2.ScheduleMaker">
