@@ -41,7 +41,27 @@
         <service template="Template.Service.Context.TransactionManager#TransactionManager"
                  instance="template"/>
         
+    </manager>
+    
+    <!-- キャッシュマップサービス群 -->
+    <manager name="Template.WebServer.SharedContext.CacheMap">
         
+        <service template="Template.Service.Cache.CacheMap.Memory#CacheMap"
+                 instance="template">
+            <service-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME" extends="true">#OverflowController</service-property>
+        </service>
+        
+        <service template="Template.Service.Cache.OverflowController#OverflowController"
+                 instance="template">
+            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME" extends="true">#OverflowValidator</service-property>
+            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME" extends="true">#OverflowAlgorithm</service-property>
+        </service>
+        
+        <service name="OverflowValidator" template="Template.Service.Cache.OverflowValidator#CacheSizeOverflowValidator"
+                 instance="template"/>
+        
+        <service name="OverflowAlgorithm" template="Template.Service.Cache.OverflowAlgorithm#LFUOverflowAlgorithm"
+                 instance="template"/>
     </manager>
     
 </server>

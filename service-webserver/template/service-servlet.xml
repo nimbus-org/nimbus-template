@@ -52,6 +52,7 @@
             <service-property name="Template.WebServer.Servlet.InterceptorChainList.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME">#ExceptionHandlingInterceptor</service-property>
             <service-property name="Template.WebServer.Servlet.InterceptorChainList.BLOCKADE_INTERCEPTOR_SERVICE_NAME">#BlockadeInterceptor</service-property>
             <service-property name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">#AuthenticateInterceptor</service-property>
+            <service-property name="Template.WebServer.Servlet.InterceptorChainList.OAUTH2_AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">#OAuth2AuthenticateInterceptor</service-property>
             
             <attribute name="InterceptorServiceNames">
                 <object code="jp.ossc.nimbus.core.ServiceName[]">
@@ -116,6 +117,9 @@
 <ifdef name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</argument>
 </ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.OAUTH2_AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.WebServer.Servlet.InterceptorChainList.OAUTH2_AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</argument>
+</ifdef>
                     </constructor>
                 </object>
             </attribute>
@@ -178,6 +182,9 @@
 </ifdef>
 <ifdef name="Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
             <depends>${Template.WebServer.Servlet.InterceptorChainList.AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.Servlet.InterceptorChainList.OAUTH2_AUTHENTICATE_INTERCEPTOR_SERVICE_NAME">
+            <depends>${Template.WebServer.Servlet.InterceptorChainList.OAUTH2_AUTHENTICATE_INTERCEPTOR_SERVICE_NAME}</depends>
 </ifdef>
             
         </service>
@@ -281,6 +288,18 @@
         
         <!-- RESTFulリクエストを処理するRestServerサービス -->
         <service template="Template.Service.REST#RestServer"
+                 instance="template"/>
+        
+        <!-- OAuth2認証/承認を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#OAuth2AuthenticateInterceptor"
+                 instance="template"/>
+        
+        <!-- OAuth2スコープ解決を行うサービス -->
+        <service template="Template.Service.AOP.Servlet.Interceptor#OAuth2ScopeResolver"
+                 instance="template"/>
+        
+        <!-- OAuth2スコープのマッチを行うサービス -->
+        <service template="Template.Service.AOP.Interceptor#OAuth2ScopeMatcher"
                  instance="template"/>
         
     </manager>

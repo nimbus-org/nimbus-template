@@ -359,6 +359,11 @@
         <service name="TraceLoggingInterceptor"
                  code="jp.ossc.nimbus.service.aop.interceptor.TraceLoggingInterceptorService"
                  instance="template"/>
+
+        <!-- OAuth2 スコープマッチャサービス -->
+        <service name="OAuth2ScopeMatcher"
+                 code="jp.ossc.nimbus.service.aop.interceptor.DefaultOAuth2ScopeMatcherService"
+                 instance="template"/>
     </manager>
 
     <manager name="Template.Service.AOP.Servlet">
@@ -827,6 +832,36 @@
             <depends>${Template.Service.AOP.Servlet.Interceptor.CODEMASTER_FINDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
+
+        <!-- OAuth2認証Interceptorサービス -->
+        <service name="OAuth2AuthenticateInterceptor"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.OAuth2AuthenticateInterceptorService"
+                 instance="template">
+            
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.HTTP_CLIENT_FACTORY_SERVICE_NAME">#HttpClientFactory</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_RESOLVER_SERVICE_NAME">#OAuth2ScopeResolver</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_MATCHER_SERVICE_NAME">#OAuth2ScopeMatcher</service-property>
+
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.HTTP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="HttpClientFactoryServiceName">${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.HTTP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_RESOLVER_SERVICE_NAME">
+            <attribute name="OAuth2ScopeResolverServiceName">${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_RESOLVER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_RESOLVER_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_MATCHER_SERVICE_NAME">
+            <attribute name="OAuth2ScopeMatcherServiceName">${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_MATCHER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.OAuth2Authenticate.OAUTH2_SCOPE_MATCHER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+
+        <!-- OAuth2 スコープ解決サービス -->
+        <service name="OAuth2ScopeResolver"
+                 code="jp.ossc.nimbus.service.aop.interceptor.servlet.DefaultOAuth2ScopeResolverService"
+                 instance="template"/>
 
     </manager>
 
