@@ -106,6 +106,8 @@
             <attribute name="ContextStoreServiceName">${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Context.SharedContext.CONTEXT_STORE_SERVICE_NAME}</depends>
 </ifdef>
+            
+            <attribute name="ForcedLockTimeoutCheckInterval">5000</attribute>
         </service>
 
         <!-- サーバを跨ってデータを分散共有するSharedContextサービス -->
@@ -183,6 +185,8 @@
             <attribute name="SharedContextKeyDistributorServiceName">${Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Context.SharedContext.KEY_DISTRIBUTOR_SERVICE_NAME}</depends>
 </ifdef>
+            
+            <attribute name="ForcedLockTimeoutCheckInterval">5000</attribute>
 
         </service>
 
