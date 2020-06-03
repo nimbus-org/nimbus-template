@@ -570,7 +570,7 @@
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
             <!-- スケジュールIDを発番するSQLを設定する -->
-            <attribute name="NextScheduleIdUpdateQuery">UPDATE SEQUENCE_SCHEDULE_ID SET SEQUENCE_SCHEDULE_ID = LAST_INSERT_ID(SEQUENCE_SCHEDULE_ID + 1)</attribute>
+            <attribute name="NextScheduleIdUpdateQuery">UPDATE SCHEDULE_ID_SEQUENCE SET SEQUENCE_SCHEDULE_ID = LAST_INSERT_ID(SEQUENCE_SCHEDULE_ID + 1)</attribute>
             <attribute name="NextScheduleIdSelectQuery">SELECT LAST_INSERT_ID()</attribute>
 </ifdef>
             
@@ -940,6 +940,10 @@
                  instance="template">
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
+            <attribute name="CommentPrefix">#</attribute>
+            <attribute name="UnescapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="EscapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="Separator">${\t}</attribute>
         </service>
 
     </manager>
@@ -1329,6 +1333,10 @@
                  instance="template">
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
+            <attribute name="CommentPrefix">#</attribute>
+            <attribute name="UnescapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="EscapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="Separator">${\t}</attribute>
         </service>
     </manager>
 
@@ -1797,6 +1805,10 @@
                  instance="template">
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
+            <attribute name="CommentPrefix">#</attribute>
+            <attribute name="UnescapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="EscapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="Separator">${\t}</attribute>
         </service>
     </manager>
 
@@ -1819,11 +1831,11 @@
                 FROM 
                     information_schema.tables 
                 WHERE 
-                    table_schema='${MYSQL_DB}' AND table_name ='SEQUENCE_SCHEDULE_ID' 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_ID_SEQUENCE' 
                 LIMIT 1
             </attribute>
             <attribute name="CreateTableQuery">
-                create table ${MYSQL_DB}.SEQUENCE_SCHEDULE_ID(
+                create table ${MYSQL_DB}.SCHEDULE_ID_SEQUENCE(
                     SEQUENCE_SCHEDULE_ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
                 )
             </attribute>
@@ -2244,6 +2256,10 @@
                  instance="template">
             <attribute name="IgnoreEmptyLine">true</attribute>
             <attribute name="NullValue">null</attribute>
+            <attribute name="CommentPrefix">#</attribute>
+            <attribute name="UnescapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="EscapeLineSeparatorInEnclosure">true</attribute>
+            <attribute name="Separator">${\t}</attribute>
         </service>
     </manager>
 
