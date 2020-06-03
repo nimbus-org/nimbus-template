@@ -84,10 +84,15 @@
                  instance="template">
 
             <service-property name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">#KeepAliveCheckerSelector</service-property>
+            <service-property name="Template.Service.Proxy.Client.Invoker.Cluster.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
 
 <ifdef name="Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME">
             <attribute name="KeepAliveCheckerSelectorServiceName">${Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Proxy.Client.Invoker.Cluster.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Proxy.Client.Invoker.Cluster.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.Proxy.Client.Invoker.Cluster.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Proxy.Client.Invoker.Cluster.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 

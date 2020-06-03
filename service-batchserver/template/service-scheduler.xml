@@ -91,6 +91,29 @@
         
     </manager>
     
+    <!-- サービス呼び出しスケジュール実行サービス群 -->
+    <manager name="Template.BatchServer.Scheduler.ScheduleExecutor.ServiceCall">
+        
+        <service name="ServiceCallScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalServiceCallScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#ServiceCallScheduleExecutorInvoker</service-property>
+        </service>
+        
+        <service name="ServiceCallScheduleExecutorInvoker"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ScheduleExecutorInvoker"
+                 instance="template">
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.KEEP_ALIVE_CHECKER_SELECTOR_SERVICE_NAME" extends="true">#ScheduleExecutorSelector</service-property>
+            <attribute name="Type"><static-field-ref code="jp.ossc.nimbus.service.scheduler2.ServiceCallScheduleExecutorServiceMBean" name="DEFAULT_EXECUTOR_TYPE"/></attribute>
+        </service>
+        
+        <service name="LocalServiceCallScheduleExecutor"
+                 template="Template.Service.Scheduler2.ScheduleExecutor#ServiceCallScheduleExecutor"
+                 instance="template"/>
+        
+    </manager>
+    
     <!-- 集配信スケジュール実行サービス群 -->
     <manager name="Template.BatchServer.Scheduler.ScheduleExecutor.Concentrate">
         

@@ -26,6 +26,7 @@
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#CommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">#ServiceCallScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">#ConcentrateScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSLambdaScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_GLUE_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSGlueScheduleExecutor</service-property>
@@ -48,6 +49,9 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
@@ -72,6 +76,9 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
@@ -173,6 +180,33 @@
             <!-- ScheduleManagerサービスのサービス名を設定する -->
             <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+
+        </service>
+
+        <!-- コマンドでスケジュールを処理するScheduleExecuterサービス -->
+        <service name="ServiceCallScheduleExecutor"
+                 code="jp.ossc.nimbus.service.scheduler2.ServiceCallScheduleExecutorService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleExecutor.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+
+<ifdef name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">
+            <!-- スケジュール実行時のリクエストIDを取得するContextサービスのサービス名を設定する -->
+            <attribute name="ThreadContextServiceName">${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
+            <!-- ScheduleManagerサービスのサービス名を設定する -->
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.ScheduleExecutor.INTERPRETER_SERVICE_NAME">
+            <!-- Interpreterサービスのサービス名を設定する -->
+            <attribute name="InterpreterServiceName">${Template.Service.Scheduler2.ScheduleExecutor.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleExecutor.INTERPRETER_SERVICE_NAME}</depends>
 </ifdef>
 
         </service>
@@ -523,6 +557,29 @@
 
     </manager>
 
+    <manager name="Template.Service.Scheduler2.ScheduleManager.DB.MySQL">
+
+        <manager-property name="Template.Service.Scheduler2.CLUSTER_SERVICE_NAME">#Cluster</manager-property>
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+
+        <!-- スケジュールをデータベースで管理するScheduleManagerサービス -->
+        <service template="Template.Service.Scheduler2.ScheduleManager.DB#ScheduleManager"
+                 instance="template">
+
+            <service-property name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME">#ScheduleIdSequence</service-property>
+
+<ifdef name="Template.Service.Scheduler2.SCHEDULE_ID_SEQUENCE_SERVICE_NAME" not="true">
+            <!-- スケジュールIDを発番するSQLを設定する -->
+            <attribute name="NextScheduleIdUpdateQuery">UPDATE SEQUENCE_SCHEDULE_ID SET SEQUENCE_SCHEDULE_ID = LAST_INSERT_ID(SEQUENCE_SCHEDULE_ID + 1)</attribute>
+            <attribute name="NextScheduleIdSelectQuery">SELECT LAST_INSERT_ID()</attribute>
+</ifdef>
+            
+            <attribute name="UseConcatFunction">true</attribute>
+            
+        </service>
+
+    </manager>
+
     <manager name="Template.Service.Scheduler2.TableCreator.JavaDB">
 
         <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
@@ -556,7 +613,7 @@
             <attribute name="CreateTableQuery">
                 create table SCHEDULE_MST(
                     ID              VARCHAR(256) not null,
-                    TASK_NAME       VARCHAR(256) not null,
+                    TASK_NAME       VARCHAR(256),
                     SCHEDULE_TYPE   VARCHAR(20),
                     INPUT_DATA      VARCHAR(256),
                     START_TIME      CHAR(9) not null,
@@ -714,7 +771,7 @@
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,
-                    TASK_NAME      VARCHAR(256) NOT NULL,
+                    TASK_NAME      VARCHAR(256),
                     INPUT_DATA     VARCHAR(256),
                     OUTPUT_DATA    VARCHAR(1500),
                     INITIAL_DATE   CHAR(8) NOT NULL,
@@ -945,7 +1002,7 @@
             <attribute name="CreateTableQuery">
                 create table SCHEDULE_MST(
                     ID              VARCHAR(256) not null,
-                    TASK_NAME       VARCHAR(256) not null,
+                    TASK_NAME       VARCHAR(256),
                     SCHEDULE_TYPE   VARCHAR(20),
                     INPUT           VARCHAR(256),
                     START_TIME      CHAR(9) not null,
@@ -1103,7 +1160,7 @@
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,
-                    TASK_NAME      VARCHAR(256) NOT NULL,
+                    TASK_NAME      VARCHAR(256),
                     INPUT          VARCHAR(256),
                     OUTPUT         VARCHAR(1500),
                     INITIAL_DATE   CHAR(8) NOT NULL,
@@ -1328,7 +1385,8 @@
                 SCHEDULE_ID_SEQUENCE(
                     SEQUENCE_SCHEDULE_ID BIGINT not null,
                     PRIMARY KEY(SEQUENCE_SCHEDULE_ID)
-                )</attribute>
+                )
+            </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_ID_SEQUENCE values(?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertOnStart">true</attribute>
@@ -1363,7 +1421,7 @@
             <attribute name="CreateTableQuery">
                 create table SCHEDULE_MST(
                     ID              VARCHAR(256) not null,
-                    TASK_NAME       VARCHAR(256) not null,
+                    TASK_NAME       VARCHAR(256),
                     SCHEDULE_TYPE   VARCHAR(20),
                     INPUT           TEXT,
                     START_TIME      CHAR(9) not null,
@@ -1549,7 +1607,7 @@
                     MASTER_ID      VARCHAR(256) NOT NULL,
                     S_DATE         CHAR(8) NOT NULL,
                     S_TIME         CHAR(9) NOT NULL,
-                    TASK_NAME      VARCHAR(256) NOT NULL,
+                    TASK_NAME      VARCHAR(256),
                     INPUT          TEXT,
                     OUTPUT         TEXT,
                     INITIAL_DATE   CHAR(8) NOT NULL,
@@ -1730,6 +1788,453 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">0</attribute>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
+        <service name="RecordListConverter"
+                 code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
+                 instance="template">
+            <attribute name="IgnoreEmptyLine">true</attribute>
+            <attribute name="NullValue">null</attribute>
+        </service>
+    </manager>
+
+    <manager name="Template.Service.Scheduler2.TableCreator.MySQL">
+
+        <manager-property name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">#ConnectionFactory</manager-property>
+
+        <!-- スケジュールテーブルのスケジュールID用のSEQUENCEテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleSequenceTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SEQUENCE_SCHEDULE_ID' 
+                LIMIT 1
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SEQUENCE_SCHEDULE_ID(
+                    SEQUENCE_SCHEDULE_ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_ID_SEQUENCE values(?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :SEQUENCE_SCHEDULE_ID,int
+            </attribute>
+            <attribute name="InsertRecords">
+                1
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <depends>RecordListConverter</depends>
+        </service>
+        
+        <!-- スケジュールマスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_MST' 
+                LIMIT 1
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_MST(
+                    ID              VARCHAR(256) not null,
+                    TASK_NAME       VARCHAR(256),
+                    SCHEDULE_TYPE   VARCHAR(20),
+                    INPUT           TEXT,
+                    START_TIME      CHAR(9) not null,
+                    END_TIME        CHAR(9),
+                    REPEAT_INTERVAL BIGINT,
+                    RETRY_INTERVAL  BIGINT,
+                    RETRY_END_TIME  CHAR(9),
+                    MAX_DELAY_TIME  BIGINT,
+                    ENABLE          CHAR(1) not null,
+                    EXECUTOR_KEY    VARCHAR(128),
+                    EXECUTOR_TYPE   VARCHAR(128),
+                    TEMPLATE        CHAR(1) not null,
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_MST values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :TASK_NAME,java.lang.String
+                :SCHEDULE_TYPE,java.lang.String
+                :INPUT,java.lang.String
+                :START_TIME,java.lang.String
+                :END_TIME,java.lang.String
+                :REPEAT_INTERVAL,long
+                :RETRY_INTERVAL,long
+                :RETRY_END_TIME,java.lang.String
+                :MAX_DELAY_TIME,long
+                :ENABLE,java.lang.String
+                :EXECUTOR_KEY,java.lang.String
+                :EXECUTOR_TYPE,java.lang.String
+                :TEMPLATE,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleDependsMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_DEPENDS_MST' 
+                LIMIT 1              
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_DEPENDS_MST(
+                    ID               VARCHAR(256) not null,
+                    DEPENDS_ID       VARCHAR(256),
+                    DEPENDS_GROUP_ID VARCHAR(256),
+                    GROUP_ID         VARCHAR(256),
+                    IGNORE_ERROR     CHAR(1)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :DEPENDS_ID,java.lang.String
+                :DEPENDS_GROUP_ID,java.lang.String
+                :GROUP_ID,java.lang.String
+                :IGNORE_ERROR,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleGroupDependsMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP_DEPENDS_MST' 
+                LIMIT 1  
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS_MST(
+                    GROUP_ID         VARCHAR(256) not null,
+                    DEPENDS_GROUP_ID VARCHAR(256) not null,
+                    IGNORE_ERROR     CHAR(1),
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS_MST values(?,?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :GROUP_ID,java.lang.String
+                :DEPENDS_GROUP_ID,java.lang.String
+                :IGNORE_ERROR,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleGroupMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP_MST'
+                LIMIT 1       
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_GROUP_MST(
+                    ID          VARCHAR(256) not null,
+                    GROUP_ID    VARCHAR(256) not null,
+                    PRIMARY KEY(ID, GROUP_ID)
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_GROUP_MST values(?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :GROUP_ID,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE'
+                LIMIT 1  
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE(
+                    ID             VARCHAR(256) NOT NULL,
+                    MASTER_ID      VARCHAR(256) NOT NULL,
+                    S_DATE         CHAR(8) NOT NULL,
+                    S_TIME         CHAR(9) NOT NULL,
+                    TASK_NAME      VARCHAR(256),
+                    INPUT          TEXT,
+                    OUTPUT         TEXT,
+                    INITIAL_DATE   CHAR(8) NOT NULL,
+                    INITIAL_TIME   CHAR(9) NOT NULL,
+                    RETRY_INTERVAL BIGINT,
+                    RETRY_END_TIME CHAR(9),
+                    STATE          CHAR(1) DEFAULT 'I' NOT NULL,
+                    CONTROL_STATE  CHAR(1) DEFAULT 'I' NOT NULL,
+                    EXECUTOR_KEY   VARCHAR(128),
+                    EXECUTOR_TYPE  VARCHAR(128),
+                    EXEC_S_TIME    CHAR(17),
+                    EXEC_E_TIME    CHAR(17),
+                    MAX_DELAY_TIME BIGINT,
+                    CHECK_STATE    CHAR(1) DEFAULT 'I' NOT NULL,
+                    ROWVERSION     INT,
+                    UPDATEUSERID   VARCHAR(256),
+                    UPDATETIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY(ID)
+                )
+            </attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :MASTER_ID,java.lang.String
+                :S_DATE,java.lang.String
+                :S_TIME,java.lang.String
+                :TASK_NAME,java.lang.String
+                :INPUT,java.lang.String
+                :OUTPUT,java.lang.String
+                :INITIAL_DATE,java.lang.String
+                :INITIAL_TIME,java.lang.String
+                :RETRY_INTERVAL,long
+                :RETRY_END_TIME,java.lang.String
+                :STATE,java.lang.String
+                :CONTROL_STATE,java.lang.String
+                :EXECUTOR_KEY,java.lang.String
+                :EXECUTOR_TYPE,java.lang.String
+                :EXEC_S_TIME,java.lang.String
+                :EXEC_E_TIME,java.lang.String
+                :MAX_DELAY_TIME,long
+                :CHECK_STATE,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">long</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
+            </invoke>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュールグループテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleGroupTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP'
+                LIMIT 1;  
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_GROUP(
+                    ID              VARCHAR(256) not null,
+                    GROUP_ID        VARCHAR(256) not null,
+                    MASTER_GROUP_ID VARCHAR(256) not null,
+                    ROWVERSION     INT,
+                    UPDATEUSERID   VARCHAR(256),
+                    UPDATETIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY(ID, GROUP_ID, MASTER_GROUP_ID)
+                )
+            </attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_GROUP values(?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :GROUP_ID,java.lang.String
+                :MASTER_GROUP_ID,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleDependsTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_DEPENDS'
+                LIMIT 1  
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_DEPENDS(
+                    ID               VARCHAR(256) not null,
+                    DEPENDS_ID       VARCHAR(256),
+                    DEPENDS_GROUP_ID VARCHAR(256),
+                    GROUP_ID         VARCHAR(256),
+                    IGNORE_ERROR     CHAR(1),
+                    ROWVERSION       INT,
+                    UPDATEUSERID     VARCHAR(256),
+                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            </attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS values(?,?,?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :DEPENDS_ID,java.lang.String
+                :DEPENDS_GROUP_ID,java.lang.String
+                :GROUP_ID,java.lang.String
+                :IGNORE_ERROR,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <invoke name="setSqlType">
+                <argument type="java.lang.Class">java.lang.String</argument>
+                <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
+            </invoke>
+            <depends>RecordListConverter</depends>
+        </service>
+
+        <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleGroupDependsTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+               SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP_DEPENDS'
+                LIMIT 1 
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS(
+                    GROUP_ID         VARCHAR(256) not null,
+                    DEPENDS_GROUP_ID VARCHAR(256) not null,
+                    IGNORE_ERROR     CHAR(1),
+                    ROWVERSION       INT,
+                    UPDATEUSERID     VARCHAR(256),
+                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                )
+            </attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS values(?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :GROUP_ID,java.lang.String
+                :DEPENDS_GROUP_ID,java.lang.String
+                :IGNORE_ERROR,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
             <depends>RecordListConverter</depends>
         </service>
 
