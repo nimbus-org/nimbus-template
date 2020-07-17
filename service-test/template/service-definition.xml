@@ -46,7 +46,7 @@
                  code="jp.ossc.nimbus.service.test.HttpTestControllerClientService"
                  instance="template">
             
-            <service-property name="Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#TestResourceManager</service-property>
+            <service-property name="Template.Service.Test.TestController.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#HttpClientFactory</service-property>
             <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_MANAGER_SERVICE_NAME">#TestResourceManager</service-property>
             <service-property name="Template.Service.Test.TestController.TEST_RESOURCE_FILE_BASE_DIR" extends="true">resource</service-property>
             
@@ -490,7 +490,7 @@
             
             <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
             <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JMS_TOPIC_SESSION_FACTORY_SERVICE_NAME">#JMSTopicSessionFactory</service-property>
-            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">ServerConnectionFactory</service-property>
+            <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SERVER_CONNECTION_FACTORY_SERVICE_NAME">#ServerConnectionFactory</service-property>
             
             <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.JNDI_FINDER_SERVICE_NAME">#JndiFinder</service-property>
             <service-property name="Template.Service.Test.TestAction.CodeMasterNotifyActionService.SUBJECT">CodeMaster</service-property>
@@ -955,6 +955,115 @@
             <attribute name="ExpectedCost">5</attribute>
         </service>
         
+        <service name="CSVToRecordConvertAction"
+                 template="FileToObjectConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordCSVConverter</service-property>
+        </service>
+        
+        <service name="CSVToRecordListConvertAction"
+                 template="FileToObjectConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordListCSVConverter</service-property>
+        </service>
+        
+        <service name="RecordListToCSVConvertAction"
+                 template="ObjectToFileConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordListCSVConverter</service-property>
+        </service>
+        
+        <service name="BeanToJSONConvertAction"
+                 template="ObjectToFileConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#BeanJSONConverter</service-property>
+        </service>
+        
+        <service name="JSONToBeanConvertAction"
+                 template="FileToObjectConvertAction"
+                 instance="template">
+                 code="jp.ossc.nimbus.service.test.action.FileToObjectConvertActionService">
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#BeanJSONConverter</service-property>
+        </service>
+        
+        <service name="JSONToDataSetConvertAction"
+                 template="FileToObjectConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#DataSetJSONConverter</service-property>
+        </service>
+        
+        <service name="RecordListCSVConverter"
+                 code="jp.ossc.nimbus.util.converter.RecordListCSVConverter"
+                 instance="template">
+            <attribute name="ExistsHeader">true</attribute>
+            <attribute name="NullValue">null</attribute>
+        </service>
+        
+        <service name="RecordCSVConverter"
+                 code="jp.ossc.nimbus.util.converter.RecordCSVConverter"
+                 instance="template">
+            <attribute name="ExistsHeader">true</attribute>
+            <attribute name="NullValue">null</attribute>
+        </service>
+        
+        <service name="BeanJSONConverter"
+                 code="jp.ossc.nimbus.util.converter.BeanJSONConverter"
+                 instance="template">
+            <attribute name="Format">true</attribute>
+        </service>
+        
+        <service name="DataSetJSONConverter"
+                 code="jp.ossc.nimbus.util.converter.DataSetJSONConverter"
+                 instance="template">
+            <attribute name="IgnoreUnknownElement">true</attribute>
+        </service>
+        
+        <service name="FileToDatabaseUpdateChainAction"
+                 template="#ChainTestAction"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME" extends="true">#InterpreterAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME" extends="true">#CSVToRecordListConvertAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME" extends="true">#DatabaseUpdateAction</service-property>
+            
+            <attribute name="ActionServiceNames">
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</argument>
+                    </constructor>
+                </object>
+            </attribute>
+            
+            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="FileToBeanServerConnectionSendChainAction"
+                 template="#ChainTestAction"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.INTERPRETER_ACTION_SERVICE_NAME" extends="true">#InterpreterAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME" extends="true">#JSONToBeanConvertAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.SERVER_CONNECTION_SEND_ACTION_SERVICE_NAME" extends="true">#ServerConnectionSendAction</service-property>
+            
+            <attribute name="ActionServiceNames">
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.INTERPRETER_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.FILE_TO_OBJECT_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.SERVER_CONNECTION_SEND_ACTION_SERVICE_NAME}</argument>
+                    </constructor>
+                </object>
+            </attribute>
+            
+            <depends>${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.INTERPRETER_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.FILE_TO_OBJECT_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.FileToBeanServerConnectionSendChainAction.SERVER_CONNECTION_SEND_ACTION_SERVICE_NAME}</depends>
+        </service>
+        
     </manager>
     
     <manager name="Template.Service.Test.EvaluateTestAction">
@@ -1034,6 +1143,55 @@
                  instance="template">
             
             <attribute name="ExpectedCost">5</attribute>
+        </service>
+        
+        <service name="CleanAndCommandEvaluateChainAction"
+                 template="#ChainEvaluateTestAction"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.FILE_OPERATE_ACTION_SERVICE_NAME" extends="true">#FileOperateAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.COMMAND_EXECUTE_ACTION_SERVICE_NAME" extends="true">#JSONToBeanConvertAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.TEXT_EVALUATE_ACTION_SERVICE_NAME" extends="true">#TextEvaluateAction</service-property>
+            
+            <attribute name="ActionServiceNames">
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.FILE_OPERATE_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.COMMAND_EXECUTE_ACTION_SERVICE_NAME}</argument>
+                    </constructor>
+                </object>
+            </attribute>
+            <attribute name="EndEvaluateTestActionServiceName">${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.TEXT_EVALUATE_ACTION_SERVICE_NAME}</attribute>
+            
+            <depends>${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.FILE_OPERATE_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.COMMAND_EXECUTE_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.TEXT_EVALUATE_ACTION_SERVICE_NAME}</depends>
+        </service>
+        
+        <service name="DatabaseSearchEvaluateChainAction"
+                 template="#ChainEvaluateTestAction"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.INTERPRETER_ACTION_SERVICE_NAME" extends="true">#InterpreterAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.DATABASE_SEARCH_ACTION_SERVICE_NAME" extends="true">#DatabaseSearchAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.RECORDLIST_TO_FILE_ACTION_SERVICE_NAME" extends="true">#RecordListToCSVConvertAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.TEXT_COMPARE_EVALUATE_ACTION_SERVICE_NAME" extends="true">#CSVCompareEvaluateAction</service-property>
+            
+            <attribute name="ActionServiceNames">
+                <object code="jp.ossc.nimbus.core.ServiceName[]">
+                    <constructor>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.DATABASE_SEARCH_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.RECORDLIST_TO_FILE_ACTION_SERVICE_NAME}</argument>
+                    </constructor>
+                </object>
+            </attribute>
+            <attribute name="EndEvaluateTestActionServiceName">${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.TEXT_COMPARE_EVALUATE_ACTION_SERVICE_NAME}</attribute>
+            
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.DATABASE_SEARCH_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.RECORDLIST_TO_FILE_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.DatabaseSearchEvaluateChainAction.TEXT_COMPARE_EVALUATE_ACTION_SERVICE_NAME}</depends>
         </service>
         
     </manager>
