@@ -1150,7 +1150,7 @@
                  instance="template">
             
             <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.FILE_OPERATE_ACTION_SERVICE_NAME" extends="true">#FileOperateAction</service-property>
-            <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.COMMAND_EXECUTE_ACTION_SERVICE_NAME" extends="true">#JSONToBeanConvertAction</service-property>
+            <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.COMMAND_EXECUTE_ACTION_SERVICE_NAME" extends="true">#CommandExecuteAction</service-property>
             <service-property name="Template.Service.Test.TestAction.CleanAndCommandEvaluateChainAction.TEXT_EVALUATE_ACTION_SERVICE_NAME" extends="true">#TextEvaluateAction</service-property>
             
             <attribute name="ActionServiceNames">
