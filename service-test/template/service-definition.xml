@@ -915,6 +915,34 @@
 </ifdef>
         </service>
         
+        <service name="ScheduleFindAction"
+                 code="jp.ossc.nimbus.service.test.action.ScheduleFindActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ScheduleFindActionService.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ScheduleFindActionService.SCHEDULE_MANAGER_SERVICE_NAME">
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Test.TestAction.ScheduleFindActionService.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ScheduleFindActionService.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ScheduleRemoveAction"
+                 code="jp.ossc.nimbus.service.test.action.ScheduleRemoveActionService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Test.TestAction.ScheduleRemoveActionService.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</service-property>
+            
+            <attribute name="ExpectedCost">5</attribute>
+            
+<ifdef name="Template.Service.Test.TestAction.ScheduleRemoveActionService.SCHEDULE_MANAGER_SERVICE_NAME">
+            <attribute name="ScheduleManagerServiceName">${Template.Service.Test.TestAction.ScheduleRemoveActionService.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ScheduleRemoveActionService.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
         <service name="MBeanCallAction"
                  code="jp.ossc.nimbus.service.test.action.MBeanCallActionService"
                  instance="template">
