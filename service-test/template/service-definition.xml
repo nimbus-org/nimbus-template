@@ -901,12 +901,17 @@
                  instance="template">
             
             <service-property name="Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME">#ScheduleManager</service-property>
+            <service-property name="Template.Service.Test.TestAction.ScheduleMakeActionService.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
             
             <attribute name="ExpectedCost">5</attribute>
             
 <ifdef name="Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME">
             <attribute name="ScheduleManagerServiceName">${Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Test.TestAction.ScheduleMakeActionService.SCHEDULE_MANAGER_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Test.TestAction.ScheduleMakeActionService.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Test.TestAction.ScheduleMakeActionService.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Test.TestAction.ScheduleMakeActionService.INTERPRETER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
         
@@ -956,38 +961,37 @@
         </service>
         
         <service name="CSVToRecordConvertAction"
-                 template="FileToObjectConvertAction"
+                 template="#FileToObjectConvertAction"
                  instance="template">
             <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordCSVConverter</service-property>
         </service>
         
         <service name="CSVToRecordListConvertAction"
-                 template="FileToObjectConvertAction"
+                 template="#FileToObjectConvertAction"
                  instance="template">
             <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordListCSVConverter</service-property>
         </service>
         
         <service name="RecordListToCSVConvertAction"
-                 template="ObjectToFileConvertAction"
+                 template="#ObjectToFileConvertAction"
                  instance="template">
             <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordListCSVConverter</service-property>
         </service>
         
         <service name="BeanToJSONConvertAction"
-                 template="ObjectToFileConvertAction"
+                 template="#ObjectToFileConvertAction"
                  instance="template">
             <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#BeanJSONConverter</service-property>
         </service>
         
         <service name="JSONToBeanConvertAction"
-                 template="FileToObjectConvertAction"
+                 template="#FileToObjectConvertAction"
                  instance="template">
-                 code="jp.ossc.nimbus.service.test.action.FileToObjectConvertActionService">
             <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#BeanJSONConverter</service-property>
         </service>
         
         <service name="JSONToDataSetConvertAction"
-                 template="FileToObjectConvertAction"
+                 template="#FileToObjectConvertAction"
                  instance="template">
             <service-property name="Template.Service.Test.TestAction.FileToObjectConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#DataSetJSONConverter</service-property>
         </service>
@@ -1029,16 +1033,16 @@
             <attribute name="ActionServiceNames">
                 <object code="jp.ossc.nimbus.core.ServiceName[]">
                     <constructor>
-                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</argument>
-                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</argument>
-                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</argument>
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</argument>
                     </constructor>
                 </object>
             </attribute>
             
-            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</depends>
-            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</depends>
-            <depends>${Template.Service.Test.TestAction.CsvToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.INTERPRETER_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.FILE_TO_RECORDLIST_ACTION_SERVICE_NAME}</depends>
+            <depends>${Template.Service.Test.TestAction.FileToDatabaseUpdateChainAction.DATABASE_UPDATE_ACTION_SERVICE_NAME}</depends>
         </service>
         
         <service name="FileToBeanServerConnectionSendChainAction"
