@@ -351,7 +351,6 @@
 
 <ifdef name="Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME">
             <attribute name="CodeMasterFinderServiceName">${Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 

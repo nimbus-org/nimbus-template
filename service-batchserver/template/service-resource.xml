@@ -169,9 +169,16 @@
         <!-- 業務フローに差し込むインターセプタのリストとなるInterceptorChainListサービス -->
         <service template="Template.Service.BeanControl#BeanFlowInterceptorChainList"
                  instance="template">
+            <service-property name="Template.Service.BeanControl.Interceptor.THREAD_CONTEXT_INIT_INTERCEPTOR_SERVICE_NAME" extends="true">#ThreadContextInitializeInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.JOURNAL_INTERCEPTOR_SERVICE_NAME" extends="true">#JournalInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.METRICS_INTERCEPTOR_SERVICE_NAME" extends="true">#BeanFlowMetricsInterceptor</service-property>
             <service-property name="Template.Service.BeanControl.Interceptor.EXCEPTION_HANDLING_INTERCEPTOR_SERVICE_NAME" extends="true">#BeanFlowExceptionHandlingInterceptor</service-property>
+        </service>
+        
+        <!-- 業務フローのスレッドコンテキストの初期化を行うInterceptorサービス -->
+        <service template="Template.Service.AOP.Interceptor#ThreadContextInitializeInterceptor"
+                 instance="template">
+            <attribute name="Clear">false</attribute>
         </service>
         
         <!-- 業務フローのジャーナルのエントリポイントとなるInterceptorサービス -->

@@ -10,6 +10,10 @@
         
         <service template="Template.BatchServer.Server#RemoteServiceServer"/>
         
+        <service template="Template.BatchServer.Server#RemoteServiceServer"/>
+        
+        <service template="Template.BatchServer.Server#InterceptorChainList"/>
+        
         <service template="Template.BatchServer.Resource.Cluster.Multicast#Cluster">
             <attribute name="MulticastGroupAddress">239.0.1.1</attribute>
             <attribute name="MulticastPort">20001</attribute>

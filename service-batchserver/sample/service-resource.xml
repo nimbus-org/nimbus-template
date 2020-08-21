@@ -114,6 +114,10 @@
         
         <service template="Template.BatchServer.Resource.BeanControl#BeanFlowInterceptorChainList"/>
         
+        <service template="Template.BatchServer.Resource.BeanControl#ThreadContextInitializeInterceptor">
+            <service-property name="Template.Service.AOP.Interceptor.ThreadContextInitialize.CODEMASTER_FINDER_SERVICE_NAME">BatchServer.Resource#CodeMasterFinder</service-property>
+        </service>
+        
         <service template="Template.BatchServer.Resource.BeanControl#JournalInterceptor">
             <attribute name="BushingCallBlock">true</attribute>
         </service>
