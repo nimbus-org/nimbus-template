@@ -284,13 +284,13 @@
 
 <ifdef name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME">
             <!-- あふれ先のCacheサービスのサービス名を設定する -->
-            <attribute name="PersistCacheServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME}</attribute>
+            <attribute name="CacheServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_SERVICE_NAME}</depends>
 </ifdef>
 
 <ifdef name="Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME">
             <!-- あふれ先のCacheMapサービスのサービス名を設定する -->
-            <attribute name="PersistCacheMapServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME}</attribute>
+            <attribute name="CacheMapServiceName">${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Cache.OverflowAction.StoreCache.PERSIST_CACHE_MAP_SERVICE_NAME}</depends>
 </ifdef>
 

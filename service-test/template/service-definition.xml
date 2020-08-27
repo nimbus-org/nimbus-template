@@ -368,6 +368,7 @@
     
     <manager name="Template.Service.Test.Stub.HTTP">
         
+        <manager-property name="Template.Service.Test.OUTPUT_DIR">target</manager-property>
         <manager-property name="Template.Service.Test.FILE_ENCODING">UTF-8</manager-property>
         
         <service name="TestStub"
@@ -377,6 +378,7 @@
             <service-property name="Template.Service.Test.Stub.ID">WebServer</service-property>
             <service-property name="Template.Service.Test.Stub.STUB_RESOURCE_MANAGER_SERVICE_NAME">#StubResourceManager</service-property>
             <service-property name="Template.Service.Test.Stub.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
+            <service-property name="Template.Service.Test.Stub.RESOURCE_DIR">${Template.Service.Test.OUTPUT_DIR}/stub</service-property>
             
             <attribute name="Id">${Template.Service.Test.Stub.ID}</attribute>
             
@@ -392,6 +394,10 @@
             
 <ifdef name="Template.Service.Test.FILE_ENCODING">
             <attribute name="FileEncoding">${Template.Service.Test.FILE_ENCODING}</attribute>
+</ifdef>
+            
+<ifdef name="Template.Service.Test.Stub.RESOURCE_DIR">
+            <attribute name="ResourceDirectory">${Template.Service.Test.Stub.RESOURCE_DIR}</attribute>
 </ifdef>
             
         </service>
