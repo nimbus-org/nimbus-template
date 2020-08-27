@@ -21,6 +21,15 @@
                  instance="template">
             
             <service-property name="Template.Service.Proxy.Server.RMI.CLUSTER_SERVICE_NAME" extends="true">#Cluster</service-property>
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#InterceptorChainList</service-property>
         </service>
+        
+        <service template="Template.Service.Proxy.InterceptorChainList#InterceptorChainList"
+                 instance="template">
+            <service-property name="Template.Service.Proxy.CONTEXT_IMPORT_INTERCEPTOR_SERVICE_NAME" extends="true">#ContextImportInterceptor</service-property>
+        </service>
+        
+        <service template="Template.Service.AOP.Interceptor#ContextImportInterceptor"
+                 instance="template"/>
     </manager>
 </server>

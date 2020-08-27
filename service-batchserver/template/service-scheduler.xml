@@ -41,6 +41,15 @@
             <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
         </service>
         
+        <service name="RemoteScheduleExecutorInterceptorChainList"
+                 template="Template.Service.Proxy.InterceptorChainList#InterceptorChainList"
+                 instance="template">
+            <service-property name="Template.Service.Proxy.CONTEXT_EXPORT_INTERCEPTOR_SERVICE_NAME" extends="true">#ContextExportInterceptor</service-property>
+        </service>
+        
+        <service template="Template.Service.AOP.Interceptor#ContextExportInterceptor"
+                 instance="template"/>
+        
     </manager>
     
     <!-- 業務フロースケジュール実行サービス群 -->
@@ -50,6 +59,7 @@
                  template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
                  instance="template">
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalBeanFlowScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#RemoteScheduleExecutorInterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#BeanFlowScheduleExecutorInvoker</service-property>
         </service>
         
@@ -75,6 +85,7 @@
                  template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
                  instance="template">
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalCommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#RemoteScheduleExecutorInterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#CommandScheduleExecutorInvoker</service-property>
         </service>
         
@@ -98,6 +109,7 @@
                  template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
                  instance="template">
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalServiceCallScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#RemoteScheduleExecutorInterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#ServiceCallScheduleExecutorInvoker</service-property>
         </service>
         
@@ -121,6 +133,7 @@
                  template="Template.Service.Scheduler2.ScheduleExecutor#ClusterScheduleExecutor"
                  instance="template">
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME" extends="true">#LocalConcentrateScheduleExecutor</service-property>
+            <service-property name="Template.Service.Proxy.INTERCEPTOR_CHAIN_LIST_SERVICE_NAME" extends="true">#RemoteScheduleExecutorInterceptorChainList</service-property>
             <service-property name="Template.Service.Proxy.INVOKER_SERVICE_NAME" extends="true">#ConcentrateScheduleExecutorInvoker</service-property>
         </service>
         

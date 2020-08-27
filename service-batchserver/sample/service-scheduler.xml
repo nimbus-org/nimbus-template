@@ -45,6 +45,10 @@
             <service-property name="Template.Service.KeepAlive.KeepAliveCheckerSelector.CLUSTER_SERVICE_NAME">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</service-property>
         </service>
         
+        <service template="Template.BatchServer.Scheduler#RemoteScheduleExecutorInterceptorChainList"/>
+        
+        <service template="Template.BatchServer.Scheduler#ContextExportInterceptor"/>
+        
         <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#BeanFlowScheduleExecutor"/>
         <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#BeanFlowScheduleExecutorInvoker"/>
         <service template="Template.BatchServer.Scheduler.ScheduleExecutor.BeanFlow#LocalBeanFlowScheduleExecutor">
