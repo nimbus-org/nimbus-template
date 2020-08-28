@@ -55,12 +55,26 @@
                  instance="template"/>
     </manager>
     
+    <!-- JNDI関連のリソースサービス群 -->
+    <manager name="Template.GridServer.Resource.JNDI">
+        
+        <!-- JNDIサーバに接続するJndiFinderサービス -->
+        <service template="Template.Service.JNDI#JndiFinder"
+                 instance="template"/>
+        
+    </manager>
+    
     <!-- JDBC接続関連のリソースサービス群 -->
     <manager name="Template.GridServer.Resource.JDBC">
         
         <!-- JDBCドライバからJDBC接続を取得するConnectionFactoryサービス -->
         <service name="JDBCConnectionFactory"
                  template="Template.Service.Connection.JDBC#ConnectionFactory"
+                 instance="template"/>
+        
+        <!-- データソースからJDBC接続を取得するConnectionFactoryサービス -->
+        <service name="DataSourceConnectionFactory"
+                 template="Template.Service.Connection.DataSource#ConnectionFactory"
                  instance="template"/>
         
         <!-- 実体となるJDBC接続を取得するConnectionFactoryサービスから取得したJDBC接続をラップして機能を付加するConnectionFactoryサービス -->
