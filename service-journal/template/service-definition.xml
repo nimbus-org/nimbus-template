@@ -733,7 +733,7 @@ WritableRecordFactoryサービス
                 METHOD_PARAMS=Access.JournalRecords.MethodCall[0].Parameters
                 PERFORMANCE=Access.Performance
             </attribute>
-            <attribute name="Format">""%DATE%","%REQUEST_ID%","%TARGET%.%METHOD_NAME%","%METHOD_PARAMS%","%PERFORMANCE%""</attribute>
+            <attribute name="Format">%DATE%${Template.Service.Journal.ProxyJournal.SEPARATOR}%REQUEST_ID%${Template.Service.Journal.ProxyJournal.SEPARATOR}%TARGET%.%METHOD_NAME%${Template.Service.Journal.ProxyJournal.SEPARATOR}%METHOD_PARAMS%${Template.Service.Journal.ProxyJournal.SEPARATOR}%PERFORMANCE%</attribute>
             <attribute name="ImplementServiceNames">
                 DATE=#NormalDateElement
                 METHOD_PARAMS=#ParametersElement
@@ -755,14 +755,7 @@ WritableRecordFactoryサービス
                 PERFORMANCE=Access.Performance
                 EXCEPTION=Access.JournalRecords.Exception[0]
             </attribute>
-            <attribute name="Format">
-                時刻=%DATE%
-                リクエストID=%REQUEST_ID%
-                呼び出し情報=%TARGET%.%METHOD_NAME%(%METHOD_PARAMS%)
-                処理時間=%PERFORMANCE%[ms]
-                発生例外:
-                %EXCEPTION%
-            </attribute>
+            <attribute name="Format">時刻=%DATE%${line.separator}リクエストID=%REQUEST_ID%${line.separator}呼び出し情報=%TARGET%.%METHOD_NAME%(%METHOD_PARAMS%)${line.separator}処理時間=%PERFORMANCE%[ms]${line.separator}発生例外:${line.separator}%EXCEPTION%</attribute>
             <attribute name="ImplementServiceNames">
                 DATE=#ErrorDateElement
                 METHOD_PARAMS=#ParametersElement
@@ -893,6 +886,255 @@ EditorFinderサービス
                  template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
                  instance="template"/>
 
+    </manager>
+
+    <manager name="Template.Service.Journal.HttpJournal">
+        
+        <manager-property name="Template.Service.Journal.HttpJournal.LOG_OUTPUT_PATH">.</manager-property>
+        <manager-property name="Template.Service.Journal.HttpJournal.SEPARATOR">,</manager-property>
+
+<!--=======================================================================
+ジャーナルサービス
+========================================================================-->
+        <service name="AccessJournal"
+                 template="Template.Service.Journal#Journal"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EDITOR_FINDER_SERVICE_NAME" extends="true">#AccessJournalEditorFinder</service-property>
+            <service-property name="Template.Service.Journal.QUEUE_SERVICE_NAME">#AccessJournalQueue</service-property>
+            
+            <attribute name="WritableElementKey">Access</attribute>
+            <attribute name="CategoryServiceNames">
+                #AccessJournalCategory
+                #AccessErrorJournalCategory
+            </attribute>
+            <depends>AccessJournalCategory</depends>
+            <depends>AccessErrorJournalCategory</depends>
+        </service>
+
+        <service name="AccessJournalQueue"
+                 template="Template.Service.Queue#DefaultQueue"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.HttpJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">1000</service-property>
+            
+<ifdef name="Template.Service.Journal.HttpJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE">
+            <attribute name="MaxThresholdSize">${Template.Service.Journal.HttpJournal.JOURNAL_QUEUE_MAX_THRESHOLD_SIZE}</attribute>
+</ifdef>
+        </service>
+
+<!--=======================================================================
+カテゴリサービス
+========================================================================-->
+
+        <service name="AccessJournalCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessJournalWriter</service-property>
+        </service>
+
+        <!-- Accessエラージャーナルカテゴリ -->
+        <service name="AccessErrorJournalCategory"
+                 template="Template.Service.Writer.Category#EvaluateCategory"
+                 instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessErrorJournalWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessErrorJournalWriter</service-property>
+            <attribute name="Enabled">true</attribute>
+            <attribute name="WritableConditions">
+                @Access.JournalRecords.Exception[0]@ != null or @Access.JournalRecords.Response[0].JournalRecords.Status[0]@ != 200
+            </attribute>
+        </service>
+
+<!--=======================================================================
+WritableRecordFactoryサービス
+========================================================================-->
+        <!-- Accessジャーナルのフォーマッタ -->
+        <service name="AccessJournalWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Access.StartTime
+                REQUEST_ID=Access.RequestID
+                URL=Access.JournalRecords.Request[0].JournalRecords.URI[0]
+                COOKIES=Access.JournalRecords.Request[0].JournalRecords.Cookies[0]
+                HEADERS=Access.JournalRecords.Request[0].JournalRecords.Headers[0]
+                PARAMETERS=Access.JournalRecords.Request[0].JournalRecords.Parameters[0]
+                BODY=Access.JournalRecords.Request[0].JournalRecords.Body[0]
+                STATUS=Access.JournalRecords.Response[0].JournalRecords.Status[0]
+                RESPONSE_HEADERS=Access.JournalRecords.Response[0].JournalRecords.Headers[0]
+                OUTPUT=Access.JournalRecords.Response[0].JournalRecords.Body[0]
+                PERFORMANCE=Access.Performance
+            </attribute>
+            <attribute name="Format">%DATE%${Template.Service.Journal.HttpJournal.SEPARATOR}%REQUEST_ID%${Template.Service.Journal.HttpJournal.SEPARATOR}%URL%${Template.Service.Journal.HttpJournal.SEPARATOR}%COOKIES%${Template.Service.Journal.HttpJournal.SEPARATOR}%HEADERS%${Template.Service.Journal.HttpJournal.SEPARATOR}%PARAMETERS%${Template.Service.Journal.HttpJournal.SEPARATOR}%BODY%${Template.Service.Journal.HttpJournal.SEPARATOR}%RESPONSE_HEADERS%${Template.Service.Journal.HttpJournal.SEPARATOR}%OUTPUT%${Template.Service.Journal.HttpJournal.SEPARATOR}%STATUS%${Template.Service.Journal.HttpJournal.SEPARATOR}%PERFORMANCE%</attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#NormalDateElement
+                COOKIES=#CSVElement
+                HEADERS=#CSVElement
+                PARAMETERS=#CSVElement
+                BODY=#CSVElement
+                RESPONSE_HEADERS=#CSVElement
+                OUTPUT=#CSVElement
+            </attribute>
+            <depends>NormalDateElement</depends>
+            <depends>CSVElement</depends>
+        </service>
+
+        <!-- Accessエラージャーナルのフォーマッタ -->
+        <service name="AccessErrorJournalWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Access.StartTime
+                REQUEST_ID=Access.RequestID
+                URL=Access.JournalRecords.Request[0].JournalRecords.URI[0]
+                COOKIES=Access.JournalRecords.Request[0].JournalRecords.Cookies[0]
+                HEADERS=Access.JournalRecords.Request[0].JournalRecords.Headers[0]
+                PARAMETERS=Access.JournalRecords.Request[0].JournalRecords.Parameters[0]
+                BODY=Access.JournalRecords.Request[0].JournalRecords.Body[0]
+                STATUS=Access.JournalRecords.Response[0].JournalRecords.Status[0]
+                RESPONSE_HEADERS=Access.JournalRecords.Response[0].JournalRecords.Headers[0]
+                OUTPUT=Access.JournalRecords.Response[0].JournalRecords.Body[0]
+                PERFORMANCE=Access.Performance
+                EXCEPTION=Access.JournalRecords.Exception[0]
+            </attribute>
+            <attribute name="Format">時刻=%DATE%${line.separator}リクエストID=%REQUEST_ID%${line.separator}リクエストURL=%URL%${line.separator}リクエストCookie=%COOKIES%${line.separator}リクエストヘッダ=%HEADERS%${line.separator}リクエストパラメータ=%PARAMETERS%${line.separator}リクエストボディ=%BODY%${line.separator}レスポンスステータス=%STATUS%${line.separator}レスポンスヘッダ=%RESPONSE_HEADERS%${line.separator}出力=%OUTPUT%${line.separator}処理時間=%PERFORMANCE%${line.separator}発生例外=%EXCEPTION%</attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#NormalDateElement
+                COOKIES=#CSVElement
+                HEADERS=#CSVElement
+                PARAMETERS=#CSVElement
+                BODY=#CSVElement
+                RESPONSE_HEADERS=#CSVElement
+                OUTPUT=#CSVElement
+            </attribute>
+            <depends>NormalDateElement</depends>
+            <depends>CSVElement</depends>
+        </service>
+
+        <service name="NormalDateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
+                 instance="template">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+        </service>
+
+        <service name="ErrorDateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
+                 instance="template">
+            <attribute name="Format">yyyyMMddHHmmssSSS</attribute>
+        </service>
+
+        <service name="CSVElement"
+                 template="Template.Service.Writer.WritableRecordFactory#LineElement"
+                 instance="template">
+            <attribute name="Trim">true</attribute>
+            <attribute name="StringConverter"><service-ref>#CustomConverter</service-ref></attribute>
+            <depends>CustomConverter</depends>
+        </service>
+
+        <service name="CustomConverter"
+                 code="jp.ossc.nimbus.util.converter.CustomConverter"
+                 instance="template">
+            <invoke name="add">
+                <argument type="jp.ossc.nimbus.util.converter.Converter">
+                    <service-ref>#CSVEscapeConverter</service-ref>
+                </argument>
+            </invoke>
+            <depends>#CSVEscapeConverter</depends>
+        </service>
+
+        <service name="CSVEscapeConverter"
+                 code="jp.ossc.nimbus.io.CSVWriter"
+                 instance="template">
+            <attribute name="Enclose">true</attribute>
+            <attribute name="Separator">${Template.Service.Journal.HttpJournal.SEPARATOR}</attribute>
+        </service>
+
+<!--=======================================================================
+ライターサービス
+========================================================================-->
+        <!-- Accessジャーナル書き込みサービス -->
+        <service name="AccessJournalWriter"
+                 template="Template.Service.Writer.MessageWriter.Log4J#CustomizedRollingFileWriter"
+                 instance="template">
+            <attribute name="Append">true</attribute>
+            <attribute name="BufferedIO">false</attribute>
+            <attribute name="File">${Template.Service.Journal.HttpJournal.LOG_OUTPUT_PATH}/accessjournal%INDEX%.log</attribute>
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="Header">""</attribute>
+            <attribute name="MaximumFileSize">10485760</attribute>
+            <attribute name="MaxBackupIndex">100</attribute>
+        </service>
+
+        <!-- Accessエラージャーナル書き込みサービス -->
+        <service name="AccessErrorJournalWriter"
+                 template="Template.Service.Writer.MessageWriter#FileWriter"
+                 instance="template">
+            <attribute name="File">${Template.Service.Journal.HttpJournal.LOG_OUTPUT_PATH}/error-journal/accessjournal-error</attribute>
+            <attribute name="FilePostfix">_%DATE%.log</attribute>
+        </service>
+
+
+<!--=======================================================================
+EditorFinderサービス
+========================================================================-->
+        <service name="AccessJournalEditorFinder"
+                 template="Template.Service.Journal.EditorFinder#ObjectMappedEditorFinder"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.EDITOR_PROPERTIES_SERVICE_NAME" extends="true">#AccessJournalEditorProperties</service-property>
+            
+        </service>
+        
+        <service name="AccessJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MutableObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ThrowableJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.MAP_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#MapJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#AccessRequestJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectArrayJournalEditor</service-property>
+            
+<ifdef name="Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(java.lang.String[])">${Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.AccessJournal.EditorFinder.STRING_ARRAY_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+
+        <!-- ジャーナルに出力するオブジェクトをジャーナル文字列へと変換するJournalEditorサービス群 -->
+        <service name="AccessRequestJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.Map#SimpleRequestMapJournalEditor"
+                 instance="template">
+            <attribute name="OutputRequestId">true</attribute>
+            <attribute name="OutputStartTime">true</attribute>
+            <attribute name="OutputRecords">true</attribute>
+            <attribute name="OutputEndTime">false</attribute>
+            <attribute name="OutputPerformance">true</attribute>
+        </service>
+
+        <service name="MutableObjectJournalEditor"
+                 template="Template.Service.Journal.JournalEditor#MutableObjectJournalEditor"
+                 instance="template"/>
+
+        <service name="ObjectJournalEditor"
+                 template="Template.Service.Journal.JournalEditor#ObjectJournalEditor"
+                 instance="template"/>
+
+        <service name="ObjectArrayJournalEditor"
+                 template="Template.Service.Journal.JournalEditor#ObjectArrayJournalEditor"
+                 instance="template"/>
+
+        <service name="MapJournalEditor"
+                 template="Template.Service.Journal.JournalEditor#MapJournalEditor"
+                 instance="template"/>
+
+        <service name="ThrowableJournalEditor"
+                 template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
+                 instance="template"/>
+        
     </manager>
     
     <manager name="Template.Service.Journal">
