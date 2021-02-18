@@ -2267,6 +2267,7 @@
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             Main,
+                            MainDoubt,
                             Join,
                             Client,
                             Members,
@@ -2281,6 +2282,15 @@
                         <attribute name="Description">稼働系フラグ（true：稼働系、false:待機系）</attribute>
                         <attribute name="Key">Main</attribute>
                         <attribute name="ContextKey">Attributes.Main</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">稼働系疑いフラグ（true：疑い、false:正常）</attribute>
+                        <attribute name="Key">MainDoubt</attribute>
+                        <attribute name="ContextKey">Attributes.MainDoubt</attribute>
                     </object>
                 </argument>
             </invoke>
@@ -2397,7 +2407,7 @@
         <service name="ClusterWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%Main%,%Join%,%Client%,%Members%,%MemberSize%,%MemberSizeDelta%,%ClientMembers%,%ClientMemberSize%,%ClientMemberSizeDelta%</attribute>
+            <attribute name="Format">%Timestamp%,%Main%,%MainDoubt%,%Join%,%Client%,%Members%,%MemberSize%,%MemberSizeDelta%,%ClientMembers%,%ClientMemberSize%,%ClientMemberSizeDelta%</attribute>
         </service>
     </manager>
 
@@ -2473,6 +2483,9 @@
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             CacheHitRatio,
+                            LockedCount,
+                            AverageLockTime,
+                            MaxLockTime,
                             Main
                         </attribute>
                     </object>
@@ -2490,6 +2503,33 @@
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ロック数</attribute>
+                        <attribute name="Key">LockedCount</attribute>
+                        <attribute name="ContextKey">Attributes.LockedCount</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">平均ロック時間[ms]</attribute>
+                        <attribute name="Key">AverageLockTime</attribute>
+                        <attribute name="ContextKey">Attributes.AverageLockTime</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">最大ロック時間[ms]</attribute>
+                        <attribute name="Key">MaxLockTime</attribute>
+                        <attribute name="ContextKey">Attributes.MaxLockTime</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
                         <attribute name="Description">主ノードフラグ（true：主ノード、false:バックアップノード）</attribute>
                         <attribute name="Key">Main</attribute>
                         <attribute name="ContextKey">Attributes.Main</attribute>
@@ -2501,7 +2541,7 @@
         <service name="SharedContextWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%Main%</attribute>
+            <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%LockedCount%,%AverageLockTime%,%MaxLockTime%,%Main%</attribute>
         </service>
 
         <!-- jp.ossc.nimbus.service.context.DistributedSharedContextServiceMBeanを監視するサービス -->
@@ -2570,6 +2610,9 @@
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             CacheHitRatio,
+                            LockedCount,
+                            AverageLockTime,
+                            MaxLockTime,
                             Main,
                             MainNodeCount
                         </attribute>
@@ -2582,6 +2625,33 @@
                         <attribute name="Description">キャッシュヒット率[%]</attribute>
                         <attribute name="Key">CacheHitRatio</attribute>
                         <attribute name="ContextKey">Attributes.CacheHitRatio</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">ロック数</attribute>
+                        <attribute name="Key">LockedCount</attribute>
+                        <attribute name="ContextKey">Attributes.LockedCount</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">平均ロック時間[ms]</attribute>
+                        <attribute name="Key">AverageLockTime</attribute>
+                        <attribute name="ContextKey">Attributes.AverageLockTime</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">最大ロック時間[ms]</attribute>
+                        <attribute name="Key">MaxLockTime</attribute>
+                        <attribute name="ContextKey">Attributes.MaxLockTime</attribute>
                     </object>
                 </argument>
             </invoke>
@@ -2608,7 +2678,7 @@
         <service name="DistributedSharedContextWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%Main%,%MainNodeCount%</attribute>
+            <attribute name="Format">%Timestamp%,%SizeLocal%,%SizeLocalDelta%,%MaxSizeLocal%,%CacheHitRatio%,%LockedCount%,%AverageLockTime%,%MaxLockTime%,%Main%,%MainNodeCount%</attribute>
         </service>
     </manager>
 
@@ -3560,7 +3630,253 @@
             <attribute name="Format">%Timestamp%,%ActiveScheduleDispatcherSize%,%RemainScheduleDispatcherSize%,%State%,%StartEntry%</attribute>
         </service>
     </manager>
+    
+    <manager name="Template.Service.JMX.MBeanWatcher.Tomcat9">
 
+        <!-- Catalina:type=ThreadPoolを監視するサービス -->
+        <service name="ThreadPoolWatcher"
+                 template="Template.Service.JMX#MBeanWatcher"
+                 instance="template">
+            
+            <attribute name="Description">Tomcatのスレッドプールの監視</attribute>
+            
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
+<ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
+                        <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
+</ifdef>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
+                        <attribute name="ContextKey">Attributes</attribute>
+                        <attribute name="Names">
+                            currentThreadsBusy,
+                            currentThreadCount,
+                            maxThreads
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">実行中スレッドの数</attribute>
+                        <attribute name="Key">CurrentThreadsBusy</attribute>
+                        <attribute name="ContextKey">Attributes.currentThreadsBusy</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スレッドプールの数</attribute>
+                        <attribute name="Key">CurrentThreadCount</attribute>
+                        <attribute name="ContextKey">Attributes.currentThreadCount</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">スレッドプールの数の最大</attribute>
+                        <attribute name="Key">MaxThreads</attribute>
+                        <attribute name="ContextKey">Attributes.maxThreads</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$SubtractOperation">
+                        <attribute name="Description">スレッドプールの空き</attribute>
+                        <attribute name="Key">RemainThreadCount</attribute>
+                        <attribute name="ContextKey">RemainThreadCount</attribute>
+                        <attribute name="NullToZero">true</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.maxThreads</attribute>
+                            </object>
+                        </attribute>
+                        <attribute name="SecondTarget">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.currentThreadsBusy</attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+        </service>
+
+        <service name="ThreadPoolWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="Format">%Timestamp%,%CurrentThreadsBusy%,%CurrentThreadCount%,%RemainThreadCount%,%MaxThreads%</attribute>
+        </service>
+
+        <!-- Catalina:type=Managerを監視するサービス -->
+        <service name="WebApplicationWatcher"
+                 template="Template.Service.JMX#MBeanWatcher"
+                 instance="template">
+            
+            <attribute name="Description">TomcatのWebアプリケーションの監視</attribute>
+            
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
+<ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
+                        <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
+</ifdef>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
+                        <attribute name="ContextKey">Attributes</attribute>
+                        <attribute name="Names">
+                            activeSessions,
+                            expiredSessions,
+                            maxActive,
+                            sessionAverageAliveTime,
+                            sessionMaxAliveTime
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">有効なセッション数</attribute>
+                        <attribute name="Key">ActiveSessions</attribute>
+                        <attribute name="ContextKey">Attributes.activeSessions</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">破棄されたセッション数</attribute>
+                        <attribute name="Key">ExpiredSessions</attribute>
+                        <attribute name="ContextKey">Attributes.expiredSessions</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">有効なセッション数の最大</attribute>
+                        <attribute name="Key">MaxActive</attribute>
+                        <attribute name="ContextKey">Attributes.maxActive</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">セッションの生存時間の平均</attribute>
+                        <attribute name="Key">SessionAverageAliveTime</attribute>
+                        <attribute name="ContextKey">Attributes.sessionAverageAliveTime</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">セッションの生存時間の最大</attribute>
+                        <attribute name="Key">SessionMaxAliveTime</attribute>
+                        <attribute name="ContextKey">Attributes.sessionMaxAliveTime</attribute>
+                    </object>
+                </argument>
+            </invoke>
+        </service>
+
+        <service name="WebApplicationWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="Format">%Timestamp%,%ActiveSessions%,%ExpiredSessions%,%MaxActive%,%SessionAverageAliveTime%,%SessionMaxAliveTime%</attribute>
+        </service>
+
+        <!-- Catalina:type=Resource,resourcetype=DataSource,name=dataSource,connectionpool=connectionsを監視するサービス -->
+        <service name="ConnectionPoolWatcher"
+                 template="Template.Service.JMX#MBeanWatcher"
+                 instance="template">
+            
+            <attribute name="Description">JBossのデータソース接続プールの監視</attribute>
+            
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
+<ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
+                        <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
+</ifdef>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
+                        <attribute name="ContextKey">Attributes</attribute>
+                        <attribute name="Names">
+                            MaxTotal,
+                            NumIdle,
+                            NumActive,
+                            NumWaiters,
+                            MaxConnectionsInUseCount
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">接続プール数の最大</attribute>
+                        <attribute name="Key">MaxTotal</attribute>
+                        <attribute name="ContextKey">Attributes.MaxTotal</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">使用可能な接続数</attribute>
+                        <attribute name="Key">NumIdle</attribute>
+                        <attribute name="ContextKey">Attributes.NumIdle</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">使用中の接続数</attribute>
+                        <attribute name="Key">NumActive</attribute>
+                        <attribute name="ContextKey">Attributes.NumActive</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">取得待ちの接続数</attribute>
+                        <attribute name="Key">NumWaiters</attribute>
+                        <attribute name="ContextKey">Attributes.NumWaiters</attribute>
+                    </object>
+                </argument>
+            </invoke>
+        </service>
+
+        <service name="ConnectionPoolWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="Format">%Timestamp%,%MaxTotal%,%NumIdle%,%NumActive%,%NumWaiters%</attribute>
+        </service>
+    </manager>
+    
     <manager name="Template.Service.JMX.MBeanWatcher.JBoss5">
 
         <!-- org.jboss.web.tomcat.service.management.ThreadPoolを監視するサービス -->

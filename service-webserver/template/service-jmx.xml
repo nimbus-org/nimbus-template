@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.WebServer.JMX">
+        
+        <service template="Template.Service.JMX#MBeanServerConnectionFactory"
+                 instance="template"/>
+        
+        <service template="Template.Service.JMX#MBeanWatcher"
+                 instance="template">
+            
+            <service-property name="Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE">#AccessJournalQueueWatcher</service-property>
+            
+<ifdef name="Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE">
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$MBeanWatcher">
+                        <attribute name="MBeanWatcherServiceName">${Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE}</attribute>
+                        <attribute name="SharedConnection">true</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <depends>${Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE}</depends>
+</ifdef>
+        
+    </manager>
+    
+    <manager name="Template.WebServer.JMX.AccessJournal">
+        
+        <service name="AccessJournalQueueWatcher"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#AccessJournalQueueCategory</service-property>
+        </service>
+        
+        <service name="AccessJournalQueueCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessJournalQueueWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessJournalQueueMessageWriter</service-property>
+        </service>
+        
+        <service name="AccessJournalQueueWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.WebServer.JMX.BusinessJournal">
+        
+        <service name="BusinessJournalQueueWatcher"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#BusinessJournalQueueCategory</service-property>
+        </service>
+        
+        <service name="BusinessJournalQueueCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#BusinessJournalQueueWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessJournalQueueMessageWriter</service-property>
+        </service>
+        
+        <service name="BusinessJournalQueueWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.WebServer.JMX.SharedContext">
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Context#SharedContextWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#SharedContextCategory</service-property>
+        </service>
+        
+        <service name="SharedContextCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#SharedContextWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#SharedContextMessageWriter</service-property>
+        </service>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Context#SharedContextWritableRecordFactory"
+                 instance="template"/>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Context#DistributedSharedContextWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#DistributedSharedContextCategory</service-property>
+        </service>
+        
+        <service name="DistributedSharedContextCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#DistributedSharedContextWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#DistributedSharedContextMessageWriter</service-property>
+        </service>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Context#DistributedSharedContextWritableRecordFactory"
+                 instance="template"/>
+        
+    </manager>
+    
+    <manager name="Template.WebServer.JMX.SharedContext.CacheMap">
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Cache#CacheMapWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#CacheMapCategory</service-property>
+        </service>
+        
+        <service name="CacheMapCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#CacheMapWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#CacheMapMessageWriter</service-property>
+        </service>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Cache#CacheMapWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.WebServer.Resource.Cluster">
+        
+        <service template="Template.Service.JMX.MBeanWatcher.KeepAlive#ClusterWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#ClusterCategory</service-property>
+        </service>
+        
+        <service name="ClusterCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ClusterWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ClusterMessageWriter</service-property>
+        </service>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.KeepAlive#ClusterWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+    
+    <manager name="Template.WebServer.Resource.Publish">
+        
+        <service name="ServerConnectionWatcher"
+                 template="Template.Service.JMX.MBeanWatcher.Publish#TCPServerConnectionWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#ServerConnectionCategory</service-property>
+        </service>
+        
+        <service name="ServerConnectionCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ServerConnectionWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ServerConnectionMessageWriter</service-property>
+        </service>
+        
+        <service name="ServerConnectionWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Publish#TCPServerConnectionWritableRecordFactory"
+                 instance="template"/>
+        
+        <service name="ClientConnectionWatcher"
+                 template="Template.Service.JMX.MBeanWatcher.Publish#TCPClientConnectionsWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME">#ClientConnectionCategory</service-property>
+        </service>
+        
+        <service name="ClientConnectionCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template"/>
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ClientConnectionWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ClientConnectionMessageWriter</service-property>
+        </service>
+        
+        <service name="ClientConnectionWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Publish#TCPClientConnectionWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+</server>

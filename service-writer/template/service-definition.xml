@@ -290,7 +290,7 @@
     
     <manager name="Template.Service.Writer.MessageWriter.AWS">
         
-        <!-- データベースに出力するMessageWriterサービス -->
+        <!-- AWS Logsに出力するMessageWriterサービス -->
         <service name="AWSLogsWriter"
                  code="jp.ossc.nimbus.service.writer.aws.AWSLogsWriterService"
                  instance="template">
@@ -303,5 +303,17 @@
             <depends>${Template.Service.Writer.MessageWriter.AWS.AWS_LOGS_CLIENT_BUILDER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
+    </manager>
+    
+    <manager name="Template.Service.Writer.MessageWriter.Prometheus">
+        
+        <!-- PrometheusにGauge形式で出力するMessageWriterサービス -->
+        <service name="GaugeWriter"
+                 code="jp.ossc.nimbus.service.writer.prometheus.GaugeWriterService"
+                 instance="template"/>
+        
+        <service name="HTTPServer"
+                 code="jp.ossc.nimbus.service.writer.prometheus.HTTPServerService"
+                 instance="template"/>
     </manager>
 </server>
