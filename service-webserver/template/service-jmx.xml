@@ -150,7 +150,7 @@
         
         <service name="ClusterCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ClusterWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ClusterMessageWriter</service-property>
         </service>
@@ -169,7 +169,7 @@
         
         <service name="ServerConnectionCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ServerConnectionWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ServerConnectionMessageWriter</service-property>
         </service>
@@ -186,7 +186,7 @@
         
         <service name="ClientConnectionCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#ClientConnectionWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#ClientConnectionMessageWriter</service-property>
         </service>
