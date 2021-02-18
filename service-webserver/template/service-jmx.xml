@@ -22,6 +22,7 @@
                  instance="template">
             
             <service-property name="Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE">#AccessJournalQueueWatcher</service-property>
+            <service-property name="Template.WebServer.JMX.Watcher.BUSINESS_JOURNAL_QUEUE">#BusinessJournalQueueWatcher</service-property>
             
 <ifdef name="Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE">
             <invoke name="addTarget">
@@ -33,6 +34,17 @@
                 </argument>
             </invoke>
             <depends>${Template.WebServer.JMX.Watcher.ACCESS_JOURNAL_QUEUE}</depends>
+</ifdef>
+<ifdef name="Template.WebServer.JMX.Watcher.BUSINESS_JOURNAL_QUEUE">
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$MBeanWatcher">
+                        <attribute name="MBeanWatcherServiceName">${Template.WebServer.JMX.Watcher.BUSINESS_JOURNAL_QUEUE}</attribute>
+                        <attribute name="SharedConnection">true</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <depends>${Template.WebServer.JMX.Watcher.BUSINESS_JOURNAL_QUEUE}</depends>
 </ifdef>
         
     </manager>
