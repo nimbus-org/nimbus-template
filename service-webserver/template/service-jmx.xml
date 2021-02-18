@@ -46,6 +46,7 @@
             </invoke>
             <depends>${Template.WebServer.JMX.Watcher.BUSINESS_JOURNAL_QUEUE}</depends>
 </ifdef>
+        </service>
         
     </manager>
     
