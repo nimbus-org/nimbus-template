@@ -60,7 +60,7 @@
         
         <service name="AccessJournalQueueCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#AccessJournalQueueWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#AccessJournalQueueMessageWriter</service-property>
         </service>
@@ -80,7 +80,7 @@
         
         <service name="BusinessJournalQueueCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#BusinessJournalQueueWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#BusinessJournalQueueMessageWriter</service-property>
         </service>
@@ -99,7 +99,7 @@
         
         <service name="SharedContextCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#SharedContextWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#SharedContextMessageWriter</service-property>
         </service>
@@ -114,7 +114,7 @@
         
         <service name="DistributedSharedContextCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#DistributedSharedContextWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#DistributedSharedContextMessageWriter</service-property>
         </service>
@@ -133,7 +133,7 @@
         
         <service name="CacheMapCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
-                 instance="template"/>
+                 instance="template">
             <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME">#CacheMapWritableRecordFactory</service-property>
             <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME">#CacheMapMessageWriter</service-property>
         </service>
