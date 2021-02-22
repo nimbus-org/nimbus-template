@@ -29,7 +29,6 @@
 </ifdef>
         </service>
 
-        <manager-property name="Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL">1000</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">yyyy/MM/dd HH:mm:ss</manager-property>
         <manager-property name="Template.Service.JMX.MBeanWatcher.MBEAN_SERVER_CON_FAC_SERVICE_NAME">#MBeanServerConnectionFactory</manager-property>
 
@@ -72,6 +71,7 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
+            <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
             
             <attribute name="Description">Queueの監視</attribute>
@@ -155,7 +155,7 @@
                         <attribute name="ContextKey">MaxDepth</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_INTERVAL}</attribute>
                                 <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -186,6 +186,7 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
+            <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT">60</service-property>
 
             <attribute name="Description">複数のQueueの監視</attribute>
@@ -292,7 +293,7 @@
                         <attribute name="ContextKey">MaxDepth</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_INTERVAL}</attribute>
                                 <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Queue.MAX_DEPTH_PERIOD_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -340,7 +341,8 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
-            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE">60</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_COUNT">60</service-property>
             
             <attribute name="Description">QueueHandlerContainerの監視</attribute>
 
@@ -392,8 +394,8 @@
                         <attribute name="ContextKey">MaxActiveQueueHandlerSize</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
-                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_INTERVAL}</attribute>
+                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
                                         <attribute name="ContextKey">Attributes.ActiveQueueHandlerSize</attribute>
@@ -2174,6 +2176,7 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
+            <service-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT">60</service-property>
             
             <attribute name="Description">CacheMapの監視</attribute>
@@ -2221,8 +2224,8 @@
                         <attribute name="ContextKey">MaxSize</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
-                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Queue.MAX_SIZE_PERIOD_COUNT}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_INTERVAL}</attribute>
+                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Cache.MAX_SIZE_PERIOD_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
                                         <attribute name="ContextKey">Size</attribute>
@@ -2418,6 +2421,7 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
 
+            <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</service-property>
             
             <attribute name="Description">SharedContextの監視</attribute>
@@ -2465,7 +2469,7 @@
                         <attribute name="ContextKey">MaxSizeLocal</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_INTERVAL}</attribute>
                                 <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -2548,6 +2552,9 @@
         <service name="DistributedSharedContextWatcher"
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
+
+            <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT">60</service-property>
             
             <attribute name="Description">DistributedSharedContextの監視</attribute>
             
@@ -2592,7 +2599,7 @@
                         <attribute name="Key">MaxSizeLocal</attribute>
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
-                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</attribute>
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_INTERVAL}</attribute>
                                 <attribute name="Count">${Template.Service.JMX.MBeanWatcher.Context.MAX_SIZE_PERIOD_COUNT}</attribute>
                                 <attribute name="Target">
                                     <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
@@ -3017,7 +3024,13 @@
                         <attribute name="ContextKey">Attributes</attribute>
                         <attribute name="Names">
                             ReceiveCount,
-                            RemoteSocketAddress
+                            AverageReceiveProcessTime,
+                            AverageOnMessageProcessTime,
+                            AverageMessageLatency,
+                            MaxMessageLatency,
+                            MessagePayoutCount,
+                            MaxMessagePayoutCount,
+                            RemoteSocketAddress,
                         </attribute>
                     </object>
                 </argument>
@@ -3052,6 +3065,126 @@
                         <attribute name="Target">
                             <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
                                 <attribute name="ContextKey">ReceiveCount</attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Average">
+                        <attribute name="Description">平均受信処理時間[ms]</attribute>
+                        <attribute name="Key">AverageReceiveProcessTime</attribute>
+                        <attribute name="ContextKey">AverageReceiveProcessTime</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">AverageReceiveProcessTime</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Average">
+                        <attribute name="Description">平均メッセージ処理時間[ms]</attribute>
+                        <attribute name="Key">AverageOnMessageProcessTime</attribute>
+                        <attribute name="ContextKey">AverageOnMessageProcessTime</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">AverageOnMessageProcessTime</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Average">
+                        <attribute name="Description">平均メッセージ到達時間[ms]</attribute>
+                        <attribute name="Key">AverageMessageLatency</attribute>
+                        <attribute name="ContextKey">AverageMessageLatency</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">AverageMessageLatency</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">最大メッセージ到達時間[ms]</attribute>
+                        <attribute name="Key">MaxMessageLatency</attribute>
+                        <attribute name="ContextKey">MaxMessageLatency</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">MaxMessageLatency</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">メッセージのリサイクルにおける、メッセージの払い出し数</attribute>
+                        <attribute name="Key">MessagePayoutCount</attribute>
+                        <attribute name="ContextKey">MessagePayoutCount</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">MessagePayoutCount</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">メッセージのリサイクルにおける、メッセージの最大払い出し数</attribute>
+                        <attribute name="Key">MaxMessagePayoutCount</attribute>
+                        <attribute name="ContextKey">MaxMessagePayoutCount</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Property">MaxMessagePayoutCount</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
                             </object>
                         </attribute>
                     </object>
@@ -3108,7 +3241,7 @@
         <service name="TCPClientConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%ReceiveCount%,%ReceiveCountDelta%,%ServerSize%,%ServerSizeDelta%,"%RemoteSocketAddress%"</attribute>
+            <attribute name="Format">%Timestamp%,%ReceiveCount%,%ReceiveCountDelta%,%AverageReceiveProcessTime%,%AverageOnMessageProcessTime%,%AverageMessageLatency%,%MaxMessageLatency%,%MessagePayoutCount%,%MaxMessagePayoutCount%,%ServerSize%,%ServerSizeDelta%,"%RemoteSocketAddress%"</attribute>
         </service>
 
         <!-- jp.ossc.nimbus.service.publish.udp.ConnectionFactoryServiceMBeanを監視するサービス -->
@@ -3275,6 +3408,9 @@
                             SendCount,
                             ClientSize,
                             Clients,
+                            SendMessageCacheSize,
+                            MessagePayoutCount,
+                            MaxMessagePayoutCount
                         </attribute>
                     </object>
                 </argument>
@@ -3336,12 +3472,39 @@
                     </object>
                 </argument>
             </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">送信キャッシュの件数</attribute>
+                        <attribute name="Key">SendMessageCacheSize</attribute>
+                        <attribute name="ContextKey">Attributes.SendMessageCacheSize</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">メッセージのリサイクルにおける、メッセージの払い出し数</attribute>
+                        <attribute name="Key">MessagePayoutCount</attribute>
+                        <attribute name="ContextKey">Attributes.MessagePayoutCount</attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                        <attribute name="Description">メッセージのリサイクルにおける、メッセージの最大払い出し数</attribute>
+                        <attribute name="Key">MaxMessagePayoutCount</attribute>
+                        <attribute name="ContextKey">Attributes.MaxMessagePayoutCount</attribute>
+                    </object>
+                </argument>
+            </invoke>
         </service>
 
         <service name="TCPServerConnectionWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%SendCount%,%SendCountDelta%,%ClientSize%,"%Clients%","%DecreaseClient%"</attribute>
+            <attribute name="Format">%Timestamp%,%SendCount%,%SendCountDelta%,%ClientSize%,"%Clients%","%DecreaseClient%",%SendMessageCacheSize%,%MessagePayoutCount%,%MaxMessagePayoutCount%</attribute>
         </service>
     </manager>
 
@@ -3806,7 +3969,7 @@
                  template="Template.Service.JMX#MBeanWatcher"
                  instance="template">
             
-            <attribute name="Description">JBossのデータソース接続プールの監視</attribute>
+            <attribute name="Description">Tomcatのデータソース接続プールの監視</attribute>
             
             <invoke name="addTarget">
                 <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
