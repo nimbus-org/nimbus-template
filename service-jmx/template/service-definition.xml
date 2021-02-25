@@ -344,6 +344,9 @@
             <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
             <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_COUNT">60</service-property>
             
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_COUNT">60</service-property>
+            
             <attribute name="Description">QueueHandlerContainerの監視</attribute>
 
             <invoke name="addTarget">
@@ -415,12 +418,212 @@
                     </object>
                 </argument>
             </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">ハンドラの使用率[%]</attribute>
+                        <attribute name="Key">QueueHandlerUsedRate</attribute>
+                        <attribute name="ContextKey">QueueHandlerUsedRate</attribute>
+                        <attribute name="Scale">2</attribute>
+                        <attribute name="NullToZero">true</attribute>
+                        <attribute name="ReturnZeroOnZeroDivide">true</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.ActiveQueueHandlerSize</attribute>
+                            </object>
+                        </attribute>
+                        <attribute name="SecondTarget">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">Attributes.QueueHandlerSize</attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Average">
+                        <attribute name="Description">期間内のハンドラの平均使用率[%]</attribute>
+                        <attribute name="Key">AverageQueueHandlerUsedRate</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_INTERVAL}</attribute>
+                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_COUNT}</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">QueueHandlerUsedRate</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+        </service>
+
+        <!-- jp.ossc.nimbus.service.queue.QueueHandlerContainerServiceMBeanを監視するサービス -->
+        <service name="QueueHandlerContainersWatcher"
+                 template="Template.Service.JMX#MBeanWatcher"
+                 instance="template">
+
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_COUNT">60</service-property>
+            
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_INTERVAL">${Template.Service.JMX.MBeanWatcher.CHECK_INTERVAL}</service-property>
+            <service-property name="Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_COUNT">60</service-property>
+            
+            <attribute name="Description">QueueHandlerContainerの監視</attribute>
+
+            <attribute name="MBeanSet">true</attribute>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Timestamp">
+                        <attribute name="Description">タイムスタンプ</attribute>
+<ifdef name="Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT">
+                        <attribute name="Format">${Template.Service.JMX.MBeanWatcher.TIMESTAMP_FORMAT}</attribute>
+</ifdef>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Attributes">
+                        <attribute name="ContextKey">Attributes</attribute>
+                        <attribute name="Names">
+                            QueueHandlerSize,
+                            ActiveQueueHandlerSize,
+                            StandbyQueueHandlerSize
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">ハンドラの数</attribute>
+                        <attribute name="Key">QueueHandlerSize</attribute>
+                        <attribute name="ContextKey">QueueHandlerSize</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="Property">QueueHandlerSize</attribute>
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">処理中のハンドラの数</attribute>
+                        <attribute name="Key">ActiveQueueHandlerSize</attribute>
+                        <attribute name="ContextKey">ActiveQueueHandlerSize</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="Property">ActiveQueueHandlerSize</attribute>
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Max">
+                        <attribute name="Description">期間内の処理中のハンドラの最大数</attribute>
+                        <attribute name="Key">MaxActiveQueueHandlerSize</attribute>
+                        <attribute name="ContextKey">MaxActiveQueueHandlerSize</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_INTERVAL}</attribute>
+                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.MAX_ACTIVE_QUEUE_HANDLER_SIZE_COUNT}</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">ActiveQueueHandlerSize</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Sum">
+                        <attribute name="Description">待機中のハンドラの数</attribute>
+                        <attribute name="Key">StandbyQueueHandlerSize</attribute>
+                        <attribute name="ContextKey">StandbyQueueHandlerSize</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Property">
+                                <attribute name="Property">StandbyQueueHandlerSize</attribute>
+                                <attribute name="ElementEdit">true</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">Attributes</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$PercentageOperation">
+                        <attribute name="Description">ハンドラの使用率[%]</attribute>
+                        <attribute name="Key">QueueHandlerUsedRate</attribute>
+                        <attribute name="ContextKey">QueueHandlerUsedRate</attribute>
+                        <attribute name="Scale">2</attribute>
+                        <attribute name="NullToZero">true</attribute>
+                        <attribute name="ReturnZeroOnZeroDivide">true</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">ActiveQueueHandlerSize</attribute>
+                            </object>
+                        </attribute>
+                        <attribute name="SecondTarget">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                <attribute name="ContextKey">QueueHandlerSize</attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
+            <invoke name="addTarget">
+                <argument type="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Target">
+                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Average">
+                        <attribute name="Description">期間内のハンドラの平均使用率[%]</attribute>
+                        <attribute name="Key">AverageQueueHandlerUsedRate</attribute>
+                        <attribute name="Target">
+                            <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Period">
+                                <attribute name="Interval">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_INTERVAL}</attribute>
+                                <attribute name="Count">${Template.Service.JMX.MBeanWatcher.QueueHandlerContainer.AVERAGE_HANDLER_USED_RATE_COUNT}</attribute>
+                                <attribute name="Target">
+                                    <object code="jp.ossc.nimbus.service.jmx.MBeanWatcherService$Context">
+                                        <attribute name="ContextKey">QueueHandlerUsedRate</attribute>
+                                    </object>
+                                </attribute>
+                            </object>
+                        </attribute>
+                    </object>
+                </argument>
+            </invoke>
         </service>
 
         <service name="QueueHandlerContainerWritableRecordFactory"
                  template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
                  instance="template">
-            <attribute name="Format">%Timestamp%,%ActiveQueueHandlerSize%,%MaxActiveQueueHandlerSize%,%StandbyQueueHandlerSize%</attribute>
+            <attribute name="Format">%Timestamp%,%ActiveQueueHandlerSize%,%MaxActiveQueueHandlerSize%,%StandbyQueueHandlerSize%,%QueueHandlerUsedRate%,%AverageQueueHandlerUsedRate%</attribute>
         </service>
 
     </manager>
