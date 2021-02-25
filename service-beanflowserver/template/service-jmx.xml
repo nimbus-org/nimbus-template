@@ -13,7 +13,7 @@
         <fatal output="true"/>
     </default-log>
     
-    <manager name="Template.BatchServer.JMX">
+    <manager name="Template.BeanFlowServer.JMX">
         
         <service template="Template.Service.JMX#MBeanServerConnectionFactory"
                  instance="template"/>
@@ -23,7 +23,7 @@
         
     </manager>
     
-    <manager name="Template.BatchServer.JMX.Queue">
+    <manager name="Template.BeanFlowServer.JMX.Queue">
         
         <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueWatcher"
                  instance="template">
@@ -68,7 +68,7 @@
                  instance="template"/>
     </manager>
     
-    <manager name="Template.BatchServer.JMX.SharedContext">
+    <manager name="Template.BeanFlowServer.JMX.SharedContext">
         
         <service template="Template.Service.JMX.MBeanWatcher.Context#SharedContextWatcher"
                  instance="template">
@@ -102,7 +102,7 @@
         
     </manager>
     
-    <manager name="Template.BatchServer.JMX.SharedContext.CacheMap">
+    <manager name="Template.BeanFlowServer.JMX.SharedContext.CacheMap">
         
         <service template="Template.Service.JMX.MBeanWatcher.Cache#CacheMapWatcher"
                  instance="template">
@@ -120,7 +120,7 @@
                  instance="template"/>
     </manager>
     
-    <manager name="Template.BatchServer.Resource.Cluster">
+    <manager name="Template.BeanFlowServer.Resource.Cluster">
         
         <service template="Template.Service.JMX.MBeanWatcher.KeepAlive#ClusterWatcher"
                  instance="template">
@@ -138,7 +138,7 @@
                  instance="template"/>
     </manager>
     
-    <manager name="Template.BatchServer.Resource.Publish">
+    <manager name="Template.BeanFlowServer.Resource.Publish">
         
         <service name="ServerConnectionWatcher"
                  template="Template.Service.JMX.MBeanWatcher.Publish#TCPServerConnectionWatcher"

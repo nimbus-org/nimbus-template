@@ -31,6 +31,11 @@
             <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#QueueCategory</service-property>
         </service>
         
+        <service template="Template.Service.JMX.MBeanWatcher.Queue#QueuesWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#QueueCategory</service-property>
+        </service>
+        
         <service name="QueueCategory"
                  template="Template.Service.Writer.Category#SimpleCategory"
                  instance="template">
@@ -40,6 +45,27 @@
         
         <service name="QueueWritableRecordFactory"
                  template="Template.Service.JMX.MBeanWatcher.Queue#QueueWritableRecordFactory"
+                 instance="template"/>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueHandlerContainerWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#QueueHandlerContainerCategory</service-property>
+        </service>
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueHandlerContainersWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#QueueHandlerContainerCategory</service-property>
+        </service>
+        
+        <service name="QueueHandlerContainerCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#QueueHandlerContainerWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#QueueHandlerContainerMessageWriter</service-property>
+        </service>
+        
+        <service name="QueueHandlerContainerWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Queue#QueueHandlerContainerWritableRecordFactory"
                  instance="template"/>
     </manager>
     
