@@ -661,6 +661,8 @@
             <service-property name="Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.EXCHANGE_EDITOR_FINDER_SERVICE_NAME">#ExchangeEditorFinder</service-property>
             <service-property name="Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.REQ_OBJ_EDITOR_FINDER_SERVICE_NAME">#RequestObjectEditorFinder</service-property>
             <service-property name="Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.EXCEPTION_EDITOR_FINDER_SERVICE_NAME">#ExceptionEditorFinder</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME">#BeanFlowSelector</service-property>
+            <service-property name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME">#BeanFlowInvokerFactory</service-property>
 
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.CONVERTER_SERVICE_NAME">
             <attribute name="ConverterServiceName">${Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.CONVERTER_SERVICE_NAME}</attribute>
@@ -690,6 +692,16 @@
 <ifdef name="Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.EXCEPTION_EDITOR_FINDER_SERVICE_NAME">
             <attribute name="ExceptionEditorFinderServiceName">${Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.EXCEPTION_EDITOR_FINDER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.AOP.Servlet.Interceptor.ServletRequestExchange.EXCEPTION_EDITOR_FINDER_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME">
+            <attribute name="BeanFlowSelectorServiceName">${Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.BEANFLOW_SELECTOR_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME">
+            <attribute name="BeanFlowInvokerFactoryServiceName">${Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.AOP.Servlet.Interceptor.BEANFLOW_INVOKER_FAC_SERVICE_NAME}</depends>
 </ifdef>
         </service>
 
