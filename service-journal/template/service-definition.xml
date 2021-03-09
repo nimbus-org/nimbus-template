@@ -1000,7 +1000,7 @@ WritableRecordFactoryサービス
             </attribute>
             <attribute name="Format">時刻=%DATE%${line.separator}リクエストID=%REQUEST_ID%${line.separator}リクエストURL=%URL%${line.separator}リクエストCookie=%COOKIES%${line.separator}リクエストヘッダ=%HEADERS%${line.separator}リクエストパラメータ=%PARAMETERS%${line.separator}リクエストボディ=%BODY%${line.separator}レスポンスステータス=%STATUS%${line.separator}レスポンスヘッダ=%RESPONSE_HEADERS%${line.separator}出力=%OUTPUT%${line.separator}処理時間=%PERFORMANCE%${line.separator}発生例外=%EXCEPTION%</attribute>
             <attribute name="ImplementServiceNames">
-                DATE=#NormalDateElement
+                DATE=#ErrorDateElement
                 COOKIES=#CSVElement
                 HEADERS=#CSVElement
                 PARAMETERS=#CSVElement
