@@ -177,7 +177,7 @@ WritableRecordFactoryサービス
                  instance="template">
             <attribute name="Append">true</attribute>
             <attribute name="BufferedIO">false</attribute>
-            <attribute name="File">${Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH}/accessjournal_%INDEX%.log</attribute>
+            <attribute name="File">${Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH}/accessjournal%INDEX%.log</attribute>
             <attribute name="ImmediateFlush">true</attribute>
             <attribute name="Header"></attribute>
             <attribute name="MaximumFileSize">10485760</attribute>
@@ -336,6 +336,92 @@ Editorサービス
                  template="Template.Service.Journal.JournalEditor#ThrowableJournalEditor"
                  instance="template"/>
 
+    </manager>
+
+    <manager name="Template.Service.Journal.AccessJournal.JSON">
+        
+        <service name="AccessNormalJournalWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Access.StartTime
+                REQUEST_ID=Access.RequestID
+                CLIENT_IP=Access.JournalRecords.Request[0].JournalRecords.ServletRequest[0].RemoteAddress
+                SESSION_ID=Access.JournalRecords.Response[0].JournalRecords.HttpSession[0].ID
+                REQUEST_URL=Access.JournalRecords.Request[0].JournalRecords.ServletRequest[0].RequestURL
+                REQUEST_OBJ=Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Request[0].JournalRecords.{{RequestBytes[0]}|{RequestObject[0].Bytes(UTF-8)}}
+                RESPONSE_STATUS=Access.JournalRecords.Response[0].JournalRecords.ServletResponse[0].Status
+                RESPONSE_OBJ=Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Response[0].JournalRecords.ResponseBytes[0]
+                PERFORMANCE=Access.Performance
+            </attribute>
+            <attribute name="Format">{"timestamp":"%DATE%","requestId":"%REQUEST_ID%","ipAddress":"%CLIENT_IP%","sessionId":"%SESSION_ID%","url":"%REQUEST_URL%","request":%REQUEST_OBJ%,"statusCode":%RESPONSE_STATUS%,"response":%RESPONSE_OBJ%,"performance":%PERFORMANCE%}</attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#AccessNormalDateElement
+                REQUEST_OBJ=#JSONElement
+                RESPONSE_OBJ=#JSONElement
+            </attribute>
+            <depends>AccessNormalDateElement</depends>
+            <depends>JSONElement</depends>
+            <depends>JSONEscapeElement</depends>
+        </service>
+        
+        <service name="AccessErrorJournalWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                DATE=Access.StartTime
+                REQUEST_ID=Access.RequestID
+                CLIENT_IP=Access.JournalRecords.Request[0].JournalRecords.ServletRequest[0].RemoteAddress
+                SESSION_ID=Access.JournalRecords.Response[0].JournalRecords.HttpSession[0].ID
+                REQUEST_URL=Access.JournalRecords.Request[0].JournalRecords.ServletRequest[0].RequestURL
+                REQUEST_OBJ=Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Request[0].JournalRecords.{{RequestBytes[0]}|{RequestObject[0].Bytes(UTF-8)}}
+                RESPONSE_STATUS=Access.JournalRecords.Response[0].JournalRecords.ServletResponse[0].Status
+                PERFORMANCE=Access.Performance
+                RESPONSE_OBJ=Access.JournalRecords.Request[0].JournalRecords.Exchange[0].JournalRecords.Response[0].JournalRecords.ResponseBytes[0]
+                EXCEPTION=Access.JournalRecords.Request[0].JournalRecords.{{Exception[0]}|{Exchange[0].JournalRecords.Exception[0]}}
+            </attribute>
+            <attribute name="Format">{"timestamp":"%DATE%","requestId":"%REQUEST_ID%","ipAddress":"%CLIENT_IP%","sessionId":"%SESSION_ID%","url":"%REQUEST_URL%","request":%REQUEST_OBJ%,"statusCode":%RESPONSE_STATUS%,"response":%RESPONSE_OBJ%,"performance":%PERFORMANCE%,"exception":"%EXCEPTION%"}</attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#AccessNormalDateElement
+                REQUEST_OBJ=#JSONElement
+                RESPONSE_OBJ=#JSONElement
+                EXCEPTION=#JSONEscapeElement
+            </attribute>
+            <depends>AccessNormalDateElement</depends>
+            <depends>JSONElement</depends>
+            <depends>JSONEscapeElement</depends>
+        </service>
+        
+        <service name="JSONElement"
+                 template="Template.Service.Writer.WritableRecordFactory#LineElement"
+                 instance="template">
+            <attribute name="Trim">true</attribute>
+        </service>
+        
+        <service name="JSONEscapeElement"
+                 template="Template.Service.Writer.WritableRecordFactory#SimpleElement"
+                 instance="template">
+            <attribute name="StringConverter"><service-ref>#JSONEscapeElementConverter</service-ref></attribute>
+            <depends>JSONEscapeElementConverter</depends>
+        </service>
+        
+        <service name="JSONEscapeElementConverter"
+                 code="jp.ossc.nimbus.util.converter.JSONEscapeConverter"
+                 instance="template">
+            <attribute name="UnicodeEscape">false</attribute>
+        </service>
+        
+        <service name="AccessErrorJournalWriter"
+                 template="Template.Service.Writer.MessageWriter.Log4J#CustomizedRollingFileWriter"
+                 instance="template">
+            <attribute name="Append">true</attribute>
+            <attribute name="BufferedIO">false</attribute>
+            <attribute name="File">${Template.Service.Journal.AccessJournal.LOG_OUTPUT_PATH}/accessjournal-error%INDEX%.log</attribute>
+            <attribute name="ImmediateFlush">true</attribute>
+            <attribute name="Header"></attribute>
+            <attribute name="MaximumFileSize">10485760</attribute>
+            <attribute name="MaxBackupIndex">100</attribute>
+        </service>
     </manager>
 
     <manager name="Template.Service.Journal.BusinessJournal">
@@ -658,6 +744,115 @@ Editorサービス
             </attribute>
         </service>
 
+    </manager>
+
+    <manager name="Template.Service.Journal.BusinessJournal.JSON">
+        
+        <service name="BusinessJournalWritableRecordFactory"
+                 template="Template.Service.Writer.WritableRecordFactory#PropertyWritableRecordFactory"
+                 instance="template">
+            <attribute name="FormatKeyMapping">
+                ACTION_FLOW=Business.JournalRecords.{{Flow[0]}|{Action[0].JournalRecords.Request[0].JournalRecords.Flow[0]}|{Validate[0].JournalRecords.Request[0].JournalRecords.Flow[0]}}
+            </attribute>
+            <attribute name="Format">%ACTION_FLOW%</attribute>
+        </service>
+        
+        <service name="BusinessErrorJournalWritableRecordFactory"
+                 template="Template.Service.Journal.BusinessJournal.JSON#BusinessJournalWritableRecordFactory"
+                 instance="template"/>
+        
+        <service name="BusinessErrorJournalWriter"
+                 template="Template.Service.Journal.BusinessJournal#BusinessJournalWriter"
+                 instance="template">
+            <attribute name="File">${Template.Service.Journal.BusinessJournal.LOG_OUTPUT_PATH}/businessjournal-error%INDEX%.log</attribute>
+        </service>
+        
+        <service name="BeanFlowJournalEditorProperties"
+                 template="Template.Service.Journal.EditorFinder#EditorProperties"
+                 instance="template">
+            
+            <service-property name="Template.Service.Journal.EditorFinder.OBJECT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ObjectJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.CLASS_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ClassJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#DateJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.THROWABLE_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ThrowableJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#StepRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.EditorFinder.DATASET_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#DataSetJournalEditor</service-property>
+            
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#FlowRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#ExecuteRequestJournalEditor</service-property>
+            <service-property name="Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME" extends="true">#BeanJournalEditor</service-property>
+            
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.RequestJournal,Flow)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.FLOW_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.service.journal.RequestJournal,Execute)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.EXECUTE_REQUEST_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME">
+            <attribute name="Property(jp.ossc.nimbus.servlet.BeanFlowServletContext)">${Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Journal.BeanFlowJournal.EditorFinder.BEANFLOW_SERVLET_CONTEXT_JOURNAL_EDITOR_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <service name="ObjectJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#JSONJournalEditor"
+                 instance="template">
+            <attribute name="ExpandArrayValue">true</attribute>
+            <attribute name="MaxArraySize">3</attribute>
+            <attribute name="ExpandMapValue">true</attribute>
+            <attribute name="ExcludeExpandMapClasses">
+                jp.ossc.nimbus.service.context.Context
+            </attribute>
+            <attribute name="SecretProperties">
+                password
+            </attribute>
+        </service>
+
+        <service name="FlowRequestJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#RequestJournalJSONJournalEditor"
+                 instance="template">
+            <attribute name="DisabledProperties">
+                Input
+            </attribute>
+        </service>
+        
+        <service name="StepRequestJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#RequestJournalJSONJournalEditor"
+                 instance="template">
+            <attribute name="DisabledProperties">
+                RequestId
+            </attribute>
+        </service>
+        
+        <service name="ExecuteRequestJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#RequestJournalJSONJournalEditor"
+                 instance="template">
+            <attribute name="DisabledProperties">
+                RequestId,
+                StartTime,
+                EndTime
+            </attribute>
+        </service>
+        
+        <service name="DataSetJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#DataSetJSONJournalEditor"
+                 instance="template">
+            <attribute name="SecretProperties">
+                password
+            </attribute>
+        </service>
+
+        <service name="BeanJournalEditor"
+                 template="Template.Service.Journal.JournalEditor.JSON#BeanJSONJournalEditor"
+                 instance="template">
+            <attribute name="EnabledProperties">
+                input,
+                output
+            </attribute>
+        </service>
+        
     </manager>
 
     <manager name="Template.Service.Journal.ProxyJournal">
@@ -2030,6 +2225,18 @@ EditorFinderサービス
         
         <manager-property name="Template.Service.Journal.JournalEditor.INDENT">"    "</manager-property>
         <manager-property name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">true</manager-property>
+        
+        <service name="BeanJSONJournalEditor"
+                 code="jp.ossc.nimbus.service.journal.editor.BeanJSONJournalEditorService"
+                 instance="template">
+            
+<ifdef name="Template.Service.Journal.JournalEditor.OUTPUT_INDENT">
+            <attribute name="OutputIndent">${Template.Service.Journal.JournalEditor.OUTPUT_INDENT}</attribute>
+</ifdef>
+<ifdef name="Template.Service.Journal.JournalEditor.INDENT">
+            <attribute name="Indent">${Template.Service.Journal.JournalEditor.INDENT}</attribute>
+</ifdef>
+        </service>
         
         <service name="DataSetJSONJournalEditor"
                  code="jp.ossc.nimbus.service.journal.editor.DataSetJSONJournalEditorService"
