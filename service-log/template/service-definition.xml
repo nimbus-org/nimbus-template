@@ -699,4 +699,38 @@
         </service>
 
     </manager>
+    
+    <manager name="Template.Service.Log.JSON">
+        
+        <service name="LogWritableRecordFactory"
+                 code="jp.ossc.nimbus.service.log.LogWritableRecordFactoryService"
+                 instance="template">
+            <attribute name="Format">{"timestamp":"%DATE%","requestId":"%REQUEST_ID%","priority":"%PRIORITY%","code":"%CODE%","message":"%MESSAGE%"}</attribute>
+            <attribute name="ImplementServiceNames">
+                DATE=#DateElement
+                MESSAGE=#JSONEscapeElement
+            </attribute>
+            <depends>DateElement</depends>
+            <depends>JSONEscapeElement</depends>
+        </service>
+
+        <service name="DateElement"
+                 template="Template.Service.Writer.WritableRecordFactory#DateElement"
+                 instance="template">
+            <attribute name="Format">yyyy/MM/dd HH:mm:ss.SSS</attribute>
+        </service>
+        
+        <service name="JSONEscapeElement"
+                 template="Template.Service.Writer.WritableRecordFactory#SimpleElement"
+                 instance="template">
+            <attribute name="StringConverter"><service-ref>#JSONEscapeElementConverter</service-ref></attribute>
+            <depends>JSONEscapeElementConverter</depends>
+        </service>
+        
+        <service name="JSONEscapeElementConverter"
+                 code="jp.ossc.nimbus.util.converter.JSONEscapeConverter"
+                 instance="template">
+            <attribute name="UnicodeEscape">false</attribute>
+        </service>
+    </manager>
 </server>
