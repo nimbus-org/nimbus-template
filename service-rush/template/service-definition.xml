@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server PUBLIC
+  "-//Nimbus//DTD Nimbus 1.0//JA"
+  "http://nimbus.sourceforge.jp/dtd/nimbus-service_1_0.dtd">
+
+<server>
+    
+    <default-log>
+        <debug output="false"/>
+        <information output="false"/>
+        <warning output="true"/>
+        <error output="true"/>
+        <fatal output="true"/>
+    </default-log>
+    
+    <manager name="Template.Service.Rush">
+        
+        <service name="Rush"
+                 code="jp.ossc.nimbus.service.rush.RushService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME" extends="true">#RushClient</service-property>
+            <service-property name="Template.Service.Rush.CLUSTER_SERVICE_NAME">#Cluster</service-property>
+            <service-property name="Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME">#RequestConnectionFactory</service-property>
+            
+<ifdef name="Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="RushClientFactoryServiceName">${Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.CLUSTER_SERVICE_NAME">
+            <attribute name="ClusterServiceName">${Template.Service.Rush.CLUSTER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="RequestConnectionFactoryServiceName">${Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+        </service>
+
+    </manager>
+    
+    <manager name="Template.Service.Rush.HTTP">
+        
+        <service name="RushClient"
+                 code="jp.ossc.nimbus.service.rush.http.HttpRushClientService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#HttpClientFactory</service-property>
+            <service-property name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            
+<ifdef name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME">
+            <attribute name="HttpClientFactoryServiceName">${Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">
+            <attribute name="TemplateEngineServiceName">${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+    </manager>
+    
+</server>
