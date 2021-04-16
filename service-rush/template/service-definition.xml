@@ -22,6 +22,8 @@
             <service-property name="Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME" extends="true">#RushClient</service-property>
             <service-property name="Template.Service.Rush.CLUSTER_SERVICE_NAME">#Cluster</service-property>
             <service-property name="Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME">#RequestConnectionFactory</service-property>
+            <service-property name="Template.Service.Rush.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
+            <service-property name="Template.Service.Rush.JOURNAL_SERVICE_NAME">#Journal</service-property>
             
 <ifdef name="Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME">
             <attribute name="RushClientFactoryServiceName">${Template.Service.Rush.RUSH_CLIENT_FACTORY_SERVICE_NAME}</attribute>
@@ -38,6 +40,16 @@
             <depends>${Template.Service.Rush.REQUEST_CONNECTION_FACTORY_SERVICE_NAME}</depends>
 </ifdef>
             
+<ifdef name="Template.Service.Rush.THREAD_CONTEXT_SERVICE_NAME">
+            <attribute name="ThreadContextServiceName">${Template.Service.Rush.THREAD_CONTEXT_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.THREAD_CONTEXT_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.JOURNAL_SERVICE_NAME">
+            <attribute name="JournalServiceName">${Template.Service.Rush.JOURNAL_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.JOURNAL_SERVICE_NAME}</depends>
+</ifdef>
+            
         </service>
 
     </manager>
@@ -50,7 +62,6 @@
             
             <service-property name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#HttpClientFactory</service-property>
             <service-property name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
-            <service-property name="Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             
 <ifdef name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME">
             <attribute name="HttpClientFactoryServiceName">${Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
@@ -60,11 +71,6 @@
 <ifdef name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">
             <attribute name="TemplateEngineServiceName">${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</depends>
-</ifdef>
-            
-<ifdef name="Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME">
-            <attribute name="ThreadContextServiceName">${Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Rush.HTTP.THREAD_CONTEXT_SERVICE_NAME}</depends>
 </ifdef>
         </service>
     </manager>
