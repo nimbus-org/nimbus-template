@@ -62,6 +62,7 @@
             
             <service-property name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME" extends="true">#HttpClientFactory</service-property>
             <service-property name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">#TemplateEngine</service-property>
+            <service-property name="Template.Service.Rush.HTTP.INTERPRETER_SERVICE_NAME">#Interpreter</service-property>
             
 <ifdef name="Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME">
             <attribute name="HttpClientFactoryServiceName">${Template.Service.Rush.HTTP.HTTP_CLIENT_FACTORY_SERVICE_NAME}</attribute>
@@ -71,6 +72,11 @@
 <ifdef name="Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME">
             <attribute name="TemplateEngineServiceName">${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Rush.HTTP.TEMPLATE_ENGINE_SERVICE_NAME}</depends>
+</ifdef>
+            
+<ifdef name="Template.Service.Rush.HTTP.INTERPRETER_SERVICE_NAME">
+            <attribute name="InterpreterServiceName">${Template.Service.Rush.HTTP.INTERPRETER_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Rush.HTTP.INTERPRETER_SERVICE_NAME}</depends>
 </ifdef>
         </service>
     </manager>
