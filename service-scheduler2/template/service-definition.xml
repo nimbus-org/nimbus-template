@@ -415,6 +415,20 @@
         <!-- 日付キーでスケジュール生成を判断するScheduleMakerサービス -->
         <service name="DateKeyConditionScheduleMaker"
                  code="jp.ossc.nimbus.service.scheduler2.DateKeyConditionScheduleMakerService"
+                 instance="template">
+            
+            <service-property name="Template.Service.Scheduler2.ScheduleMaker.DATE_EVALUATOR_SERVICE_NAME">#GoogleCalendarEventDateEvaluator</service-property>
+            
+<ifdef name="Template.Service.Scheduler2.ScheduleMaker.DATE_EVALUATOR_SERVICE_NAME">
+            <!-- DateEvaluatorサービスのサービス名を設定する -->
+            <attribute name="DateEvaluatorServiceName">${Template.Service.Scheduler2.ScheduleMaker.DATE_EVALUATOR_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.ScheduleMaker.DATE_EVALUATOR_SERVICE_NAME}</depends>
+</ifdef>
+        </service>
+        
+        <!-- Googleカレンダーイベント日付評価 -->
+        <service name="GoogleCalendarEventDateEvaluator"
+                 code="jp.ossc.nimbus.service.scheduler.GoogleCalendarEventDateEvaluatorService"
                  instance="template"/>
 
         <!-- 業務フローでスケジュール生成を判断するScheduleMakerサービス -->
@@ -846,7 +860,9 @@
                     ROWVERSION     INTEGER,
                     UPDATEUSERID   VARCHAR(256),
                     UPDATETIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY(ID, GROUP_ID, MASTER_GROUP_ID)
+                    PRIMARY KEY(ID, GROUP_ID, MASTER_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_ID(ID), 
+                    FOREIGN KEY FK_SCHEDULE_GROUP_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -880,7 +896,9 @@
                     IGNORE_ERROR     CHAR(1),
                     ROWVERSION       INTEGER,
                     UPDATEUSERID     VARCHAR(256),
-                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    INDEX IDX_SCHEDULE_DEPEND_ID(ID), 
+                    FOREIGN KEY FK_SCHEDULE_DEPENDS_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -919,7 +937,9 @@
                     ROWVERSION       INTEGER,
                     UPDATEUSERID     VARCHAR(256),
                     UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_DEPENDS_GROUP_ID(GROUP_ID), 
+                    FOREIGN KEY FK_GROUP_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP(GROUP_ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -1069,7 +1089,9 @@
                     DEPENDS_ID       VARCHAR(256),
                     DEPENDS_GROUP_ID VARCHAR(256),
                     GROUP_ID         VARCHAR(256),
-                    IGNORE_ERROR     CHAR(1)
+                    IGNORE_ERROR     CHAR(1),
+                    INDEX IDX_SCHEDULE_DEPENDS_MST_ID(ID), 
+                    FOREIGN KEY FK_SCHEDULE_DEPENDS_MST_ID(ID) REFERENCES SCHEDULE_MST(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?)</attribute>
@@ -1105,7 +1127,9 @@
                     GROUP_ID         VARCHAR(256) not null,
                     DEPENDS_GROUP_ID VARCHAR(256) not null,
                     IGNORE_ERROR     CHAR(1),
-                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_DEPENDS_MST_ID(GROUP_ID), 
+                    FOREIGN KEY FK_SCHEDULE_GROUP_DEPENDS_MST_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP_MST(GROUP_ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS_MST values(?,?,?)</attribute>
@@ -1134,7 +1158,9 @@
                 create table SCHEDULE_GROUP_MST(
                     ID          VARCHAR(256) not null,
                     GROUP_ID    VARCHAR(256) not null,
-                    PRIMARY KEY(ID, GROUP_ID)
+                    PRIMARY KEY(ID, GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_ID(ID), 
+                    FOREIGN KEY FX_SCHEDULE_GROUP_ID(ID) SCHEDULE_MST(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_MST values(?,?)</attribute>
@@ -1849,6 +1875,8 @@
                 1
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_ID_SEQUENCE</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_ID_SEQUENCE</attribute>
             <depends>RecordListConverter</depends>
         </service>
         
@@ -1886,7 +1914,8 @@
                     EXECUTOR_KEY    VARCHAR(128),
                     EXECUTOR_TYPE   VARCHAR(128),
                     TEMPLATE        CHAR(1) not null,
-                    PRIMARY KEY(ID)
+                    PRIMARY KEY(ID),
+                    INDEX IDX_SCHEDULE_MST_ID(ID)
                 )
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_MST values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)</attribute>
@@ -1917,6 +1946,8 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_MST</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_MST</attribute>
             <depends>RecordListConverter</depends>
         </service>
 
@@ -1940,17 +1971,22 @@
             </attribute>
             <attribute name="CreateTableQuery">
                 create table ${MYSQL_DB}.SCHEDULE_DEPENDS_MST(
+                    DUMMY_ID         VARCHAR(256) not null,
                     ID               VARCHAR(256) not null,
                     DEPENDS_ID       VARCHAR(256),
                     DEPENDS_GROUP_ID VARCHAR(256),
                     GROUP_ID         VARCHAR(256),
-                    IGNORE_ERROR     CHAR(1)
+                    IGNORE_ERROR     CHAR(1),
+                    PRIMARY KEY(DUMMY_ID),
+                    INDEX IDX_SCHEDULE_DEPENDS_MST_ID(ID),
+                    FOREIGN KEY FK_SCHEDULE_DEPENDS_MST_ID(ID) REFERENCES SCHEDULE_MST(ID) ON DELETE CASCADE
                 )
             </attribute>
-            <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?)</attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertOnStart">true</attribute>
             <attribute name="RecordListSchema">
+                :DUMMY_ID,java.lang.String
                 :ID,java.lang.String
                 :DEPENDS_ID,java.lang.String
                 :DEPENDS_GROUP_ID,java.lang.String
@@ -1962,7 +1998,52 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_DEPENDS_MST</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_DEPENDS_MST</attribute>
             <depends>RecordListConverter</depends>
+            <depends>ScheduleMasterTableCreator</depends>
+        </service>
+
+        <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
+        <service name="ScheduleGroupMasterTableCreator"
+                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
+                 instance="template">
+<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
+            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
+</ifdef>
+            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
+            <attribute name="ExistsTableQuery">
+                SELECT 
+                    count(1) 
+                FROM 
+                    information_schema.tables 
+                WHERE 
+                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP_MST'
+                LIMIT 1       
+            </attribute>
+            <attribute name="CreateTableQuery">
+                create table ${MYSQL_DB}.SCHEDULE_GROUP_MST(
+                    ID          VARCHAR(256) not null,
+                    GROUP_ID    VARCHAR(256) not null,
+                    PRIMARY KEY(ID, GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_MST_ID(ID),
+                    INDEX IDX_SCHEDULE_GROUP_MST_GROUP_ID(GROUP_ID),
+                    FOREIGN KEY FK_SCHEDULE_GROUP_MST_ID(ID) REFERENCES SCHEDULE_MST(ID) ON DELETE CASCADE
+                )
+            </attribute>
+            <attribute name="InsertQuery">insert into SCHEDULE_GROUP_MST values(?,?)</attribute>
+            <attribute name="CreateTableOnStart">true</attribute>
+            <attribute name="InsertOnStart">true</attribute>
+            <attribute name="RecordListSchema">
+                :ID,java.lang.String
+                :GROUP_ID,java.lang.String
+            </attribute>
+            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_GROUP_MST</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_GROUP_MST</attribute>
+            <depends>RecordListConverter</depends>
+            <depends>ScheduleMasterTableCreator</depends>
         </service>
 
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
@@ -1988,7 +2069,9 @@
                     GROUP_ID         VARCHAR(256) not null,
                     DEPENDS_GROUP_ID VARCHAR(256) not null,
                     IGNORE_ERROR     CHAR(1),
-                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_DEPENDS_MST_GROUP_ID(GROUP_ID),
+                    FOREIGN KEY FK_SCHEDULE_GROUP_DEPENDS_MST_GROUP_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP_MST(GROUP_ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS_MST values(?,?,?)</attribute>
@@ -2000,43 +2083,10 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS_MST</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS_MST</attribute>
             <depends>RecordListConverter</depends>
-        </service>
-
-        <!-- スケジュールグループマスタテーブルの準備をするTableCreatorサービス -->
-        <service name="ScheduleGroupMasterTableCreator"
-                 code="jp.ossc.nimbus.service.connection.TableCreatorService"
-                 instance="template">
-<ifdef name="Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME">
-            <attribute name="ConnectionFactoryServiceName">${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</attribute>
-            <depends>${Template.Service.Scheduler2.Connection.CONNECTION_FACTORY_SERVICE_NAME}</depends>
-</ifdef>
-            <attribute name="RecordListConverterServiceName">#RecordListConverter</attribute>
-            <attribute name="ExistsTableQuery">
-                SELECT 
-                    count(1) 
-                FROM 
-                    information_schema.tables 
-                WHERE 
-                    table_schema='${MYSQL_DB}' AND table_name ='SCHEDULE_GROUP_MST'
-                LIMIT 1       
-            </attribute>
-            <attribute name="CreateTableQuery">
-                create table ${MYSQL_DB}.SCHEDULE_GROUP_MST(
-                    ID          VARCHAR(256) not null,
-                    GROUP_ID    VARCHAR(256) not null,
-                    PRIMARY KEY(ID, GROUP_ID)
-                )
-            </attribute>
-            <attribute name="InsertQuery">insert into SCHEDULE_GROUP_MST values(?,?)</attribute>
-            <attribute name="CreateTableOnStart">true</attribute>
-            <attribute name="InsertOnStart">true</attribute>
-            <attribute name="RecordListSchema">
-                :ID,java.lang.String
-                :GROUP_ID,java.lang.String
-            </attribute>
-            <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
-            <depends>RecordListConverter</depends>
+            <depends>ScheduleGroupMasterTableCreator</depends>
         </service>
 
         <!-- スケジュールテーブルの準備をするTableCreatorサービス -->
@@ -2069,7 +2119,7 @@
                     INITIAL_DATE   CHAR(8) NOT NULL,
                     INITIAL_TIME   CHAR(9) NOT NULL,
                     RETRY_INTERVAL BIGINT,
-                    RETRY_END_TIME CHAR(9),
+                    RETRY_END_TIME CHAR(17),
                     STATE          CHAR(1) DEFAULT 'I' NOT NULL,
                     CONTROL_STATE  CHAR(1) DEFAULT 'I' NOT NULL,
                     EXECUTOR_KEY   VARCHAR(128),
@@ -2081,8 +2131,13 @@
                     ROWVERSION     INT,
                     UPDATEUSERID   VARCHAR(256),
                     UPDATETIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY(ID)
-                )
+                    PRIMARY KEY(ID),
+                    INDEX IDX_SCHEDULE_ID(ID),
+                    INDEX IDX_SCHEDULE_MASTER_ID(MASTER_ID),
+                    INDEX IDX_SCHEDULE_EXECUTOR_KEY(EXECUTOR_KEY),
+                    INDEX IDX_SCHEDULE_EXECUTOR_TYPE(EXECUTOR_TYPE),
+                    INDEX IDX_SCHEDULE_STATE(STATE)
+                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertQuery">insert into SCHEDULE values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
@@ -2117,6 +2172,8 @@
                 <argument type="java.lang.Class">long</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="BIGINT"/></argument>
             </invoke>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE</attribute>
             <depends>RecordListConverter</depends>
         </service>
 
@@ -2146,7 +2203,10 @@
                     ROWVERSION     INT,
                     UPDATEUSERID   VARCHAR(256),
                     UPDATETIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY(ID, GROUP_ID, MASTER_GROUP_ID)
+                    PRIMARY KEY(ID, GROUP_ID, MASTER_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_ID(ID),
+                    INDEX IDX_SCHEDULE_GROUP_GROUP_ID(GROUP_ID),
+                    FOREIGN KEY FK_SCHEDULE_GROUP_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2158,7 +2218,10 @@
                 :MASTER_GROUP_ID,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_GROUP</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_GROUP</attribute>
             <depends>RecordListConverter</depends>
+            <depends>ScheduleTableCreator</depends>
         </service>
 
         <!-- スケジュール依存マスタテーブルの準備をするTableCreatorサービス -->
@@ -2188,7 +2251,13 @@
                     IGNORE_ERROR     CHAR(1),
                     ROWVERSION       INT,
                     UPDATEUSERID     VARCHAR(256),
-                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    INDEX IDX_SCHEDULE_DEPENDS_ID(ID),
+                    INDEX IDX_SCHEDULE_DEPENDS_DEPENDS_ID(DEPENDS_ID),
+                    INDEX IDX_SCHEDULE_DEPENDS_DEPENDS_GROUP_ID(DEPENDS_GROUP_ID),
+                    INDEX IDX_SCHEDULE_DEPENDS_GROUP_ID(GROUP_ID),
+                    INDEX IDX_SCHEDULE_DEPENDS_IGNORE_ERROR(IGNORE_ERROR),
+                    FOREIGN KEY FK_SCHEDULE_DEPENDS_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2206,7 +2275,10 @@
                 <argument type="java.lang.Class">java.lang.String</argument>
                 <argument type="int"><static-field-ref code="java.sql.Types" name="VARCHAR"/></argument>
             </invoke>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_DEPENDS</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_DEPENDS</attribute>
             <depends>RecordListConverter</depends>
+            <depends>ScheduleTableCreator</depends>
         </service>
 
         <!-- スケジュールグループ依存マスタテーブルの準備をするTableCreatorサービス -->
@@ -2235,7 +2307,10 @@
                     ROWVERSION       INT,
                     UPDATEUSERID     VARCHAR(256),
                     UPDATETIME       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
+                    PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_DEPENDS_GROUP_ID(GROUP_ID),
+                    INDEX IDX_SCHEDULE_GROUP_DEPENDS_IGNORE_ERROR(IGNORE_ERROR),
+                    FOREIGN KEY FK_SCHEDULE_GROUP_DEPENDS_GROUP_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP(GROUP_ID) ON DELETE CASCADE
                 )
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2247,7 +2322,10 @@
                 :IGNORE_ERROR,java.lang.String
             </attribute>
             <attribute name="IgnoreSQLExceptionErrorCodeOnInsert">1062</attribute>
+            <attribute name="DeleteQuery">DELETE FROM ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS</attribute>
+            <attribute name="DropTableQuery">DROP TABLE ${MYSQL_DB}.SCHEDULE_GROUP_DEPENDS</attribute>
             <depends>RecordListConverter</depends>
+            <depends>ScheduleGroupTableCreator</depends>
         </service>
 
         <!-- CSV形式のストリームとRecordListの相互変換を行うConverterサービス -->
