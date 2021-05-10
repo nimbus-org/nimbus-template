@@ -23,6 +23,25 @@
         
     </manager>
     
+    <manager name="Template.BatchServer.JMX.Scheduler">
+        
+        <service template="Template.Service.JMX.MBeanWatcher.Scheduler2#SchedulerWatcher"
+                 instance="template">
+            <service-property name="Template.Service.JMX.MBeanWatcher.CATEGORY_SERVICE_NAME" extends="true">#SchedulerCategory</service-property>
+        </service>
+        
+        <service name="SchedulerCategory"
+                 template="Template.Service.Writer.Category#SimpleCategory"
+                 instance="template">
+            <service-property name="Template.Service.Writer.Category.WRITABLE_RECORD_FACTORY_SERVICE_NAME" extends="true">#SchedulerWritableRecordFactory</service-property>
+            <service-property name="Template.Service.Writer.Category.MESSAGE_WRITER_SERVICE_NAME" extends="true">#SchedulerMessageWriter</service-property>
+        </service>
+        
+        <service name="SchedulerWritableRecordFactory"
+                 template="Template.Service.JMX.MBeanWatcher.Scheduler2#SchedulerWritableRecordFactory"
+                 instance="template"/>
+    </manager>
+    
     <manager name="Template.BatchServer.JMX.Queue">
         
         <service template="Template.Service.JMX.MBeanWatcher.Queue#QueueWatcher"

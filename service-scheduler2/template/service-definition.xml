@@ -26,6 +26,7 @@
             <service-property name="Template.Service.Scheduler2.SCHEDULE_EXECUTOR_SERVICE_NAME">#ScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.BEANFLOW_SCHEDULE_EXECUTOR_SERVICE_NAME">#BeanFlowScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#CommandScheduleExecutor</service-property>
+            <service-property name="Template.Service.Scheduler2.LOCAL_COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">#LocalCommandScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">#ServiceCallScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.CONCENTRATE_SCHEDULE_EXECUTOR_SERVICE_NAME">#ConcentrateScheduleExecutor</service-property>
             <service-property name="Template.Service.Scheduler2.AWS_LAMBDA_SCHEDULE_EXECUTOR_SERVICE_NAME">#AWSLambdaScheduleExecutor</service-property>
@@ -35,6 +36,7 @@
             <service-property name="Template.Service.Scheduler2.SEQUENCE_SERVICE_NAME">#Sequence</service-property>
             <service-property name="Template.Service.Scheduler2.THREAD_CONTEXT_SERVICE_NAME">#ThreadContext</service-property>
             <service-property name="Template.Service.Scheduler2.TRANSACTION_MANAGER_FACTORY_SERVICE_NAME">#TransactionManagerFactory</service-property>
+            <service-property name="Template.Service.Scheduler2.QUEUE_SERVICE_NAME">#Queue</service-property>
 
 <ifdef name="Template.Service.Scheduler2.SCHEDULE_MANAGER_SERVICE_NAME">
             <!-- ScheduleManagerサービスのサービス名を設定する -->
@@ -49,6 +51,9 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.LOCAL_COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
+                        <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.LOCAL_COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">
                         <argument type="jp.ossc.nimbus.core.ServiceName">${Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME}</argument>
@@ -76,6 +81,9 @@
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
+</ifdef>
+<ifdef name="Template.Service.Scheduler2.LOCAL_COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME">
+            <depends>${Template.Service.Scheduler2.LOCAL_COMMAND_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
 </ifdef>
 <ifdef name="Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME">
             <depends>${Template.Service.Scheduler2.SERVICE_CALL_SCHEDULE_EXECUTOR_SERVICE_NAME}</depends>
@@ -124,6 +132,12 @@
             <!-- スケジューラをクラスタ化するクラスタサービスのサービス名を設定する -->
             <attribute name="ClusterServiceName">${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</attribute>
             <depends>${Template.Service.Scheduler2.CLUSTER_SERVICE_NAME}</depends>
+</ifdef>
+
+<ifdef name="Template.Service.Scheduler2.QUEUE_SERVICE_NAME">
+            <!-- スケジュールを投入するQueueサービスのサービス名を設定する -->
+            <attribute name="QueueServiceName">${Template.Service.Scheduler2.QUEUE_SERVICE_NAME}</attribute>
+            <depends>${Template.Service.Scheduler2.QUEUE_SERVICE_NAME}</depends>
 </ifdef>
 
             <!-- スケジュール実行スレッド数を設定する -->
@@ -691,7 +705,7 @@
                     DEPENDS_GROUP_ID VARCHAR(256),
                     GROUP_ID         VARCHAR(256),
                     IGNORE_ERROR     CHAR(1)
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -727,7 +741,7 @@
                     DEPENDS_GROUP_ID VARCHAR(256) not null,
                     IGNORE_ERROR     CHAR(1),
                     PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID)
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS_MST values(?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -1863,7 +1877,7 @@
             <attribute name="CreateTableQuery">
                 create table ${MYSQL_DB}.SCHEDULE_ID_SEQUENCE(
                     SEQUENCE_SCHEDULE_ID BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_ID_SEQUENCE values(?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -1916,7 +1930,7 @@
                     TEMPLATE        CHAR(1) not null,
                     PRIMARY KEY(ID),
                     INDEX IDX_SCHEDULE_MST_ID(ID)
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_MST values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -1980,7 +1994,7 @@
                     PRIMARY KEY(DUMMY_ID),
                     INDEX IDX_SCHEDULE_DEPENDS_MST_ID(ID),
                     FOREIGN KEY FK_SCHEDULE_DEPENDS_MST_ID(ID) REFERENCES SCHEDULE_MST(ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS_MST values(?,?,?,?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2030,7 +2044,7 @@
                     INDEX IDX_SCHEDULE_GROUP_MST_ID(ID),
                     INDEX IDX_SCHEDULE_GROUP_MST_GROUP_ID(GROUP_ID),
                     FOREIGN KEY FK_SCHEDULE_GROUP_MST_ID(ID) REFERENCES SCHEDULE_MST(ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_MST values(?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2072,7 +2086,7 @@
                     PRIMARY KEY(GROUP_ID, DEPENDS_GROUP_ID),
                     INDEX IDX_SCHEDULE_GROUP_DEPENDS_MST_GROUP_ID(GROUP_ID),
                     FOREIGN KEY FK_SCHEDULE_GROUP_DEPENDS_MST_GROUP_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP_MST(GROUP_ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS_MST values(?,?,?)</attribute>
             <attribute name="CreateTableOnStart">true</attribute>
@@ -2137,7 +2151,7 @@
                     INDEX IDX_SCHEDULE_EXECUTOR_KEY(EXECUTOR_KEY),
                     INDEX IDX_SCHEDULE_EXECUTOR_TYPE(EXECUTOR_TYPE),
                     INDEX IDX_SCHEDULE_STATE(STATE)
-                 )
+                 ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertQuery">insert into SCHEDULE values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
@@ -2207,7 +2221,7 @@
                     INDEX IDX_SCHEDULE_GROUP_ID(ID),
                     INDEX IDX_SCHEDULE_GROUP_GROUP_ID(GROUP_ID),
                     FOREIGN KEY FK_SCHEDULE_GROUP_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP values(?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
@@ -2258,7 +2272,7 @@
                     INDEX IDX_SCHEDULE_DEPENDS_GROUP_ID(GROUP_ID),
                     INDEX IDX_SCHEDULE_DEPENDS_IGNORE_ERROR(IGNORE_ERROR),
                     FOREIGN KEY FK_SCHEDULE_DEPENDS_ID(ID) REFERENCES SCHEDULE(ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_DEPENDS values(?,?,?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
@@ -2311,7 +2325,7 @@
                     INDEX IDX_SCHEDULE_GROUP_DEPENDS_GROUP_ID(GROUP_ID),
                     INDEX IDX_SCHEDULE_GROUP_DEPENDS_IGNORE_ERROR(IGNORE_ERROR),
                     FOREIGN KEY FK_SCHEDULE_GROUP_DEPENDS_GROUP_ID(GROUP_ID) REFERENCES SCHEDULE_GROUP(GROUP_ID) ON DELETE CASCADE
-                )
+                ) DEFAULT CHARSET=utf8mb4
             </attribute>
             <attribute name="CreateTableOnStart">true</attribute>
             <attribute name="InsertQuery">insert into SCHEDULE_GROUP_DEPENDS values(?,?,?,1,'TEST',CURRENT_TIMESTAMP)</attribute>
