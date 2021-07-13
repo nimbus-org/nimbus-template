@@ -43,5 +43,14 @@
 
         </service>
 
+        <!-- Polyglotでスクリプトを実行するInterpreterサービス -->
+        <service name="PolyglotInterpreter"
+                 code="jp.ossc.nimbus.service.interpreter.PolyglotInterpreterService"
+                 instance="template">
+            
+            <attribute name="ContextBuilder"><static-invoke code="jp.ossc.nimbus.service.interpreter.PolyglotInterpreterService" name="getNashornCompatContextBuilder"/></attribute>
+            
+        </service>
+
     </manager>
 </server>
