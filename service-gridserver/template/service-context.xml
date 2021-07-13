@@ -77,6 +77,25 @@
             <service-property name="Template.Service.Cache.EXTERNALIZER_SERVICE_NAME">#Externalizer</service-property>
         </service>
         
+        <service name="InterpreterCacheMap"
+                 template="Template.Service.Cache.CacheMap.Memory#CacheMap"
+                 instance="template">
+            <service-property name="Template.Service.Cache.OVERFLOW_CONTROLLER_SERVICE_NAME" extends="true">#InterpreterOverflowController</service-property>
+        </service>
+        
+        <service name="InterpreterOverflowController"
+                 template="Template.Service.Cache.OverflowController#OverflowController"
+                 instance="template">
+            <service-property name="Template.Service.Cache.OVERFLOW_VALIDATOR_SERVICE_NAME" extends="true">#InterpreterOverflowValidator</service-property>
+            <service-property name="Template.Service.Cache.OVERFLOW_ALGORITHM_SERVICE_NAME" extends="true">#InterpreterOverflowAlgorithm</service-property>
+        </service>
+        
+        <service name="InterpreterOverflowValidator" template="Template.Service.Cache.OverflowValidator#CacheSizeOverflowValidator"
+                 instance="template"/>
+        
+        <service name="InterpreterOverflowAlgorithm" template="Template.Service.Cache.OverflowAlgorithm#LFUOverflowAlgorithm"
+                 instance="template"/>
+        
     </manager>
     
     <!-- データベースコンテキストストアサービス群 -->
