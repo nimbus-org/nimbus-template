@@ -377,13 +377,13 @@
 </ifdef>
             
             <attribute name="ApiClasses">
+                io.kubernetes.client.openapi.apis.AdmissionregistrationV1Api,
                 io.kubernetes.client.openapi.apis.AdmissionregistrationV1beta1Api,
+                io.kubernetes.client.openapi.apis.ApiextensionsV1Api,
                 io.kubernetes.client.openapi.apis.ApiextensionsV1beta1Api,
                 io.kubernetes.client.openapi.apis.ApiregistrationV1Api,
                 io.kubernetes.client.openapi.apis.ApiregistrationV1beta1Api,
                 io.kubernetes.client.openapi.apis.AppsV1Api,
-                io.kubernetes.client.openapi.apis.AppsV1beta1Api,
-                io.kubernetes.client.openapi.apis.AppsV1beta2Api,
                 io.kubernetes.client.openapi.apis.AuditregistrationV1alpha1Api,
                 io.kubernetes.client.openapi.apis.AuthenticationV1Api,
                 io.kubernetes.client.openapi.apis.AuthenticationV1beta1Api,
@@ -395,6 +395,7 @@
                 io.kubernetes.client.openapi.apis.BatchV1Api,
                 io.kubernetes.client.openapi.apis.BatchV1beta1Api,
                 io.kubernetes.client.openapi.apis.BatchV2alpha1Api,
+                io.kubernetes.client.openapi.apis.CertificatesV1Api,
                 io.kubernetes.client.openapi.apis.CertificatesV1beta1Api,
                 io.kubernetes.client.openapi.apis.CoordinationV1Api,
                 io.kubernetes.client.openapi.apis.CoordinationV1beta1Api,
