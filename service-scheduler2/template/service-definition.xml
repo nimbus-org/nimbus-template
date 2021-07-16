@@ -384,7 +384,6 @@
                 io.kubernetes.client.openapi.apis.ApiregistrationV1Api,
                 io.kubernetes.client.openapi.apis.ApiregistrationV1beta1Api,
                 io.kubernetes.client.openapi.apis.AppsV1Api,
-                io.kubernetes.client.openapi.apis.AuditregistrationV1alpha1Api,
                 io.kubernetes.client.openapi.apis.AuthenticationV1Api,
                 io.kubernetes.client.openapi.apis.AuthenticationV1beta1Api,
                 io.kubernetes.client.openapi.apis.AuthorizationV1Api,
