@@ -1012,6 +1012,12 @@
             <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordListCSVConverter</service-property>
         </service>
         
+        <service name="RecordToCSVConvertAction"
+                 template="#ObjectToFileConvertAction"
+                 instance="template">
+            <service-property name="Template.Service.Test.TestAction.ObjectToFileConvertActionService.STREAM_CONVERTER_SERVICE_NAME" extends="true">#RecordCSVConverter</service-property>
+        </service>
+        
         <service name="BeanToJSONConvertAction"
                  template="#ObjectToFileConvertAction"
                  instance="template">
