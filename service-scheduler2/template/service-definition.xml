@@ -2172,6 +2172,10 @@
                     INDEX IDX_SCHEDULE_MASTER_ID(MASTER_ID),
                     INDEX IDX_SCHEDULE_EXECUTOR_KEY(EXECUTOR_KEY),
                     INDEX IDX_SCHEDULE_EXECUTOR_TYPE(EXECUTOR_TYPE),
+                    INDEX IDX_SCHEDULE_INITIAL_DATE(INITIAL_DATE),
+                    INDEX IDX_SCHEDULE_INITIAL_TIME(INITIAL_TIME),
+                    INDEX IDX_SCHEDULE_S_DATE(S_DATE),
+                    INDEX IDX_SCHEDULE_S_TIME(S_TIME),
                     INDEX IDX_SCHEDULE_STATE(STATE)
                  ) DEFAULT CHARSET=utf8mb4
             </attribute>
