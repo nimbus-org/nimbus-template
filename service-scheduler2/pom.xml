@@ -22,7 +22,7 @@
             <groupId>com.github.nimbus-org</groupId>
             <artifactId>nimbus</artifactId>
             <version>1.2.5-SNAPSHOT</version>
-            <!-- Nimbus‚ªˆË‘¶‚µ‚Ä‚¢‚é‚·‚×‚Ä‚Ìjar‚ðˆê’UœŠO(‘‚©‚È‚¢‚Æ‘S•”“ü‚é) -->
+            <!-- NimbusãŒä¾å­˜ã—ã¦ã„ã‚‹ã™ã¹ã¦ã®jarã‚’ä¸€æ—¦é™¤å¤–(æ›¸ã‹ãªã„ã¨å…¨éƒ¨å…¥ã‚‹) -->
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.4.1</version>
+            <version>2.7.1</version>
         </dependency>
         
         <dependency>
